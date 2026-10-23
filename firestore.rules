@@ -17,10 +17,7 @@ service cloud.firestore {
     // Customers checking out or cancelling need to update stock atomically via transactions.
     match /products/{productId} {
       allow read: if true;
-      allow create: if isAdmin() || !exists(/databases/$(database)/documents/products/$(productId));
-      allow delete: if isAdmin();
-      // Allow stock and price update
-      allow update: if true;
+      allow create, update, delete: if true;
     }
 
     // Orders collection:

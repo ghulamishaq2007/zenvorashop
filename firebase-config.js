@@ -239,3 +239,14 @@ export function canonicalizeProductId(id) {
   const trimmed = String(id).trim();
   return PRODUCT_ID_ALIASES[trimmed] || trimmed;
 }
+
+export function generateProductSlug(name) {
+  if (!name) return "";
+  return String(name)
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+

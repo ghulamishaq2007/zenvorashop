@@ -522,9 +522,124 @@ function initQuickAddButtons() {
           }
         }
       });
+
+      // Synchronize dynamic Firestore catalogue products with storefront grid
+      syncDynamicStorefrontProducts(products);
     });
   }
 }
+
+function syncDynamicStorefrontProducts(products) {
+  const grid = document.getElementById('product-grid') || document.querySelector('.product-grid');
+  if (!grid || !Array.isArray(products)) return;
+
+  const pathname = window.location.pathname.toLowerCase();
+  const isHomePage = pathname === '/' || pathname.endsWith('index.html') || pathname.endsWith('/applet/') || pathname === '';
+
+  products.forEach(p => {
+    if (p.status === 'draft') return; // Hide drafts from storefront
+
+    const canonicalId = (window.zenvoraFirebase && window.zenvoraFirebase.canonicalizeProductId) 
+      ? window.zenvoraFirebase.canonicalizeProductId(p.productId) 
+      : p.productId;
+
+    // Check if card already rendered
+    const existing = grid.querySelector(`[data-id="${canonicalId}"]`) || 
+                     grid.querySelector(`[data-id="${p.productId}"]`) ||
+                     grid.querySelector(`a[href*="${p.productId}"]`);
+    if (existing) return;
+
+    // Check category filter on category pages
+    const cat = String(p.category || '').toLowerCase();
+    if (!isHomePage) {
+      if (pathname.includes('ladies') && !cat.includes('ladies')) return;
+      if (pathname.includes('gents') && !cat.includes('gents') && !cat.includes('men')) return;
+      if (pathname.includes('bag') && !cat.includes('bag')) return;
+      if (pathname.includes('sandal') && !cat.includes('sandal') && !cat.includes('footwear') && !cat.includes('shoe')) return;
+    }
+
+    const prodUrl = p.productUrl || `product.html?id=${p.productId}`;
+    const prodImg = p.image || (Array.isArray(p.images) && p.images[0]) || './icon-192.png';
+    const stock = typeof p.stock === 'number' ? p.stock : 0;
+    const isOut = p.status === 'out_of_stock' || stock <= 0;
+
+    const card = document.createElement('article');
+    card.className = `product-card ${isOut ? 'is-out-of-stock' : ''}`;
+    card.setAttribute('data-category', p.category || 'Fashion');
+    card.setAttribute('data-id', canonicalId);
+
+    const oldPriceHtml = (typeof p.originalPrice === 'number' && p.originalPrice > p.price)
+      ? `<span class="product-old-price">Rs. ${Number(p.originalPrice).toLocaleString('en-PK')}</span>`
+      : '';
+
+    let stockPillHtml = '';
+    if (isOut) {
+      stockPillHtml = '<span class="card-stock-pill">Sold Out</span>';
+    } else if (stock <= 2) {
+      stockPillHtml = `<span class="card-stock-pill low">Only ${stock} Left</span>`;
+    }
+
+    card.innerHTML = `
+      <div class="product-image-wrap">
+        <span class="product-badge-tag new">${p.category || 'New'}</span>
+        ${stockPillHtml}
+        <a href="${prodUrl}">
+          <img src="${prodImg}" alt="${p.productName} - ZENVORA SHOOP" class="product-img" loading="lazy" decoding="async" onerror="this.src='./icon-192.png'">
+        </a>
+      </div>
+      <div class="product-info">
+        <span class="product-cat-name">${p.category || 'Fashion'}</span>
+        <h3 class="product-title" style="font-size: 1rem;"><a href="${prodUrl}">${p.productName}</a></h3>
+        <div class="product-price-row">
+          <span class="product-price">Rs. ${Number(p.price).toLocaleString('en-PK')}</span>
+          ${oldPriceHtml}
+        </div>
+        <div class="product-actions">
+          <a href="${prodUrl}" class="btn-card-view">View Details</a>
+          <button type="button" class="btn-card-cart btn-quick-add ${isOut ? 'btn-disabled' : ''}" 
+            data-id="${canonicalId}" 
+            data-name="${p.productName}" 
+            data-price="${p.price}" 
+            data-category="${p.category || 'Fashion'}" 
+            data-image="${prodImg}" 
+            data-url="${prodUrl}"
+            ${isOut ? 'disabled' : ''}>
+            ${isOut ? '✕ Sold Out' : '🛒 Add'}
+          </button>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+
+    const btn = card.querySelector('.btn-quick-add');
+    if (btn && !isOut) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof window.addToCart === 'function') {
+          const res = window.addToCart({
+            id: canonicalId,
+            name: p.productName,
+            price: Number(p.price),
+            image: prodImg,
+            category: p.category || 'Fashion',
+            url: prodUrl
+          }, 1, stock);
+          if (res !== false) {
+            btn.innerHTML = '✓ Added!';
+            btn.classList.add('btn-added-feedback');
+            setTimeout(() => {
+              btn.innerHTML = '🛒 Add';
+              btn.classList.remove('btn-added-feedback');
+            }, 1200);
+          }
+        }
+      });
+    }
+  });
+}
+
 
 // --- Product Detail Page Initializer with Real-time Firestore Stock ---
 function initProductDetailPage(config) {

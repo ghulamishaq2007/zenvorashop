@@ -8,9 +8,15 @@ import {
   getMember,
   getMemberPurchases,
   normalizeMembershipCode,
-  db
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  checkProductHasOrders,
+  uploadProductImage,
+  db,
+  storage
 } from "./firebase-service.js";
-import { canonicalizeProductId, INITIAL_PRODUCTS } from "./firebase-config.js";
+import { canonicalizeProductId, INITIAL_PRODUCTS, generateProductSlug } from "./firebase-config.js";
 
 // Attach core Firebase functions to window for global browser access
 if (typeof window !== 'undefined') {
@@ -25,9 +31,17 @@ if (typeof window !== 'undefined') {
     getMemberPurchases,
     normalizeMembershipCode,
     canonicalizeProductId,
+    generateProductSlug,
     INITIAL_PRODUCTS,
-    db
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    checkProductHasOrders,
+    uploadProductImage,
+    db,
+    storage
   };
+
 
   // Suppress benign network abort errors (triggered on normal page navigation, window unload, or stream close)
   window.addEventListener('unhandledrejection', (event) => {

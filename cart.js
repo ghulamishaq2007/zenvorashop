@@ -40,7 +40,11 @@ const PRODUCT_URLS = {
 
 function resolveProductUrl(item) {
   const id = String(item?.id || "").trim();
-  return PRODUCT_URLS[id] || String(item?.url || "").trim() || "index.html";
+  if (PRODUCT_URLS[id]) return PRODUCT_URLS[id];
+  const url = String(item?.url || "").trim();
+  if (url && url !== "index.html") return url;
+  if (id) return `product.html?id=${encodeURIComponent(id)}`;
+  return "index.html";
 }
 
 // --- Core Cart Data Functions ---
@@ -178,6 +182,7 @@ function addToCart(product, quantityToAdd = 1, maxStock = null) {
     existingProduct.quantity = currentQty + qty;
     if (product.price) existingProduct.price = Number(product.price);
     if (product.image) existingProduct.image = product.image;
+    if (product.sku) existingProduct.sku = product.sku;
     if (typeof maxStock === 'number') existingProduct.maxStock = maxStock;
   } else {
     cart.push({
@@ -189,7 +194,8 @@ function addToCart(product, quantityToAdd = 1, maxStock = null) {
       category: product.category || 'Fashion',
       size: product.size || 'Standard',
       color: product.color || 'Standard',
-      url: product.url || 'index.html',
+      sku: product.sku || '',
+      url: product.url || `product.html?id=${encodeURIComponent(product.id)}`,
       maxStock: (typeof maxStock === 'number' ? maxStock : null)
     });
   }

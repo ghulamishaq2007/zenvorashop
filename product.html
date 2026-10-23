@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="./error-guard.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | ZENVORA SHOOP</title>
+  <meta name="description" content="Shop authentic Pakistani fashion at ZENVORA SHOOP with Cash on Delivery and easy WhatsApp ordering.">
+  <meta name="keywords" content="Pakistani fashion, ladies suits, gents suits, sandals, ZENVORA SHOOP">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css?v=20261023">
+  <link rel="manifest" href="./manifest.webmanifest">
+
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#111111">
+  <meta name="author" content="ZENVORA SHOOP">
+  <link id="dynamic-canonical" rel="canonical" href="https://zenvorashoop.netlify.app/product.html">
+
+  <meta id="dynamic-og-type" property="og:type" content="product">
+  <meta id="dynamic-og-title" property="og:title" content="Product Details | ZENVORA SHOOP">
+  <meta id="dynamic-og-desc" property="og:description" content="Shop authentic Pakistani fashion online with Cash on Delivery Pakistan.">
+  <meta id="dynamic-og-img" property="og:image" content="https://zenvorashoop.netlify.app/icon-512.png">
+  <meta id="dynamic-og-url" property="og:url" content="https://zenvorashoop.netlify.app/product.html">
+
+  <script id="schema-product" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "ZENVORA SHOOP Product",
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "PKR",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+
+  <style>
+    .variant-swatches-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .variant-swatch-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.85rem;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 9999px;
+      background: #FFFFFF;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .variant-swatch-card:hover {
+      border-color: #D4AF37;
+      transform: translateY(-1px);
+    }
+    .variant-swatch-card.active {
+      border-color: #111827;
+      background: #111827;
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+    .variant-swatch-card.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      border-color: #E5E7EB;
+      background: #F9FAFB;
+      text-decoration: line-through;
+    }
+    .variant-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .variant-stock-hint {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      font-weight: 500;
+      margin-left: 0.15rem;
+    }
+    .discount-pill {
+      display: inline-block;
+      background: #FEF2F2;
+      color: #DC2626;
+      border: 1px solid #FCA5A5;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .product-loading-container,
+    .product-not-found-container {
+      text-align: center;
+      padding: 5rem 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .product-specs-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .product-spec-item {
+      background: #F9FAFB;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #F3F4F6;
+      font-size: 0.88rem;
+    }
+    .product-spec-item strong {
+      color: #111827;
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-bar-left">
+        <div class="top-bar-item"><span>📍 Karachi Delivery Exclusive</span></div>
+        <div class="top-bar-item"><span>⚡ 2-3 Days Fast Doorstep Delivery</span></div>
+      </div>
+      <div class="top-bar-right">
+        <button type="button" id="download-app-btn" class="download-app-link" aria-label="Download ZENVORA SHOOP App">
+          <span aria-hidden="true">⇩</span> Download App
+        </button>
+        <div class="top-bar-item top-bar-whatsapp">
+          <a href="https://wa.me/923232974451" class="top-bar-link top-bar-wa-btn" target="_blank" rel="noopener" aria-label="WhatsApp Orders: 03232974451">
+            <span class="top-bar-wa-icon" aria-hidden="true">💬</span>
+            <span class="top-bar-wa-label">WhatsApp Orders:</span>
+            <span class="top-bar-wa-number">03232974451</span>
+          </a>
+        </div>
+        <div class="top-social-wrap" style="display: flex; gap: 0.75rem; margin-left: 0.5rem;">
+          <a href="https://www.facebook.com/zenvorashoop/" target="_blank" rel="noopener" class="top-social-link" title="Facebook">FB</a>
+          <a href="https://www.instagram.com/zenvorashoop/?hl=en" target="_blank" rel="noopener" class="top-social-link" title="Instagram">IG</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-title">ZENVORA <span>SHOOP</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-menu" id="nav-menu">
+          <li class="mobile-nav-header">
+            <span class="mobile-nav-title">ZENVORA <span>SHOOP</span></span>
+            <button type="button" class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
+          </li>
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html#products" class="nav-link">Categories</a></li>
+          <li><a href="my-order.html" class="nav-link">Track Order</a></li>
+          <li><a href="membership.html" class="nav-link">VIP Club</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-icon-btn" title="View Shopping Cart">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          <span class="cart-badge">0</span>
+        </a>
+        <button class="hamburger" id="hamburger-btn" type="button" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Product Viewport -->
+  <main id="main-content">
+    
+    <!-- Loading State Placeholder -->
+    <div id="product-loading-view" class="product-loading-container">
+      <div style="font-size: 2.5rem; margin-bottom: 1rem; animation: pulse 1.5s infinite;">⏳</div>
+      <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: #111827;">Loading Product Details...</h2>
+      <p style="color: #6B7280; font-size: 0.9rem;">Connecting to ZENVORA SHOOP catalogue...</p>
+    </div>
+
+    <!-- Product Not Found / Draft State -->
+    <div id="product-error-view" class="product-not-found-container" style="display: none;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🛍️</div>
+      <h2 style="font-family: var(--font-serif); font-size: 1.75rem; color: #111827; margin-bottom: 0.5rem;" id="error-heading">
+        Product Not Found
+      </h2>
+      <p style="color: #6B7280; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;" id="error-message">
+        The requested product could not be located in our active catalogue or is currently being prepared for launch.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="index.html#products" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+          Browse All Collections
+        </a>
+        <a href="https://wa.me/923232974451?text=Hi%20ZENVORA%20SHOOP,%20I%20am%20looking%20for%20a%20product" target="_blank" class="btn btn-outline" style="padding: 0.75rem 1.5rem;">
+          Inquire on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- Active Product Display -->
+    <section id="product-main-view" class="section" style="display: none; padding-top: 1.5rem;">
+      <div class="container">
+        
+        <!-- Breadcrumb navigation -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="breadcrumb-separator">/</span>
+          <a href="index.html#products" id="breadcrumb-category">Fashion</a>
+          <span class="breadcrumb-separator">/</span>
+          <span id="breadcrumb-current-name" style="color: var(--primary); font-weight: 600;">Product</span>
+        </nav>
+
+        <div class="product-detail-layout">
+          
+          <!-- Image Gallery Column -->
+          <div class="gallery-container">
+            <div class="main-image-wrap" style="position: relative; overflow: hidden; border-radius: 12px; background: #F9FAFB; border: 1px solid #E5E7EB;">
+              <img id="gallery-main-img" src="./icon-192.png" alt="Product Image" loading="eager" style="width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block; margin: 0 auto;">
+              <div id="image-badge-overlay" style="position: absolute; top: 12px; left: 12px; display: none;"></div>
+            </div>
+            <div class="thumbnails-row" id="gallery-thumbnails" style="display: flex; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto; padding-bottom: 0.25rem;">
+              <!-- Dynamic thumbnails -->
+            </div>
+          </div>
+
+          <!-- Product Purchase Panel -->
+          <div class="product-info-panel">
+            <div>
+              <span class="product-detail-category" id="product-category">Pakistani Fashion</span>
+              <h1 class="product-detail-title" id="product-title" style="font-size: 1.85rem; line-height: 1.25; margin: 0.35rem 0 0.5rem;">Product Name</h1>
+              <div id="product-sku-row" style="font-size: 0.8rem; color: #6B7280; font-family: monospace; margin-bottom: 0.5rem; display: none;">
+                SKU: <span id="product-sku-display"></span>
+              </div>
+            </div>
+
+            <!-- Price with discount badge -->
+            <div class="price-box" style="margin-bottom: 1rem;">
+              <div class="detail-price-wrap" style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+                <span class="detail-current-price" id="product-price" style="font-size: 1.8rem; font-weight: 800; color: #111827;">Rs. 0</span>
+                <span class="detail-original-price" id="product-old-price" style="text-decoration: line-through; color: #9CA3AF; font-size: 1.15rem; display: none;"></span>
+                <span class="discount-pill" id="product-discount-badge" style="display: none;"></span>
+              </div>
+              <!-- Real-time Stock Badge -->
+              <div id="product-stock-badge" class="stock-status-badge in-stock" style="margin-top: 0.5rem;">
+                <span class="stock-dot"></span><span class="stock-text" id="stock-badge-text">Checking stock...</span>
+              </div>
+            </div>
+
+            <p class="product-short-desc" id="product-short-description" style="color: #4B5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;"></p>
+
+            <!-- Colour Variants Selector (Section 4) -->
+            <div class="option-group" id="variant-color-group" style="margin-bottom: 1.25rem; display: none;">
+              <div class="option-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <span style="font-weight: 700; font-size: 0.9rem; color: #111827;">Selected Colour:</span>
+                <strong id="selected-color-label" style="color: #D4AF37; font-size: 0.95rem;"></strong>
+              </div>
+              <div class="variant-swatches-grid" id="color-swatches-container">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+            <!-- Size Selector (Optional) -->
+            <div class="option-group" id="variant-size-group" style="margin-bottom: 1.25rem; display: none;">
+              <div class="option-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <span style="font-weight: 700; font-size: 0.9rem; color: #111827;">Select Size:</span>
+                <strong id="selected-size-label" style="color: #111827; font-size: 0.95rem;">Standard</strong>
+              </div>
+              <div class="size-selector" id="size-selector-container">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+
+            <!-- Quantity & Actions -->
+            <div class="quantity-actions-wrap" style="margin-top: 1.5rem;">
+              <div class="quantity-control-row" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 0.9rem; font-weight: 700; color: #111827;">Quantity:</span>
+                <div class="quantity-picker" style="display: inline-flex; border: 1.5px solid #D1D5DB; border-radius: 8px; overflow: hidden; background: #FFF;">
+                  <button type="button" class="qty-btn" id="qty-minus" style="width: 38px; height: 38px; font-size: 1.1rem; border: none; background: #F9FAFB; cursor: pointer;">−</button>
+                  <input type="number" class="qty-input" id="product-qty-input" value="1" min="1" style="width: 50px; height: 38px; border: none; text-align: center; font-weight: 700; font-size: 0.95rem;">
+                  <button type="button" class="qty-btn" id="qty-plus" style="width: 38px; height: 38px; font-size: 1.1rem; border: none; background: #F9FAFB; cursor: pointer;">+</button>
+                </div>
+                <span id="variant-avail-stock-text" style="font-size: 0.8rem; color: #6B7280;"></span>
+              </div>
+
+              <div class="detail-btn-row" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-dark" id="btn-add-to-cart" style="flex: 1; min-width: 160px; padding: 0.9rem 1.25rem; font-size: 0.95rem; font-weight: 700;">
+                  🛒 Add to Cart
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-buy-now" style="flex: 1; min-width: 160px; padding: 0.9rem 1.25rem; font-size: 0.95rem; font-weight: 700;">
+                  ⚡ Buy Now (COD)
+                </button>
+              </div>
+            </div>
+
+            <!-- Store Trust Badges -->
+            <div class="trust-badges-panel" style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem;">
+              <div class="trust-badge-item">
+                <i style="font-size: 1.2rem; font-style: normal;">🚚</i>
+                <span>Fast Karachi Delivery (2-3 Days)</span>
+              </div>
+              <div class="trust-badge-item">
+                <i style="font-size: 1.2rem; font-style: normal;">💵</i>
+                <span>Cash on Delivery (COD)</span>
+              </div>
+              <div class="trust-badge-item">
+                <i style="font-size: 1.2rem; font-style: normal;">💬</i>
+                <span>WhatsApp 03232974451</span>
+              </div>
+              <div class="trust-badge-item">
+                <i style="font-size: 1.2rem; font-style: normal;">✨</i>
+                <span>100% Authentic Quality</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Tabbed Information Sections -->
+        <div class="product-tabs" style="margin-top: 3.5rem;">
+          <div class="tab-headers">
+            <button type="button" class="tab-btn active" data-tab="desc">Full Description & Details</button>
+            <button type="button" class="tab-btn" data-tab="shipping">Delivery & COD Policy</button>
+          </div>
+
+          <div class="tab-pane active" id="tab-desc">
+            <div id="product-full-description" style="line-height: 1.7; color: #374151; white-space: pre-line; font-size: 0.95rem;"></div>
+
+            <!-- Features & Specs Bullets -->
+            <div id="product-features-wrap" style="margin-top: 1.5rem; display: none;">
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">Key Specifications & Highlights</h3>
+              <ul id="product-features-list" style="margin: 0.5rem 0 0 1.25rem; color: #4B5563; line-height: 1.7;"></ul>
+            </div>
+
+            <div class="product-specs-list" id="product-specs-container">
+              <!-- Injected details -->
+            </div>
+          </div>
+
+          <div class="tab-pane" id="tab-shipping">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">Cash on Delivery & Karachi Fast Delivery</h3>
+            <p id="product-shipping-text" style="color: #4B5563; line-height: 1.7;">
+              ZENVORA SHOOP provides express doorstep delivery across Karachi (typically dispatched and delivered in 2 to 3 working days). Pay conveniently via Cash on Delivery (COD) upon receiving your parcel.
+            </p>
+            <p style="color: #4B5563; line-height: 1.7; margin-top: 0.75rem;">
+              <strong>Customer Support & Verification:</strong> All orders are confirmed swiftly via WhatsApp. For any custom sizing questions, color confirmation, or urgent dispatches, message our direct line at <strong>0323 2974451</strong>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>© 2026 ZENVORA SHOOP. All Rights Reserved. | WhatsApp: 03232974451</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/923232974451" class="floating-whatsapp-btn" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <svg class="whatsapp-icon" viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true">
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2ZM12.04 3.67C14.24 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.66 20.16 9.3 19.8 8.1 19.09L7.81 18.92L4.69 19.74L5.52 16.7L5.33 16.4C4.55 15.16 4.14 13.56 4.14 11.92C4.14 7.38 7.84 3.67 12.04 3.67Z"/>
+    </svg>
+    <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+  </a>
+
+  <!-- Back to Top Button -->
+  <button type="button" class="back-to-top-btn" id="back-to-top-btn" aria-label="Back to top">
+    <svg class="back-to-top-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+    <span class="back-to-top-tooltip">Back to top</span>
+  </button>
+
+  <!-- Firebase Scripts -->
+  <script type="module" src="./firebase-bridge.js"></script>
+  <script src="./cart.js?v=20261023"></script>
+  <script src="./script.js?v=20261023"></script>
+  <script src="./app-install-v2.js?v=20261023"></script>
+
+  <!-- Dynamic Product Renderer -->
+  <script type="module">
+    import { getProduct, subscribeToProduct, db, collection, getDocs, query, where, limit } from "./firebase-service.js";
+    import { canonicalizeProductId } from "./firebase-config.js";
+
+    let currentProduct = null;
+    let selectedVariant = null;
+    let selectedSize = "Standard";
+    let selectedQty = 1;
+    let unsubscribeStockListener = null;
+
+    // Extract product key from URL search param or clean path
+    function getProductTargetIdentifier() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryId = urlParams.get('id') || urlParams.get('productId') || urlParams.get('slug');
+      if (queryId) return String(queryId).trim();
+
+      const path = window.location.pathname;
+      const parts = path.split('/').filter(Boolean);
+      // Handles /product/my-slug or /p/my-slug
+      if (parts.length >= 2 && (parts[0] === 'product' || parts[0] === 'p')) {
+        return decodeURIComponent(parts[1]).replace(/\.html$/i, '');
+      }
+      return null;
+    }
+
+    async function loadDynamicProduct() {
+      const identifier = getProductTargetIdentifier();
+      const loadingEl = document.getElementById('product-loading-view');
+      const errorEl = document.getElementById('product-error-view');
+      const mainEl = document.getElementById('product-main-view');
+
+      if (!identifier) {
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (errorEl) errorEl.style.display = 'block';
+        return;
+      }
+
+      const canonicalId = canonicalizeProductId(identifier);
+
+      try {
+        let productData = null;
+
+        // 1. Try direct ID lookup
+        const docResult = await getProduct(canonicalId);
+        if (docResult && docResult.exists) {
+          productData = docResult;
+        } else {
+          // 2. Try slug query if direct ID didn't hit
+          try {
+            const q = query(collection(db, "products"), where("slug", "==", identifier), limit(1));
+            const querySnap = await getDocs(q);
+            if (!querySnap.empty) {
+              const d = querySnap.docs[0];
+              productData = { productId: d.id, exists: true, ...d.data() };
+            }
+          } catch (qErr) {
+            console.warn("Slug query fallback notice:", qErr);
+          }
+        }
+
+        if (!productData || !productData.exists) {
+          if (loadingEl) loadingEl.style.display = 'none';
+          if (errorEl) errorEl.style.display = 'block';
+          return;
+        }
+
+        // Check if Draft
+        if (productData.status === 'draft') {
+          // Allow viewing if admin is authenticated
+          const isAdmin = window.zenvoraFirebase && window.zenvoraFirebase.auth && window.zenvoraFirebase.auth.currentUser;
+          if (!isAdmin) {
+            if (loadingEl) loadingEl.style.display = 'none';
+            if (errorEl) {
+              document.getElementById('error-heading').textContent = 'Product Launching Soon';
+              document.getElementById('error-message').textContent = 'This product is currently in draft preview and will be available to customers shortly.';
+              errorEl.style.display = 'block';
+            }
+            return;
+          }
+        }
+
+        currentProduct = productData;
+        renderProductData(productData);
+
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (mainEl) mainEl.style.display = 'block';
+
+        // Real-time stock listener for authoritative updates
+        unsubscribeStockListener = subscribeToProduct(productData.productId, (freshData) => {
+          if (freshData && freshData.exists) {
+            currentProduct = { ...currentProduct, ...freshData };
+            updateRealtimeStock(currentProduct);
+          }
+        });
+
+      } catch (err) {
+        console.error("Failed to load dynamic product:", err);
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (errorEl) {
+          document.getElementById('error-message').textContent = 'Unable to load product information right now: ' + err.message;
+          errorEl.style.display = 'block';
+        }
+      }
+    }
+
+    function renderProductData(p) {
+      // 1. Page Title & Meta Tags
+      const pageTitle = (p.seo && p.seo.metaTitle) || `${p.productName} | ZENVORA SHOOP`;
+      const metaDesc = (p.seo && p.seo.metaDescription) || p.shortDescription || `Shop ${p.productName} at ZENVORA SHOOP with Cash on Delivery Pakistan.`;
+      document.title = pageTitle;
+
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) descMeta.setAttribute('content', metaDesc);
+
+      const canonicalLink = document.getElementById('dynamic-canonical');
+      if (canonicalLink) canonicalLink.href = (p.seo && p.seo.canonicalUrl) || window.location.href;
+
+      // OpenGraph
+      const ogTitle = document.getElementById('dynamic-og-title');
+      if (ogTitle) ogTitle.content = (p.seo && p.seo.ogTitle) || pageTitle;
+      const ogDesc = document.getElementById('dynamic-og-desc');
+      if (ogDesc) ogDesc.content = (p.seo && p.seo.ogDescription) || metaDesc;
+      const ogImg = document.getElementById('dynamic-og-img');
+      if (ogImg) ogImg.content = (p.seo && p.seo.ogImage) || p.image || '';
+
+      // JSON-LD Product Schema
+      const schemaEl = document.getElementById('schema-product');
+      if (schemaEl) {
+        const schemaObj = {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": p.productName,
+          "image": Array.isArray(p.images) && p.images.length > 0 ? p.images : [p.image],
+          "description": p.description || p.shortDescription || metaDesc,
+          "sku": p.sku || p.productId,
+          "brand": {
+            "@type": "Brand",
+            "name": p.brand || "ZENVORA SHOOP"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": window.location.href,
+            "priceCurrency": "PKR",
+            "price": p.price,
+            "availability": (p.stock > 0 && p.status !== 'out_of_stock') ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        };
+        schemaEl.textContent = JSON.stringify(schemaObj);
+      }
+
+      // Breadcrumb & Headings
+      document.getElementById('breadcrumb-current-name').textContent = p.productName;
+      const catEl = document.getElementById('breadcrumb-category');
+      if (catEl) {
+        catEl.textContent = p.category || 'Fashion';
+        catEl.href = `index.html?category=${encodeURIComponent(p.category || 'Fashion')}#products`;
+      }
+      document.getElementById('product-category').textContent = p.category || 'Pakistani Fashion';
+      document.getElementById('product-title').textContent = p.productName;
+
+      if (p.sku) {
+        document.getElementById('product-sku-row').style.display = 'block';
+        document.getElementById('product-sku-display').textContent = p.sku;
+      }
+
+      // Price & Discount
+      updatePriceDisplay(p.price, p.originalPrice);
+
+      // Short & Full Description
+      document.getElementById('product-short-description').textContent = p.shortDescription || '';
+      document.getElementById('product-full-description').textContent = p.description || p.shortDescription || 'Authentic Pakistani fashion by ZENVORA SHOOP.';
+
+      // Specifications & Features
+      const specsContainer = document.getElementById('product-specs-container');
+      specsContainer.innerHTML = '';
+      if (p.fabric) {
+        specsContainer.innerHTML += `<div class="product-spec-item"><strong>Fabric / Material</strong>${p.fabric}</div>`;
+      }
+      if (p.brand) {
+        specsContainer.innerHTML += `<div class="product-spec-item"><strong>Brand</strong>${p.brand}</div>`;
+      }
+      if (p.category) {
+        specsContainer.innerHTML += `<div class="product-spec-item"><strong>Category</strong>${p.category}</div>`;
+      }
+      specsContainer.innerHTML += `<div class="product-spec-item"><strong>Payment</strong>Cash on Delivery (COD)</div>`;
+      specsContainer.innerHTML += `<div class="product-spec-item"><strong>Delivery</strong>Karachi 2-3 Days</div>`;
+
+      // Features list
+      if (Array.isArray(p.features) && p.features.length > 0) {
+        const featWrap = document.getElementById('product-features-wrap');
+        const featList = document.getElementById('product-features-list');
+        featList.innerHTML = p.features.map(f => `<li>${f}</li>`).join('');
+        featWrap.style.display = 'block';
+      }
+
+      if (p.shippingInfo) {
+        const shipEl = document.getElementById('product-shipping-text');
+        if (shipEl) shipEl.textContent = p.shippingInfo;
+      }
+
+      // 2. Image Gallery Setup
+      setupGallery(p);
+
+      // 3. Colour Variants Setup (Section 4)
+      setupVariants(p);
+
+      // 4. Size Selection Setup
+      setupSizes(p);
+
+      // 5. Quantity & Actions Handlers
+      setupQuantityAndActions(p);
+
+      // Initial Stock UI
+      updateRealtimeStock(p);
+    }
+
+    function updatePriceDisplay(sellingPrice, originalPrice) {
+      const priceEl = document.getElementById('product-price');
+      const oldPriceEl = document.getElementById('product-old-price');
+      const discountPill = document.getElementById('product-discount-badge');
+
+      priceEl.textContent = 'Rs. ' + Number(sellingPrice).toLocaleString('en-PK');
+
+      if (typeof originalPrice === 'number' && originalPrice > sellingPrice) {
+        oldPriceEl.textContent = 'Rs. ' + Number(originalPrice).toLocaleString('en-PK');
+        oldPriceEl.style.display = 'inline';
+        const percent = Math.round(((originalPrice - sellingPrice) / originalPrice) * 100);
+        discountPill.textContent = `${percent}% OFF`;
+        discountPill.style.display = 'inline-block';
+      } else {
+        oldPriceEl.style.display = 'none';
+        discountPill.style.display = 'none';
+      }
+    }
+
+    function setupGallery(p) {
+      const mainImg = document.getElementById('gallery-main-img');
+      const thumbRow = document.getElementById('gallery-thumbnails');
+      const images = Array.isArray(p.images) && p.images.length > 0 ? p.images : [p.image || './icon-192.png'];
+
+      mainImg.src = images[0];
+      mainImg.alt = p.productName;
+
+      thumbRow.innerHTML = '';
+      images.forEach((imgUrl, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `thumbnail-btn ${idx === 0 ? 'active' : ''}`;
+        btn.style.width = '64px';
+        btn.style.height = '64px';
+        btn.style.padding = '0';
+        btn.style.borderRadius = '8px';
+        btn.style.border = '2px solid transparent';
+        btn.style.overflow = 'hidden';
+        btn.style.cursor = 'pointer';
+        btn.style.background = '#F9FAFB';
+        btn.innerHTML = `<img src="${imgUrl}" alt="view ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover;">`;
+
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.thumbnail-btn').forEach(b => {
+            b.classList.remove('active');
+            b.style.borderColor = 'transparent';
+          });
+          btn.classList.add('active');
+          btn.style.borderColor = '#D4AF37';
+          mainImg.style.opacity = '0.4';
+          setTimeout(() => {
+            mainImg.src = imgUrl;
+            mainImg.style.opacity = '1';
+          }, 120);
+        });
+
+        thumbRow.appendChild(btn);
+      });
+    }
+
+    function setupVariants(p) {
+      const groupEl = document.getElementById('variant-color-group');
+      const container = document.getElementById('color-swatches-container');
+      const labelEl = document.getElementById('selected-color-label');
+
+      if (!Array.isArray(p.variants) || p.variants.length === 0) {
+        groupEl.style.display = 'none';
+        selectedVariant = null;
+        return;
+      }
+
+      groupEl.style.display = 'block';
+      container.innerHTML = '';
+
+      // Pick first enabled variant
+      const firstEnabled = p.variants.find(v => v.enabled !== false && (Number(v.stock) || 0) > 0) || p.variants[0];
+      selectedVariant = firstEnabled;
+      labelEl.textContent = firstEnabled ? firstEnabled.name : 'Standard';
+
+      p.variants.forEach(variant => {
+        const vStock = Number(variant.stock) || 0;
+        const isOut = variant.enabled === false || vStock <= 0;
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = `variant-swatch-card ${variant === selectedVariant ? 'active' : ''} ${isOut ? 'disabled' : ''}`;
+        card.innerHTML = `
+          <span class="variant-dot" style="background: ${variant.hex || '#111111'};"></span>
+          <span>${variant.name}</span>
+          <span class="variant-stock-hint">${isOut ? '(Out of Stock)' : `(${vStock})`}</span>
+        `;
+
+        card.addEventListener('click', () => {
+          if (variant.enabled === false) return;
+          selectedVariant = variant;
+          labelEl.textContent = variant.name;
+
+          document.querySelectorAll('.variant-swatch-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+
+          // If variant has its own image, swap gallery hero
+          if (variant.image) {
+            const mainImg = document.getElementById('gallery-main-img');
+            if (mainImg) {
+              mainImg.style.opacity = '0.4';
+              setTimeout(() => {
+                mainImg.src = variant.image;
+                mainImg.style.opacity = '1';
+              }, 120);
+            }
+          }
+
+          // Update variant-specific price if set
+          if (typeof variant.price === 'number' && variant.price > 0) {
+            updatePriceDisplay(variant.price, p.originalPrice);
+          } else {
+            updatePriceDisplay(p.price, p.originalPrice);
+          }
+
+          updateRealtimeStock(currentProduct);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    function setupSizes(p) {
+      const groupEl = document.getElementById('variant-size-group');
+      const container = document.getElementById('size-selector-container');
+      const labelEl = document.getElementById('selected-size-label');
+
+      if (!Array.isArray(p.sizes) || p.sizes.length === 0) {
+        groupEl.style.display = 'none';
+        selectedSize = 'Standard';
+        return;
+      }
+
+      groupEl.style.display = 'block';
+      container.innerHTML = '';
+      selectedSize = p.sizes[0];
+      labelEl.textContent = selectedSize;
+
+      p.sizes.forEach((s, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `size-btn ${idx === 0 ? 'active' : ''}`;
+        btn.textContent = s;
+
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedSize = s;
+          labelEl.textContent = s;
+        });
+
+        container.appendChild(btn);
+      });
+    }
+
+    function updateRealtimeStock(p) {
+      const badge = document.getElementById('product-stock-badge');
+      const badgeText = document.getElementById('stock-badge-text');
+      const qtyInput = document.getElementById('product-qty-input');
+      const qtyPlus = document.getElementById('qty-plus');
+      const qtyMinus = document.getElementById('qty-minus');
+      const addBtn = document.getElementById('btn-add-to-cart');
+      const buyBtn = document.getElementById('btn-buy-now');
+      const availText = document.getElementById('variant-avail-stock-text');
+
+      let currentAvail = 0;
+      let isOut = false;
+
+      if (selectedVariant) {
+        // Find latest variant from fresh product data
+        const freshVar = Array.isArray(p.variants) 
+          ? p.variants.find(v => v.name && v.name.toLowerCase() === selectedVariant.name.toLowerCase())
+          : selectedVariant;
+        currentAvail = (freshVar && typeof freshVar.stock === 'number') ? freshVar.stock : 0;
+        isOut = freshVar ? (freshVar.enabled === false || currentAvail <= 0) : true;
+        availText.textContent = isOut ? `(${selectedVariant.name} sold out)` : `(${currentAvail} available in ${selectedVariant.name})`;
+      } else {
+        currentAvail = typeof p.stock === 'number' ? p.stock : 0;
+        isOut = p.status === 'out_of_stock' || currentAvail <= 0;
+        availText.textContent = isOut ? `(Sold out)` : `(${currentAvail} available)`;
+      }
+
+      if (isOut || currentAvail <= 0) {
+        badge.className = 'stock-status-badge out-of-stock';
+        badgeText.textContent = selectedVariant ? `${selectedVariant.name} - Out of Stock` : 'Out of Stock';
+        qtyInput.value = '0';
+        qtyInput.disabled = true;
+        qtyMinus.disabled = true;
+        qtyPlus.disabled = true;
+        addBtn.disabled = true;
+        addBtn.classList.add('btn-disabled');
+        addBtn.textContent = 'Out of Stock';
+        buyBtn.disabled = true;
+        buyBtn.classList.add('btn-disabled');
+        buyBtn.textContent = 'Out of Stock';
+      } else {
+        badge.className = 'stock-status-badge in-stock';
+        if (currentAvail <= 2) {
+          badge.className = 'stock-status-badge low-stock';
+          badgeText.textContent = selectedVariant ? `Only ${currentAvail} left in ${selectedVariant.name}!` : `Only ${currentAvail} left in stock!`;
+        } else {
+          badgeText.textContent = selectedVariant ? `${currentAvail} in stock (${selectedVariant.name})` : `${currentAvail} in stock`;
+        }
+
+        qtyInput.disabled = false;
+        qtyInput.setAttribute('max', String(currentAvail));
+        let curVal = parseInt(qtyInput.value, 10);
+        if (isNaN(curVal) || curVal < 1) curVal = 1;
+        if (curVal > currentAvail) curVal = currentAvail;
+        qtyInput.value = String(curVal);
+        selectedQty = curVal;
+
+        qtyMinus.disabled = curVal <= 1;
+        qtyPlus.disabled = curVal >= currentAvail;
+
+        addBtn.disabled = false;
+        addBtn.classList.remove('btn-disabled');
+        addBtn.textContent = '🛒 Add to Cart';
+
+        buyBtn.disabled = false;
+        buyBtn.classList.remove('btn-disabled');
+        buyBtn.textContent = '⚡ Buy Now (COD)';
+      }
+    }
+
+    function setupQuantityAndActions(p) {
+      const qtyInput = document.getElementById('product-qty-input');
+      const qtyPlus = document.getElementById('qty-plus');
+      const qtyMinus = document.getElementById('qty-minus');
+      const addBtn = document.getElementById('btn-add-to-cart');
+      const buyBtn = document.getElementById('btn-buy-now');
+
+      function getMaxStock() {
+        if (selectedVariant) {
+          const freshVar = Array.isArray(currentProduct?.variants)
+            ? currentProduct.variants.find(v => v.name && v.name.toLowerCase() === selectedVariant.name.toLowerCase())
+            : selectedVariant;
+          return (freshVar && typeof freshVar.stock === 'number') ? freshVar.stock : 0;
+        }
+        return typeof currentProduct?.stock === 'number' ? currentProduct.stock : 0;
+      }
+
+      qtyMinus.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value, 10) || 1;
+        if (val > 1) {
+          val--;
+          qtyInput.value = String(val);
+          selectedQty = val;
+          updateRealtimeStock(currentProduct);
+        }
+      });
+
+      qtyPlus.addEventListener('click', () => {
+        const max = getMaxStock();
+        let val = parseInt(qtyInput.value, 10) || 1;
+        if (val < max) {
+          val++;
+          qtyInput.value = String(val);
+          selectedQty = val;
+          updateRealtimeStock(currentProduct);
+        }
+      });
+
+      qtyInput.addEventListener('change', () => {
+        const max = getMaxStock();
+        let val = parseInt(qtyInput.value, 10);
+        if (isNaN(val) || val < 1) val = 1;
+        if (val > max) val = max;
+        qtyInput.value = String(val);
+        selectedQty = val;
+        updateRealtimeStock(currentProduct);
+      });
+
+      async function executeAddToCart(isBuyNow = false) {
+        const maxStock = getMaxStock();
+        if (maxStock <= 0) {
+          if (typeof showToast === 'function') showToast('Sorry, this selection is currently out of stock.', 'danger');
+          return;
+        }
+
+        const colorName = selectedVariant ? selectedVariant.name : 'Standard';
+        const itemImage = (selectedVariant && selectedVariant.image) 
+          ? selectedVariant.image 
+          : (Array.isArray(p.images) && p.images.length > 0 ? p.images[0] : p.image);
+        const itemPrice = (selectedVariant && typeof selectedVariant.price === 'number' && selectedVariant.price > 0)
+          ? selectedVariant.price
+          : p.price;
+        const itemSku = (selectedVariant && selectedVariant.sku) ? selectedVariant.sku : (p.sku || p.productId);
+
+        const cartItemPayload = {
+          id: p.productId,
+          name: p.productName,
+          price: Number(itemPrice),
+          image: itemImage,
+          category: p.category || 'Fashion',
+          size: selectedSize || 'Standard',
+          color: colorName,
+          sku: itemSku,
+          url: window.location.pathname + window.location.search
+        };
+
+        if (typeof window.addToCart !== 'function') {
+          console.error("Cart library not loaded");
+          alert('Cart is loading, please try again.');
+          return;
+        }
+
+        const success = window.addToCart(cartItemPayload, selectedQty, maxStock);
+        if (success) {
+          if (isBuyNow) {
+            window.location.href = 'cart.html';
+          }
+        }
+      }
+
+      addBtn.addEventListener('click', () => executeAddToCart(false));
+      buyBtn.addEventListener('click', () => executeAddToCart(true));
+    }
+
+    // Tab switching for Details & Shipping
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(`tab-${btn.dataset.tab}`);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadDynamicProduct);
+    } else {
+      loadDynamicProduct();
+    }
+  </script>
+</body>
+</html>

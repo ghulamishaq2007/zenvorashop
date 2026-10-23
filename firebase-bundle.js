@@ -311,7 +311,7 @@ var getDefaultEmulatorHostnameAndPort = (productName) => {
   }
 };
 var getDefaultAppConfig = () => getDefaults()?.config;
-var getExperimentalSetting = (name4) => getDefaults()?.[`_${name4}`];
+var getExperimentalSetting = (name5) => getDefaults()?.[`_${name5}`];
 var Deferred = class {
   constructor() {
     this.reject = () => {
@@ -491,19 +491,19 @@ function replaceTemplate(template, data) {
     let ptr = 0;
     let result = "";
     while (ptr < template.length) {
-      const start = template.indexOf("{$", ptr);
-      if (start === -1) {
+      const start2 = template.indexOf("{$", ptr);
+      if (start2 === -1) {
         result += template.substring(ptr);
         break;
       }
-      const end = template.indexOf("}", start + 2);
+      const end = template.indexOf("}", start2 + 2);
       if (end === -1) {
         result += template.substring(ptr);
         break;
       }
-      const key = template.substring(start + 2, end);
+      const key = template.substring(start2 + 2, end);
       const value = data[key];
-      result += template.substring(ptr, start) + (value != null ? String(value) : `<${key}?>`);
+      result += template.substring(ptr, start2) + (value != null ? String(value) : `<${key}?>`);
       ptr = end + 1;
     }
     return result;
@@ -765,8 +765,8 @@ var Component = class {
    * @param instanceFactory Service factory responsible for creating the public interface
    * @param type whether the service provided by the component is public or private
    */
-  constructor(name4, instanceFactory, type) {
-    this.name = name4;
+  constructor(name5, instanceFactory, type) {
+    this.name = name5;
     this.instanceFactory = instanceFactory;
     this.type = type;
     this.multipleInstances = false;
@@ -793,8 +793,8 @@ var Component = class {
 };
 var DEFAULT_ENTRY_NAME = "[DEFAULT]";
 var Provider = class {
-  constructor(name4, container) {
-    this.name = name4;
+  constructor(name5, container) {
+    this.name = name5;
     this.container = container;
     this.component = null;
     this.instances = /* @__PURE__ */ new Map();
@@ -997,8 +997,8 @@ function isComponentEager(component) {
   return component.instantiationMode === "EAGER";
 }
 var ComponentContainer = class {
-  constructor(name4) {
-    this.name = name4;
+  constructor(name5) {
+    this.name = name5;
     this.providers = /* @__PURE__ */ new Map();
   }
   /**
@@ -1031,12 +1031,12 @@ var ComponentContainer = class {
    * Firebase SDKs providing services should extend NameServiceMapping interface to register
    * themselves.
    */
-  getProvider(name4) {
-    if (this.providers.has(name4)) {
-      return this.providers.get(name4);
+  getProvider(name5) {
+    if (this.providers.has(name5)) {
+      return this.providers.get(name5);
     }
-    const provider = new Provider(name4, this);
-    this.providers.set(name4, provider);
+    const provider = new Provider(name5, this);
+    this.providers.set(name5, provider);
     return provider;
   }
   getProviders() {
@@ -1090,8 +1090,8 @@ var Logger = class {
    *
    * @param name The name that the logs will be associated with
    */
-  constructor(name4) {
-    this.name = name4;
+  constructor(name5) {
+    this.name = name5;
     this._logLevel = defaultLogLevel;
     this._logHandler = defaultLogHandler;
     this._userLogHandler = null;
@@ -1294,8 +1294,8 @@ function wrap(value) {
 var unwrap = (value) => reverseTransformCache.get(value);
 
 // node_modules/idb/build/index.js
-function openDB(name4, version4, { blocked, upgrade, blocking, terminated } = {}) {
-  const request = indexedDB.open(name4, version4);
+function openDB(name5, version5, { blocked, upgrade, blocking, terminated } = {}) {
+  const request = indexedDB.open(name5, version5);
   const openPromise = wrap(request);
   if (upgrade) {
     request.addEventListener("upgradeneeded", (event) => {
@@ -1467,12 +1467,12 @@ function _registerComponent(component) {
   }
   return true;
 }
-function _getProvider(app, name4) {
+function _getProvider(app, name5) {
   const heartbeatController = app.container.getProvider("heartbeat").getImmediate({ optional: true });
   if (heartbeatController) {
     void heartbeatController.triggerHeartbeat();
   }
-  return app.container.getProvider(name4);
+  return app.container.getProvider(name5);
 }
 function _isFirebaseServerApp(obj) {
   if (obj === null || obj === void 0) {
@@ -1597,18 +1597,18 @@ var SDK_VERSION = version;
 function initializeApp(_options, rawConfig = {}) {
   let options = _options;
   if (typeof rawConfig !== "object") {
-    const name5 = rawConfig;
-    rawConfig = { name: name5 };
+    const name6 = rawConfig;
+    rawConfig = { name: name6 };
   }
   const config = {
     name: DEFAULT_ENTRY_NAME2,
     automaticDataCollectionEnabled: true,
     ...rawConfig
   };
-  const name4 = config.name;
-  if (typeof name4 !== "string" || !name4) {
+  const name5 = config.name;
+  if (typeof name5 !== "string" || !name5) {
     throw ERROR_FACTORY.create("bad-app-name", {
-      appName: String(name4)
+      appName: String(name5)
     });
   }
   options || (options = getDefaultAppConfig());
@@ -1618,18 +1618,18 @@ function initializeApp(_options, rawConfig = {}) {
       /* AppError.NO_OPTIONS */
     );
   }
-  const existingApp = _apps.get(name4);
+  const existingApp = _apps.get(name5);
   if (existingApp) {
     if (!deepEqual(options, existingApp.options)) {
       throw ERROR_FACTORY.create("duplicate-app", {
-        appName: name4,
+        appName: name5,
         mismatchedParam: "options",
         oldValue: JSON.stringify(existingApp.options),
         newValue: JSON.stringify(options)
       });
     } else if (!deepEqual(config, existingApp.config)) {
       throw ERROR_FACTORY.create("duplicate-app", {
-        appName: name4,
+        appName: name5,
         mismatchedParam: "config",
         oldValue: JSON.stringify(existingApp.config),
         newValue: JSON.stringify(config)
@@ -1638,37 +1638,37 @@ function initializeApp(_options, rawConfig = {}) {
       return existingApp;
     }
   }
-  const container = new ComponentContainer(name4);
+  const container = new ComponentContainer(name5);
   for (const component of _components.values()) {
     container.addComponent(component);
   }
   const newApp = new FirebaseAppImpl(options, config, container);
-  _apps.set(name4, newApp);
+  _apps.set(name5, newApp);
   return newApp;
 }
-function getApp(name4 = DEFAULT_ENTRY_NAME2) {
-  const app = _apps.get(name4);
-  if (!app && name4 === DEFAULT_ENTRY_NAME2 && getDefaultAppConfig()) {
+function getApp(name5 = DEFAULT_ENTRY_NAME2) {
+  const app = _apps.get(name5);
+  if (!app && name5 === DEFAULT_ENTRY_NAME2 && getDefaultAppConfig()) {
     return initializeApp();
   }
   if (!app) {
-    throw ERROR_FACTORY.create("no-app", { appName: name4 });
+    throw ERROR_FACTORY.create("no-app", { appName: name5 });
   }
   return app;
 }
 function getApps() {
   return Array.from(_apps.values());
 }
-function registerVersion(libraryKeyOrName, version4, variant) {
+function registerVersion(libraryKeyOrName, version5, variant) {
   let library = PLATFORM_LOG_STRING[libraryKeyOrName] ?? libraryKeyOrName;
   if (variant) {
     library += `-${variant}`;
   }
   const libraryMismatch = library.match(/\s|\//);
-  const versionMismatch = version4.match(/\s|\//);
+  const versionMismatch = version5.match(/\s|\//);
   if (libraryMismatch || versionMismatch) {
     const warning = [
-      `Unable to register library "${library}" with version "${version4}":`
+      `Unable to register library "${library}" with version "${version5}":`
     ];
     if (libraryMismatch) {
       warning.push(`library name "${library}" contains illegal characters (whitespace or "/")`);
@@ -1677,14 +1677,14 @@ function registerVersion(libraryKeyOrName, version4, variant) {
       warning.push("and");
     }
     if (versionMismatch) {
-      warning.push(`version name "${version4}" contains illegal characters (whitespace or "/")`);
+      warning.push(`version name "${version5}" contains illegal characters (whitespace or "/")`);
     }
     logger.warn(warning.join(" "));
     return;
   }
   _registerComponent(new Component(
     `${library}-version`,
-    () => ({ library, version: version4 }),
+    () => ({ library, version: version5 }),
     "VERSION"
     /* ComponentType.VERSION */
   ));
@@ -4488,69 +4488,69 @@ for (let i2 = 0; i2 < ASCII_SIZE; i2++) {
   else ASCII_TO_LOWER[i2] = i2;
 }
 var Codepoint = class {
-  static CODES = /* @__PURE__ */ new Map([
-    ["\x07", 7],
-    ["\b", 8],
-    ["	", 9],
-    ["\n", 10],
-    ["\v", 11],
-    ["\f", 12],
-    ["\r", 13],
-    [" ", 32],
-    ['"', 34],
-    ["$", 36],
-    ["&", 38],
-    ["'", 39],
-    ["(", 40],
-    [")", 41],
-    ["*", 42],
-    ["+", 43],
-    ["-", 45],
-    [".", 46],
-    ["0", 48],
-    ["1", 49],
-    ["2", 50],
-    ["3", 51],
-    ["4", 52],
-    ["5", 53],
-    ["6", 54],
-    ["7", 55],
-    ["8", 56],
-    ["9", 57],
-    [":", 58],
-    ["<", 60],
-    [">", 62],
-    ["?", 63],
-    ["A", 65],
-    ["B", 66],
-    ["C", 67],
-    ["F", 70],
-    ["P", 80],
-    ["Q", 81],
-    ["U", 85],
-    ["Z", 90],
-    ["[", 91],
-    ["\\", 92],
-    ["]", 93],
-    ["^", 94],
-    ["_", 95],
-    ["`", 96],
-    ["a", 97],
-    ["b", 98],
-    ["f", 102],
-    ["i", 105],
-    ["m", 109],
-    ["n", 110],
-    ["r", 114],
-    ["s", 115],
-    ["t", 116],
-    ["v", 118],
-    ["x", 120],
-    ["z", 122],
-    ["{", 123],
-    ["|", 124],
-    ["}", 125]
-  ]);
+  static CODES = Object.freeze({
+    "\x07": 7,
+    "\b": 8,
+    "	": 9,
+    "\n": 10,
+    "\v": 11,
+    "\f": 12,
+    "\r": 13,
+    " ": 32,
+    '"': 34,
+    $: 36,
+    "&": 38,
+    "'": 39,
+    "(": 40,
+    ")": 41,
+    "*": 42,
+    "+": 43,
+    "-": 45,
+    ".": 46,
+    0: 48,
+    1: 49,
+    2: 50,
+    3: 51,
+    4: 52,
+    5: 53,
+    6: 54,
+    7: 55,
+    8: 56,
+    9: 57,
+    ":": 58,
+    "<": 60,
+    ">": 62,
+    "?": 63,
+    A: 65,
+    B: 66,
+    C: 67,
+    F: 70,
+    P: 80,
+    Q: 81,
+    U: 85,
+    Z: 90,
+    "[": 91,
+    "\\": 92,
+    "]": 93,
+    "^": 94,
+    _: 95,
+    "`": 96,
+    a: 97,
+    b: 98,
+    f: 102,
+    i: 105,
+    m: 109,
+    n: 110,
+    r: 114,
+    s: 115,
+    t: 116,
+    v: 118,
+    x: 120,
+    z: 122,
+    "{": 123,
+    "|": 124,
+    "}": 125
+  });
   static toUpperCase(codepoint) {
     if (codepoint < ASCII_SIZE) return ASCII_TO_UPPER[codepoint];
     const s2 = String.fromCodePoint(codepoint).toUpperCase();
@@ -4595,13 +4595,15 @@ var UnicodeRangeTable = class {
     return this.data.length / this.SIZE;
   }
 };
+var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
 var B64_MAP = /* @__PURE__ */ new Uint8Array(256);
-for (let i2 = 0, b2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-"; i2 < 64; i2++) B64_MAP[b2.charCodeAt(i2)] = i2;
+for (let i2 = 0; i2 < 64; i2++) B64_MAP[B64.charCodeAt(i2)] = i2;
 var decodeVLQ = (str) => {
   const res = [];
-  let value = 0, shift = 0;
+  let value = 0;
+  let shift = 0;
   for (let i2 = 0; i2 < str.length; i2++) {
-    let digit = B64_MAP[str.charCodeAt(i2)];
+    const digit = B64_MAP[str.charCodeAt(i2)];
     value |= (digit & 31) << shift;
     if ((digit & 32) === 0) {
       res.push(value);
@@ -4615,7 +4617,8 @@ var decodeRanges = (str, isStride1) => {
   const res = decodeVLQ(str);
   const numRanges = isStride1 ? res.length / 2 : res.length / 3;
   const out = new Uint32Array(numRanges * 3);
-  let current = 0, resIdx = 0;
+  let current = 0;
+  let resIdx = 0;
   for (let i2 = 0; i2 < numRanges; i2++) {
     current += res[resIdx++];
     out[i2 * 3] = current;
@@ -4720,9 +4723,6 @@ var UnicodeTables = class {
     Uppercase: () => new UnicodeRangeTable(decodeRanges("hCZBmDWBCGBiB2BCDOCDuBCBECEBBCCCBCCBBBDDBCBBCCBEBBCBBCECBCCDCCBCCBBBCCCBEEIJDCMCDQCDDDCCBC4BCIBBCBBDCCBCBCGCiJCCEJJHCCBBBCCCBCCBPBCIBkBDDBBBEWCGDDCBBDyBBxBgBCK2BCBMCD+CCDlBBq6ClBBCGGzW1CB0kCHHBpBBDCBhK0ECKgDCKHBJFBLHBJHBJFBMGCJHBpCDBNDBNDBNEBMDBnIFFECBDCBDEEBDBHGCBCBDDBLBBGbbBOBUzZzZBYBx5BvBBxBCCBBBDGCBCBCDDJCBCgDCJCCFuqeuqeCqBCUaCoEMCE8BCLECBICFCCDCCEUCBDBCEBCOCBCBCCCBQCZs5Vs5VBYBmmBnBBpEjBB9EKBCOBCGBCBBr3ByBB+EVB75CfBhsVfBhCYBoqZZBbZBbZBbCCBGDBDDBCBCHBbZBbBBCDBDHBCGBcBBCDBCEBCEEBFBcZBbZBbZBbZBbZBbZBfYBiBYBiBYBiBYBiBYBiB2pE2pEBgBBvgCZBHZBHZB", false)),
     White_Space: () => new UnicodeRangeTable(decodeRanges("JEBTlDlDbgvFgvFgsCKBeBBGwBwBh9DAB", false))
   });
-  static get Upper() {
-    return this.CATEGORIES.get("Lu");
-  }
   static SCRIPTS = new LazyMap({
     Adlam: () => new UnicodeRangeTable(decodeRanges("go6DrCFJFB", true)),
     Ahom: () => new UnicodeRangeTable(decodeRanges("g4lCaDOFW", true)),
@@ -4922,6 +4922,10 @@ var UnicodeTables = class {
 };
 var Unicode = class Unicode2 {
   static MAX_RUNE = 1114111;
+  static RUNE_ERROR = 65533;
+  static isUnsearchable(r2) {
+    return r2 === Unicode2.RUNE_ERROR || r2 >= Unicode2.MIN_HIGH_SURROGATE && r2 <= Unicode2.MAX_LOW_SURROGATE;
+  }
   static MAX_ASCII = 127;
   static MAX_LATIN1 = 255;
   static MAX_BMP = 65535;
@@ -4961,22 +4965,17 @@ var Unicode = class Unicode2 {
     }
     return ranges.length > 0 && r2 >= ranges.getLo(0) && Unicode2.is32(ranges, r2);
   }
-  static isUpper(r2) {
-    if (r2 <= Unicode2.MAX_LATIN1) {
-      const s2 = String.fromCodePoint(r2);
-      return s2.toUpperCase() === s2 && s2.toLowerCase() !== s2;
-    }
-    return Unicode2.is(UnicodeTables.Upper, r2);
-  }
   static isPrint(r2) {
     if (r2 <= Unicode2.MAX_LATIN1) return r2 >= 32 && r2 < Unicode2.MAX_ASCII || r2 >= 161 && r2 !== 173;
     return Unicode2.is(UnicodeTables.Print, r2);
   }
   static simpleFold(r2) {
     if (UnicodeTables.CASE_ORBIT.has(r2)) return UnicodeTables.CASE_ORBIT.get(r2);
-    const l2 = Codepoint.toLowerCase(r2);
-    if (l2 !== r2) return l2;
-    return Codepoint.toUpperCase(r2);
+    if (r2 <= Unicode2.MAX_ASCII) {
+      const l2 = Codepoint.toLowerCase(r2);
+      return l2 !== r2 ? l2 : Codepoint.toUpperCase(r2);
+    }
+    return r2;
   }
   static equalsIgnoreCase(r1, r2) {
     if (r1 === r2) return true;
@@ -5008,15 +5007,15 @@ var Utils = class Utils2 {
     return [];
   }
   static isByteArray(input) {
-    return Array.isArray(input) || input instanceof Uint8Array;
+    return Array.isArray(input) || Object.prototype.toString.call(input) === "[object Uint8Array]";
   }
   static isalnum(c2) {
-    return Codepoint.CODES.get("0") <= c2 && c2 <= Codepoint.CODES.get("9") || Codepoint.CODES.get("a") <= c2 && c2 <= Codepoint.CODES.get("z") || Codepoint.CODES.get("A") <= c2 && c2 <= Codepoint.CODES.get("Z");
+    return Codepoint.CODES["0"] <= c2 && c2 <= Codepoint.CODES["9"] || Codepoint.CODES["a"] <= c2 && c2 <= Codepoint.CODES["z"] || Codepoint.CODES["A"] <= c2 && c2 <= Codepoint.CODES["Z"];
   }
   static unhex(c2) {
-    if (Codepoint.CODES.get("0") <= c2 && c2 <= Codepoint.CODES.get("9")) return c2 - Codepoint.CODES.get("0");
-    if (Codepoint.CODES.get("a") <= c2 && c2 <= Codepoint.CODES.get("f")) return c2 - Codepoint.CODES.get("a") + 10;
-    if (Codepoint.CODES.get("A") <= c2 && c2 <= Codepoint.CODES.get("F")) return c2 - Codepoint.CODES.get("A") + 10;
+    if (Codepoint.CODES["0"] <= c2 && c2 <= Codepoint.CODES["9"]) return c2 - Codepoint.CODES["0"];
+    if (Codepoint.CODES["a"] <= c2 && c2 <= Codepoint.CODES["f"]) return c2 - Codepoint.CODES["a"] + 10;
+    if (Codepoint.CODES["A"] <= c2 && c2 <= Codepoint.CODES["F"]) return c2 - Codepoint.CODES["A"] + 10;
     return -1;
   }
   static escapeRune(rune) {
@@ -5025,25 +5024,25 @@ var Utils = class Utils2 {
       if (Utils2.METACHARACTERS.indexOf(String.fromCodePoint(rune)) >= 0) out += "\\";
       out += String.fromCodePoint(rune);
     } else switch (rune) {
-      case Codepoint.CODES.get('"'):
+      case Codepoint.CODES['"']:
         out += '\\"';
         break;
-      case Codepoint.CODES.get("\\"):
+      case Codepoint.CODES["\\"]:
         out += "\\\\";
         break;
-      case Codepoint.CODES.get("	"):
+      case Codepoint.CODES["	"]:
         out += "\\t";
         break;
-      case Codepoint.CODES.get("\n"):
+      case Codepoint.CODES["\n"]:
         out += "\\n";
         break;
-      case Codepoint.CODES.get("\r"):
+      case Codepoint.CODES["\r"]:
         out += "\\r";
         break;
-      case Codepoint.CODES.get("\b"):
+      case Codepoint.CODES["\b"]:
         out += "\\b";
         break;
-      case Codepoint.CODES.get("\f"):
+      case Codepoint.CODES["\f"]:
         out += "\\f";
         break;
       default: {
@@ -5067,7 +5066,7 @@ var Utils = class Utils2 {
       runes.push(cp);
       i2 += cp > Unicode.MAX_BMP ? 2 : 1;
     }
-    return runes;
+    return new Int32Array(runes);
   }
   static runeToString(r2) {
     return String.fromCodePoint(r2);
@@ -5187,7 +5186,7 @@ var MatcherInputBase = class MatcherInputBase2 {
   asCharSequence() {
     throw Error("not implemented");
   }
-  /** @returns {Uint8Array|number[]} */
+  /** @returns {Uint8Array|number[]|null} */
   asBytes() {
     throw Error("not implemented");
   }
@@ -5294,13 +5293,14 @@ var MachineInputBase = class {
     return -8;
   }
   constructor() {
+    this.start = 0;
     this.end = 0;
   }
   canCheckPrefix() {
     return true;
   }
   endPos() {
-    return this.end;
+    return this.end - this.start;
   }
   hasString() {
     return false;
@@ -5312,11 +5312,12 @@ var MachineInputBase = class {
     return 0;
   }
 };
-var MachineUTF8Input = class extends MachineInputBase {
-  constructor(bytes, start = 0, end = bytes.length) {
+var MachineUTF8Input = class MachineUTF8Input2 extends MachineInputBase {
+  static RUNE_ERROR_STEP = Unicode.RUNE_ERROR << 3 | 1;
+  constructor(bytes, start2 = 0, end = bytes.length) {
     super();
     this.bytes = bytes;
-    this.start = start;
+    this.start = start2;
     this.end = end;
   }
   hasString(prefilter, pos) {
@@ -5326,33 +5327,46 @@ var MachineUTF8Input = class extends MachineInputBase {
     return idx !== -1 && idx <= this.end - target.length;
   }
   hasAnyString(prefilter, pos) {
-    if (!prefilter.ac8) return false;
-    return prefilter.ac8.searchUTF8(this.bytes, this.start + pos, this.end);
+    return prefilter.automaton8().searchUTF8(this.bytes, this.start + pos, this.end);
   }
   step(pos) {
     pos += this.start;
     if (pos >= this.end) return MachineInputBase.EOF();
     const c2 = this.bytes[pos] & 255;
     if (c2 < 128) return c2 << 3 | 1;
-    else if (c2 >= 194 && c2 <= 223 && pos + 1 < this.end) {
-      const c1 = this.bytes[pos + 1] & 255;
-      if ((c1 & 192) !== 128) return c2 << 3 | 1;
-      return ((c2 & 31) << 6 | c1 & 63) << 3 | 2;
-    } else if (c2 >= 224 && c2 <= 239 && pos + 2 < this.end) {
-      const c1 = this.bytes[pos + 1] & 255;
-      if ((c1 & 192) !== 128) return c2 << 3 | 1;
+    let size;
+    let rune;
+    let lo = 128;
+    let hi = 191;
+    if (c2 >= 194 && c2 <= 223) {
+      size = 2;
+      rune = c2 & 31;
+    } else if (c2 >= 224 && c2 <= 239) {
+      size = 3;
+      rune = c2 & 15;
+      if (c2 === 224) lo = 160;
+      else if (c2 === 237) hi = 159;
+    } else if (c2 >= 240 && c2 <= 244) {
+      size = 4;
+      rune = c2 & 7;
+      if (c2 === 240) lo = 144;
+      else if (c2 === 244) hi = 143;
+    } else return MachineUTF8Input2.RUNE_ERROR_STEP;
+    if (pos + size > this.end) return MachineUTF8Input2.RUNE_ERROR_STEP;
+    const c1 = this.bytes[pos + 1] & 255;
+    if (c1 < lo || c1 > hi) return MachineUTF8Input2.RUNE_ERROR_STEP;
+    rune = rune << 6 | c1 & 63;
+    if (size > 2) {
       const c22 = this.bytes[pos + 2] & 255;
-      if ((c22 & 192) !== 128) return c2 << 3 | 1;
-      return ((c2 & 15) << 12 | (c1 & 63) << 6 | c22 & 63) << 3 | 3;
-    } else if (c2 >= 240 && c2 <= 244 && pos + 3 < this.end) {
-      const c1 = this.bytes[pos + 1] & 255;
-      if ((c1 & 192) !== 128) return c2 << 3 | 1;
-      const c22 = this.bytes[pos + 2] & 255;
-      if ((c22 & 192) !== 128) return c2 << 3 | 1;
-      const c3 = this.bytes[pos + 3] & 255;
-      if ((c3 & 192) !== 128) return c2 << 3 | 1;
-      return ((c2 & 7) << 18 | (c1 & 63) << 12 | (c22 & 63) << 6 | c3 & 63) << 3 | 4;
-    } else return c2 << 3 | 1;
+      if ((c22 & 192) !== 128) return MachineUTF8Input2.RUNE_ERROR_STEP;
+      rune = rune << 6 | c22 & 63;
+      if (size > 3) {
+        const c3 = this.bytes[pos + 3] & 255;
+        if ((c3 & 192) !== 128) return MachineUTF8Input2.RUNE_ERROR_STEP;
+        rune = rune << 6 | c3 & 63;
+      }
+    }
+    return rune << 3 | size;
   }
   index(re2, pos) {
     pos += this.start;
@@ -5363,14 +5377,15 @@ var MachineUTF8Input = class extends MachineInputBase {
     pos += this.start;
     let r1 = -1;
     if (pos > this.start && pos <= this.end) {
-      let start = pos - 1;
-      r1 = this.bytes[start--];
+      let start2 = pos - 1;
+      r1 = this.bytes[start2--];
       if (r1 >= 128) {
         let lim = pos - 4;
         if (lim < this.start) lim = this.start;
-        while (start >= lim && (this.bytes[start] & 192) === 128) start--;
-        if (start < this.start) start = this.start;
-        r1 = this.step(start - this.start) >> 3;
+        while (start2 >= lim && (this.bytes[start2] & 192) === 128) start2--;
+        if (start2 < this.start) start2 = this.start;
+        const r3 = this.step(start2 - this.start);
+        r1 = start2 + (r3 & 7) === pos ? r3 >> 3 : Unicode.RUNE_ERROR;
       }
     }
     const r2 = pos < this.end ? this.step(pos - this.start) >> 3 : -1;
@@ -5406,10 +5421,10 @@ var MachineUTF8Input = class extends MachineInputBase {
   }
 };
 var MachineUTF16Input = class extends MachineInputBase {
-  constructor(charSequence, start = 0, end = charSequence.length) {
+  constructor(charSequence, start2 = 0, end = charSequence.length) {
     super();
     this.charSequence = charSequence;
-    this.start = start;
+    this.start = start2;
     this.end = end;
   }
   hasString(prefilter, pos) {
@@ -5417,8 +5432,7 @@ var MachineUTF16Input = class extends MachineInputBase {
     return idx !== -1 && idx <= this.end - prefilter.str.length;
   }
   hasAnyString(prefilter, pos) {
-    if (!prefilter.ac16) return false;
-    return prefilter.ac16.searchUTF16(this.charSequence, this.start + pos, this.end);
+    return prefilter.automaton16().searchUTF16(this.charSequence, this.start + pos, this.end);
   }
   step(pos) {
     pos += this.start;
@@ -5446,11 +5460,11 @@ var MachineUTF16Input = class extends MachineInputBase {
   }
 };
 var MachineInput = class {
-  static fromUTF8(bytes, start = 0, end = bytes.length) {
-    return new MachineUTF8Input(bytes, start, end);
+  static fromUTF8(bytes, start2 = 0, end = bytes.length) {
+    return new MachineUTF8Input(bytes, start2, end);
   }
-  static fromUTF16(charSequence, start = 0, end = charSequence.length) {
-    return new MachineUTF16Input(charSequence, start, end);
+  static fromUTF16(charSequence, start2 = 0, end = charSequence.length) {
+    return new MachineUTF16Input(charSequence, start2, end);
   }
 };
 var RE2JSException = class extends Error {
@@ -5537,13 +5551,13 @@ var Matcher = class Matcher2 {
       if (str.indexOf("\\") < 0 && str.indexOf("$") < 0) return str;
       return str.split("").map((s2) => {
         const c2 = s2.codePointAt(0);
-        if (c2 === Codepoint.CODES.get("\\") || c2 === Codepoint.CODES.get("$")) return `\\${s2}`;
+        if (c2 === Codepoint.CODES["\\"] || c2 === Codepoint.CODES["$"]) return `\\${s2}`;
         return s2;
       }).join("");
     }
     if (str.indexOf("$") < 0) return str;
     return str.split("").map((s2) => {
-      if (s2.codePointAt(0) === Codepoint.CODES.get("$")) return "$$";
+      if (s2.codePointAt(0) === Codepoint.CODES["$"]) return "$$";
       return s2;
     }).join("");
   }
@@ -5559,7 +5573,9 @@ var Matcher = class Matcher2 {
     this.patternGroupCount = re2.numberOfCapturingGroups();
     this.groups = [];
     this.namedGroups = re2.namedGroups;
+    this.hasNamedGroups = Object.keys(this.namedGroups).length > 0;
     this.numberOfInstructions = re2.numberOfInstructions();
+    this.lookbehindState = null;
     if (input instanceof MatcherInputBase) this.resetMatcherInput(input);
     else if (Utils.isByteArray(input)) this.resetMatcherInput(MatcherInput.utf8(input));
     else this.resetMatcherInput(MatcherInput.utf16(input));
@@ -5591,9 +5607,13 @@ var Matcher = class Matcher2 {
   */
   resetMatcherInput(input) {
     if (input === null) throw new Error("input is null");
-    if (!(input instanceof MatcherInputBase)) if (Utils.isByteArray(input)) input = MatcherInput.utf8(input);
-    else input = MatcherInput.utf16(input);
+    if (!(input instanceof MatcherInputBase)) {
+      if (Utils.isByteArray(input)) input = MatcherInput.utf8(input);
+      else input = MatcherInput.utf16(input);
+    }
     this.matcherInput = input;
+    if (this.lookbehindState !== null) this.lookbehindState.reset();
+    else this.lookbehindState = this.patternInput.re2().createLookbehindState();
     this.reset();
     return this;
   }
@@ -5651,10 +5671,10 @@ var Matcher = class Matcher2 {
       if (!Number.isFinite(groupInt)) throw new RE2JSGroupException(`group '${group}' not found`);
       group = groupInt;
     }
-    const start = this.start(group);
+    const start2 = this.start(group);
     const end = this.end(group);
-    if (start < 0 && end < 0) return null;
-    return this.substring(start, end);
+    if (start2 < 0 && end < 0) return null;
+    return this.substring(start2, end);
   }
   /**
   * Returns a dictionary map of all named capturing groups and their matched values.
@@ -5664,7 +5684,7 @@ var Matcher = class Matcher2 {
   getNamedGroups() {
     if (!this.hasMatch) throw new RE2JSGroupException("perhaps no match attempted");
     const result = /* @__PURE__ */ Object.create(null);
-    for (const name4 of Object.keys(this.namedGroups)) result[name4] = this.group(name4);
+    for (const name5 of Object.keys(this.namedGroups)) result[name5] = this.group(name5);
     return result;
   }
   /**
@@ -5681,11 +5701,11 @@ var Matcher = class Matcher2 {
   * @private
   */
   loadGroup(group) {
-    if (group < 0 || group > this.patternGroupCount) throw new RE2JSGroupException(`Group index out of bounds: ${group}`);
+    if (!Number.isInteger(group) || group < 0 || group > this.patternGroupCount) throw new RE2JSGroupException(`Group index out of bounds: ${group}`);
     if (!this.hasMatch) throw new RE2JSGroupException("perhaps no match attempted");
     if (group === 0 || this.hasGroups) return;
     const end = this.matcherInputLength;
-    const res = this.patternInput.re2().matchMachineInput(this.matcherInput, this.groups[0], end, this.anchorFlag, 1 + this.patternGroupCount);
+    const res = this.patternInput.re2().matchMachineInput(this.matcherInput, this.groups[0], end, this.anchorFlag, 1 + this.patternGroupCount, this.lookbehindState);
     if (!res[0]) throw new RE2JSGroupException("inconsistency in matching group data");
     this.groups = res[1];
     this.hasGroups = true;
@@ -5716,22 +5736,22 @@ var Matcher = class Matcher2 {
   * @returns {boolean} if it finds a match
   * @throws IndexOutOfBoundsException if start is not a valid input position
   */
-  find(start = null) {
-    if (start !== null) {
-      if (start < 0 || start > this.matcherInputLength) throw new RE2JSGroupException(`start index out of bounds: ${start}`);
+  find(start2 = null) {
+    if (start2 !== null) {
+      if (!Number.isInteger(start2) || start2 < 0 || start2 > this.matcherInputLength) throw new RE2JSGroupException(`start index out of bounds: ${start2}`);
       this.reset();
-      return this.genMatch(start, 0);
+      return this.genMatch(start2, 0);
     }
-    start = 0;
+    start2 = 0;
     if (this.hasMatch) {
-      start = this.groups[1];
+      start2 = this.groups[1];
       if (this.groups[0] === this.groups[1]) {
-        const r2 = (this.matcherInput.isUTF16Encoding() ? MachineInput.fromUTF16(this.matcherInput.asCharSequence(), 0, this.matcherInputLength) : MachineInput.fromUTF8(this.matcherInput.asBytes(), 0, this.matcherInputLength)).step(start);
-        if (r2 < 0) start++;
-        else start += r2 & 7;
+        const r2 = (this.matcherInput.isUTF16Encoding() ? MachineInput.fromUTF16(this.matcherInput.asCharSequence(), 0, this.matcherInputLength) : MachineInput.fromUTF8(this.matcherInput.asBytes(), 0, this.matcherInputLength)).step(start2);
+        if (r2 < 0) start2++;
+        else start2 += r2 & 7;
       }
     }
-    return this.genMatch(start, RE2Flags.UNANCHORED);
+    return this.genMatch(start2, RE2Flags.UNANCHORED);
   }
   /**
   * Helper: does match starting at start, with RE2 anchor flag.
@@ -5741,7 +5761,7 @@ var Matcher = class Matcher2 {
   * @private
   */
   genMatch(startByte, anchor) {
-    const res = this.patternInput.re2().matchMachineInput(this.matcherInput, startByte, this.matcherInputLength, anchor, 1);
+    const res = this.patternInput.re2().matchMachineInput(this.matcherInput, startByte, this.matcherInputLength, anchor, 1, this.lookbehindState);
     if (!res[0]) {
       this.hasMatch = false;
       return false;
@@ -5758,9 +5778,9 @@ var Matcher = class Matcher2 {
   * @param {number} end
   * @returns {string}
   */
-  substring(start, end) {
-    if (this.matcherInput.isUTF8Encoding()) return Utils.utf8ByteArrayToString(this.matcherInput.asBytes().slice(start, end));
-    return this.matcherInput.asCharSequence().substring(start, end).toString();
+  substring(start2, end) {
+    if (this.matcherInput.isUTF8Encoding()) return Utils.utf8ByteArrayToString(this.matcherInput.asBytes().slice(start2, end));
+    return this.matcherInput.asCharSequence().substring(start2, end).toString();
   }
   /**
   * Helper for Pattern: return input length.
@@ -5771,23 +5791,19 @@ var Matcher = class Matcher2 {
   }
   /**
   * Appends to result two strings: the text from the append position up to the beginning of the
-  * most recent match, and then the replacement with submatch groups substituted for references of
-  * the form {@code $n}, where {@code n} is the group number in decimal. It advances the append
-  * position to where the most recent match ended.
+  * most recent match, and then the replacement with submatch groups substituted for references to
+  * them. It advances the append position to where the most recent match ended.
   *
-  * To embed a literal {@code $}, use \$ (actually {@code "\\$"} with string escapes). The escape
-  * is only necessary when {@code $} is followed by a digit, but it is always allowed. Only
-  * {@code $} and {@code \} need escaping, but any character can be escaped.
-  *
-  * The group number {@code n} in {@code $n} is always at least one digit and expands to use more
-  * digits as long as the resulting number is a valid group number for this pattern. To cut it off
-  * earlier, escape the first digit that should not be used.
+  * By default the replacement is expanded as by String.prototype.replace (see
+  * appendReplacementInternalJs). In Java mode it follows re2j / java.util.regex: $n takes as
+  * many digits as still form a valid group number, ${name} is a named group, and a backslash
+  * escapes the next character (so "\\$" in a JS string literal inserts a literal $).
   *
   * @param {string} replacement the replacement string
   * @param {boolean} [javaMode=false] activate java mode (different behaviour for capture groups and special characters)
   * @returns {string}
   * @throws IllegalStateException if there was no most recent match
-  * @throws IndexOutOfBoundsException if replacement refers to an invalid group
+  * @throws IndexOutOfBoundsException in Java mode, if replacement refers to an invalid group
   * @private
   */
   appendReplacement(replacement, javaMode = false) {
@@ -5811,7 +5827,7 @@ var Matcher = class Matcher2 {
     let i2 = 0;
     while (i2 < m2) {
       const cCode = replacement.codePointAt(i2);
-      if (cCode === Codepoint.CODES.get("\\")) {
+      if (cCode === Codepoint.CODES["\\"]) {
         if (last < i2) res += replacement.substring(last, i2);
         i2++;
         if (i2 >= m2) throw new RE2JSGroupException("character to be escaped is missing");
@@ -5819,26 +5835,26 @@ var Matcher = class Matcher2 {
         i2++;
         continue;
       }
-      if (cCode === Codepoint.CODES.get("$")) {
+      if (cCode === Codepoint.CODES["$"]) {
         if (last < i2) res += replacement.substring(last, i2);
         if (i2 + 1 >= m2) throw new RE2JSGroupException("Illegal group reference: group index is missing");
         const nextCode = replacement.codePointAt(i2 + 1);
-        if (Codepoint.CODES.get("0") <= nextCode && nextCode <= Codepoint.CODES.get("9")) {
-          let n2 = nextCode - Codepoint.CODES.get("0");
+        if (Codepoint.CODES["0"] <= nextCode && nextCode <= Codepoint.CODES["9"]) {
+          let n2 = nextCode - Codepoint.CODES["0"];
           let j = i2 + 2;
           for (; j < m2; j++) {
             const digit = replacement.codePointAt(j);
-            if (digit < Codepoint.CODES.get("0") || digit > Codepoint.CODES.get("9") || n2 * 10 + digit - Codepoint.CODES.get("0") > this.patternGroupCount) break;
-            n2 = n2 * 10 + digit - Codepoint.CODES.get("0");
+            if (digit < Codepoint.CODES["0"] || digit > Codepoint.CODES["9"] || n2 * 10 + digit - Codepoint.CODES["0"] > this.patternGroupCount) break;
+            n2 = n2 * 10 + digit - Codepoint.CODES["0"];
           }
           if (n2 > this.patternGroupCount) throw new RE2JSGroupException(`n > number of groups: ${n2}`);
           const group = this.group(n2);
           if (group !== null) res += group;
           i2 = j;
           last = i2;
-        } else if (nextCode === Codepoint.CODES.get("{")) {
+        } else if (nextCode === Codepoint.CODES["{"]) {
           let j = i2 + 2;
-          while (j < m2 && replacement.codePointAt(j) !== Codepoint.CODES.get("}")) j++;
+          while (j < m2 && replacement.codePointAt(j) !== Codepoint.CODES["}"]) j++;
           if (j >= m2) throw new RE2JSGroupException("named capture group is missing trailing '}'");
           const groupName = replacement.substring(i2 + 2, j);
           const groupVal = this.group(groupName);
@@ -5854,84 +5870,71 @@ var Matcher = class Matcher2 {
     return res;
   }
   /**
+  * Expands |replacement| for the current match by the rules of String.prototype.replace
+  * (ECMAScript GetSubstitution): $$ is "$", $& the match, $` the text before it, $' the text
+  * after it, $n and $nn a group (two digits only when they form a valid group number, so with
+  * one group "$10" is group 1 then "0"; an unmatched group is empty), and $<name> a named group
+  * (empty when no such group), only when the pattern has named groups. Anything else, such as
+  * "$0" or "$<" without a closing ">", is kept as is.
   * @param {string} replacement - the replacement string
   * @returns {string}
   * @private
   */
   appendReplacementInternalJs(replacement) {
+    const isDigit = (c2) => c2 >= 48 && c2 <= 57;
+    const groupCount = this.patternGroupCount;
     let res = "";
-    let last = 0;
-    const m2 = replacement.length;
-    for (let i2 = 0; i2 < m2 - 1; i2++) if (replacement.codePointAt(i2) === Codepoint.CODES.get("$")) {
-      let c2 = replacement.codePointAt(i2 + 1);
-      if (Codepoint.CODES.get("$") === c2) {
-        if (last < i2) res += replacement.substring(last, i2);
+    let i2 = 0;
+    while (i2 < replacement.length) {
+      const dollar = replacement.indexOf("$", i2);
+      if (dollar < 0) break;
+      res += replacement.substring(i2, dollar);
+      i2 = dollar;
+      const c2 = replacement.charCodeAt(i2 + 1);
+      if (c2 === Codepoint.CODES["$"]) {
         res += "$";
-        i2++;
-        last = i2 + 1;
-        continue;
-      } else if (Codepoint.CODES.get("&") === c2) {
-        if (last < i2) res += replacement.substring(last, i2);
-        const group = this.group(0);
-        if (group !== null) res += group;
-        else res += "$&";
-        i2++;
-        last = i2 + 1;
-        continue;
-      } else if (Codepoint.CODES.get("`") === c2) {
-        if (last < i2) res += replacement.substring(last, i2);
+        i2 += 2;
+      } else if (c2 === Codepoint.CODES["&"]) {
+        res += this.group(0);
+        i2 += 2;
+      } else if (c2 === Codepoint.CODES["`"]) {
         res += this.substring(0, this.start(0));
-        i2++;
-        last = i2 + 1;
-        continue;
-      } else if (Codepoint.CODES.get("'") === c2) {
-        if (last < i2) res += replacement.substring(last, i2);
+        i2 += 2;
+      } else if (c2 === Codepoint.CODES["'"]) {
         res += this.substring(this.end(0), this.matcherInputLength);
-        i2++;
-        last = i2 + 1;
-        continue;
-      } else if (Codepoint.CODES.get("1") <= c2 && c2 <= Codepoint.CODES.get("9")) {
-        let n2 = c2 - Codepoint.CODES.get("0");
-        if (last < i2) res += replacement.substring(last, i2);
-        for (i2 += 2; i2 < m2; i2++) {
-          c2 = replacement.codePointAt(i2);
-          if (c2 < Codepoint.CODES.get("0") || c2 > Codepoint.CODES.get("9") || n2 * 10 + c2 - Codepoint.CODES.get("0") > this.patternGroupCount) break;
-          n2 = n2 * 10 + c2 - Codepoint.CODES.get("0");
+        i2 += 2;
+      } else if (isDigit(c2)) {
+        let digits = 1;
+        let index = c2 - 48;
+        const c22 = replacement.charCodeAt(i2 + 2);
+        if (isDigit(c22) && index * 10 + c22 - 48 <= groupCount) {
+          digits = 2;
+          index = index * 10 + c22 - 48;
         }
-        if (n2 > this.patternGroupCount) {
-          res += `$${n2}`;
-          last = i2;
-          i2--;
-          continue;
+        if (index >= 1 && index <= groupCount) {
+          const group = this.group(index);
+          if (group !== null) res += group;
+        } else res += replacement.substring(i2, i2 + 1 + digits);
+        i2 += 1 + digits;
+      } else if (c2 === Codepoint.CODES["<"] && this.hasNamedGroups) {
+        const gt = replacement.indexOf(">", i2 + 2);
+        if (gt < 0) {
+          res += "$<";
+          i2 += 2;
+        } else {
+          const name5 = replacement.substring(i2 + 2, gt);
+          if (Object.prototype.hasOwnProperty.call(this.namedGroups, name5)) {
+            const group = this.group(name5);
+            if (group !== null) res += group;
+          }
+          i2 = gt + 1;
         }
-        const group = this.group(n2);
-        if (group !== null) res += group;
-        last = i2;
-        i2--;
-        continue;
-      } else if (c2 === Codepoint.CODES.get("<")) {
-        if (last < i2) res += replacement.substring(last, i2);
-        i2++;
-        let j = i2 + 1;
-        while (j < replacement.length && replacement.codePointAt(j) !== Codepoint.CODES.get(">") && replacement.codePointAt(j) !== Codepoint.CODES.get(" ")) j++;
-        if (j === replacement.length || replacement.codePointAt(j) !== Codepoint.CODES.get(">")) {
-          res += replacement.substring(i2 - 1, j + 1);
-          last = j + 1;
-          i2 = j;
-          continue;
-        }
-        const groupName = replacement.substring(i2 + 1, j);
-        if (Object.prototype.hasOwnProperty.call(this.namedGroups, groupName)) {
-          const groupVal = this.group(groupName);
-          if (groupVal !== null) res += groupVal;
-        } else res += `$<${groupName}>`;
-        last = j + 1;
-        i2 = j;
-        continue;
+      } else {
+        res += "$";
+        i2 += 1;
       }
     }
-    if (last < m2) res += replacement.substring(last, m2);
-    return res;
+    return res + replacement.substring(i2);
   }
   /**
   * Return the substring of the input from the append position to the end of the
@@ -5977,14 +5980,13 @@ var Matcher = class Matcher2 {
     let res = "";
     this.reset();
     const isFunc = typeof replacement === "function";
-    const hasNamedGroups = Object.keys(this.namedGroups).length > 0;
     let originalInput = null;
     if (isFunc) {
       if (this.groupCount() >= Matcher2.MAX_REPLACER_ARGS) throw new RE2JSGroupException("Too many capture groups to safely invoke replacer function");
       originalInput = this.matcherInput.isUTF8Encoding() ? this.matcherInput.asBytes() : this.matcherInput.asCharSequence();
     }
     while (this.find()) {
-      res += isFunc ? this.appendReplacementFunc(replacement, hasNamedGroups, originalInput) : this.appendReplacement(replacement, javaMode);
+      res += isFunc ? this.appendReplacementFunc(replacement, originalInput) : this.appendReplacement(replacement, javaMode);
       if (!all) break;
     }
     res += this.appendTail();
@@ -5994,46 +5996,48 @@ var Matcher = class Matcher2 {
   * Evaluates a replacer function for the current match and appends the result,
   * along with any un-matched preceding text, advancing the append position.
   * @param {Function} replacer - the replacer function
-  * @param {boolean} hasNamedGroups - cached flag if pattern has named groups
   * @param {string|Uint8Array|number[]} originalInput - the cached original input reference
   * @returns {string} the evaluated string to append
   * @private
   */
-  appendReplacementFunc(replacer, hasNamedGroups, originalInput) {
+  appendReplacementFunc(replacer, originalInput) {
     let res = "";
     const s2 = this.start();
     const e2 = this.end();
     if (this.appendPos < s2) res += this.substring(this.appendPos, s2);
     this.appendPos = e2;
-    const args = this.buildReplacerArgs(s2, hasNamedGroups, originalInput);
+    const args = this.matchArray();
+    args.push(s2, originalInput);
+    if (this.hasNamedGroups) args.push(this.namedGroupsObject());
     res += String(replacer(...args));
     return res;
   }
   /**
-  * Builds the argument array for the replacer function matching the standard
-  * JS String.prototype.replace(regex, replacer) signature.
-  * @param {number} matchStart - the start index of the match
-  * @param {boolean} hasNamedGroups - cached flag if pattern has named groups
-  * @param {string|Uint8Array|number[]} originalInput - the cached original input reference
-  * @returns {Array} array of arguments
+  * The match and its groups, as the elements of a JS RegExpExecArray: undefined for a group that
+  * did not take part in the match. Used by exec(), matchAll() and replacer functions.
+  * @returns {Array<string|undefined>}
   * @private
   */
-  buildReplacerArgs(matchStart, hasNamedGroups, originalInput) {
-    const args = [this.group(0)];
-    const numGroups = this.groupCount();
-    for (let i2 = 1; i2 <= numGroups; i2++) {
-      const start = this.start(i2);
-      if (start < 0) args.push(void 0);
-      else args.push(this.substring(start, this.end(i2)));
+  matchArray() {
+    const result = [this.group(0)];
+    for (let i2 = 1; i2 <= this.patternGroupCount; i2++) {
+      const group = this.group(i2);
+      result.push(group === null ? void 0 : group);
     }
-    args.push(matchStart);
-    args.push(originalInput);
-    if (hasNamedGroups) {
-      const parsedGroups = this.getNamedGroups();
-      for (const key in parsedGroups) if (parsedGroups[key] === null) parsedGroups[key] = void 0;
-      args.push(parsedGroups);
-    }
-    return args;
+    return result;
+  }
+  /**
+  * The named groups, as the groups property of a JS RegExpExecArray: an object without a
+  * prototype mapping each name to its group (undefined when it did not take part in the match),
+  * or undefined when the pattern has no named groups.
+  * @returns {Record<string, string|undefined>|undefined}
+  * @private
+  */
+  namedGroupsObject() {
+    if (!this.hasNamedGroups) return;
+    const result = this.getNamedGroups();
+    for (const name5 in result) if (result[name5] === null) result[name5] = void 0;
+    return result;
   }
 };
 var Inst = class Inst2 {
@@ -6063,7 +6067,7 @@ var Inst = class Inst2 {
     this.op = op;
     this.out = 0;
     this.arg = 0;
-    this.runes = [];
+    this.runes = /* @__PURE__ */ new Int32Array(0);
     this.next = null;
   }
   matchRune(r2) {
@@ -6162,18 +6166,26 @@ var Inst = class Inst2 {
     }
   }
 };
-var Queue = class {
+var Queue = class Queue2 {
   constructor(numInst) {
     this.sparse = new Int32Array(numInst);
     this.densePcs = new Int32Array(numInst);
     this.denseCaps = null;
     this.size = 0;
     this.ncap = 0;
+    this.mainThreads = 0;
   }
+  static INITIAL_THREADS = 32;
   init(ncap) {
     this.ncap = ncap;
-    const needed = this.densePcs.length * ncap;
+    const needed = Math.min(this.densePcs.length, Queue2.INITIAL_THREADS) * ncap;
     if (!this.denseCaps || this.denseCaps.length < needed) this.denseCaps = new Int32Array(needed);
+  }
+  growCaps(needed) {
+    const limit2 = this.densePcs.length * this.ncap;
+    const grown = new Int32Array(Math.min(limit2, Math.max(needed, 2 * this.denseCaps.length)));
+    grown.set(this.denseCaps);
+    this.denseCaps = grown;
   }
   contains(pc) {
     const j = this.sparse[pc];
@@ -6190,6 +6202,7 @@ var Queue = class {
   }
   clear() {
     this.size = 0;
+    this.mainThreads = 0;
   }
   toString() {
     let out = "{";
@@ -6201,6 +6214,18 @@ var Queue = class {
     return out;
   }
 };
+var LookbehindState = class {
+  constructor(prog) {
+    this.pos = -1;
+    this.pcs = new Int32Array(prog.numInst());
+    this.size = 0;
+    this.lbTable = new Int32Array(prog.numLb + 1);
+  }
+  reset() {
+    this.pos = -1;
+    this.size = 0;
+  }
+};
 var Machine = class Machine2 {
   static fromRE2(re2) {
     const m2 = new Machine2();
@@ -6208,19 +6233,18 @@ var Machine = class Machine2 {
     m2.re2 = re2;
     m2.q0 = new Queue(m2.prog.numInst());
     m2.q1 = new Queue(m2.prog.numInst());
+    m2.addStack = new Int32Array(2 * (m2.prog.numInst() + 1));
     m2.matched = false;
     m2.matchcap = new Int32Array(m2.prog.numCap < 2 ? 2 : m2.prog.numCap);
     m2.ncap = 0;
     return m2;
-  }
-  static fromMachine(machine) {
-    return Machine2.fromRE2(machine.re2);
   }
   constructor() {
     this.prog = null;
     this.re2 = null;
     this.q0 = null;
     this.q1 = null;
+    this.addStack = null;
     this.matched = false;
     this.matchcap = null;
     this.ncap = 0;
@@ -6241,14 +6265,23 @@ var Machine = class Machine2 {
     if (this.ncap === 0) return Utils.emptyInts();
     return Utils.toArray(this.matchcap.subarray(0, this.ncap));
   }
-  match(input, pos, anchor) {
+  match(input, pos, anchor, lbState = null) {
     const startCond = this.re2.cond;
     if (startCond === Utils.EMPTY_ALL) return false;
     if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && pos !== 0) return false;
     this.matched = false;
     this.matchcap.fill(-1);
-    let currentPos = this.prog.numLb > 0 ? 0 : pos;
-    let matchStartPos = pos;
+    const hasLookbehinds = this.prog.numLb > 0;
+    const matchStartPos = pos;
+    let currentPos = pos;
+    let resumeLookbehinds = false;
+    if (hasLookbehinds) {
+      if (lbState !== null && lbState.pos >= 0 && lbState.pos <= pos) {
+        currentPos = lbState.pos;
+        resumeLookbehinds = true;
+      } else currentPos = 0;
+    }
+    let saveLookbehinds = hasLookbehinds && lbState !== null;
     let runq = this.q0;
     let nextq = this.q1;
     let r2 = input.step(currentPos);
@@ -6264,12 +6297,16 @@ var Machine = class Machine2 {
     let flag;
     if (currentPos === 0) flag = Utils.emptyOpContext(-1, rune);
     else flag = input.context(currentPos);
+    if (hasLookbehinds) {
+      if (resumeLookbehinds) this.restoreLookbehinds(lbState, runq, flag);
+      else this.spawnLookbehinds(runq, currentPos, flag);
+    }
     while (true) {
-      if (runq.isEmpty()) {
+      if (runq.mainThreads === 0) {
         if ((startCond & Utils.EMPTY_BEGIN_TEXT) !== 0 && currentPos !== 0) break;
         if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && currentPos !== 0) break;
         if (this.matched) break;
-        if (this.prog.numLb === 0 && !(this.re2.prefix.length === 0) && rune1 !== this.re2.prefixRune && input.canCheckPrefix()) {
+        if (this.prog.numLb === 0 && runq.isEmpty() && !(this.re2.prefix.length === 0) && rune1 !== this.re2.prefixRune && input.canCheckPrefix()) {
           const advance = input.index(this.re2, currentPos);
           if (advance < 0) break;
           currentPos += advance;
@@ -6282,9 +6319,12 @@ var Machine = class Machine2 {
           flag = input.context(currentPos);
         }
       }
-      if (currentPos === 0 && this.prog.numLb > 0) for (let i2 = 0; i2 < this.prog.lbStarts.length; i2++) this.add(runq, this.prog.lbStarts[i2], currentPos, this.matchcap, 0, flag);
-      if (!this.matched && (currentPos === 0 || anchor === RE2Flags.UNANCHORED)) {
-        if (currentPos >= matchStartPos) {
+      if (currentPos >= matchStartPos) {
+        if (saveLookbehinds) {
+          this.saveLookbehinds(lbState, runq, currentPos);
+          saveLookbehinds = false;
+        }
+        if (!this.matched && (currentPos === 0 || anchor === RE2Flags.UNANCHORED)) {
           if (this.ncap > 0) this.matchcap[0] = currentPos;
           this.add(runq, this.prog.start, currentPos, this.matchcap, 0, flag);
         }
@@ -6306,6 +6346,7 @@ var Machine = class Machine2 {
       runq = nextq;
       nextq = tmpq;
     }
+    runq.clear();
     nextq.clear();
     return this.matched;
   }
@@ -6329,12 +6370,12 @@ var Machine = class Machine2 {
     }
     let flag = currentPos === 0 ? Utils.emptyOpContext(-1, rune) : input.context(currentPos);
     const matches = /* @__PURE__ */ new Set();
+    if (this.prog.numLb > 0) this.spawnLookbehinds(runq, currentPos, flag);
     while (true) {
-      if (runq.isEmpty()) {
+      if (runq.mainThreads === 0) {
         if ((startCond & Utils.EMPTY_BEGIN_TEXT) !== 0 && currentPos !== 0) break;
         if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && currentPos !== 0) break;
       }
-      if (currentPos === 0 && this.prog.numLb > 0) for (let i2 = 0; i2 < this.prog.lbStarts.length; i2++) this.add(runq, this.prog.lbStarts[i2], currentPos, this.matchcap, 0, flag);
       if (currentPos === 0 || anchor === RE2Flags.UNANCHORED) {
         if (currentPos >= matchStartPos) this.add(runq, this.prog.start, currentPos, this.matchcap, 0, flag);
       }
@@ -6421,75 +6462,99 @@ var Machine = class Machine2 {
     }
     runq.clear();
   }
+  spawnLookbehinds(q, pos, flag) {
+    for (let i2 = 0; i2 < this.prog.lbStarts.length; i2++) this.add(q, this.prog.lbStarts[i2], pos, this.matchcap, 0, flag);
+  }
+  restoreLookbehinds(lbState, q, flag) {
+    this.lbTable.set(lbState.lbTable);
+    for (let j = 0; j < lbState.size; j++) this.add(q, lbState.pcs[j], lbState.pos, this.matchcap, 0, flag);
+  }
+  saveLookbehinds(lbState, q, pos) {
+    let size = 0;
+    for (let j = 0; j < q.size; j++) {
+      const pc = q.densePcs[j];
+      if (this.prog.lbInst[pc] === 1 && Inst.isRuneOp(this.prog.inst[pc].op)) lbState.pcs[size++] = pc;
+    }
+    lbState.size = size;
+    lbState.pos = pos;
+    lbState.lbTable.set(this.lbTable);
+  }
   add(q, pc, pos, capArray, capOffset, cond) {
-    while (true) {
-      if (pc === 0) return;
-      if (q.contains(pc)) return;
-      const d = q.add(pc);
-      const inst = this.prog.inst[pc];
-      switch (inst.op) {
-        case Inst.FAIL:
-          return;
-        case Inst.ALT:
-        case Inst.ALT_MATCH:
-          this.add(q, inst.out, pos, capArray, capOffset, cond);
-          pc = inst.arg;
-          continue;
-        case Inst.EMPTY_WIDTH:
-          if ((inst.arg & ~cond) === 0) {
+    const stk = this.addStack;
+    let nstk = 0;
+    for (; ; ) {
+      while (pc !== 0 && !q.contains(pc)) {
+        const d = q.add(pc);
+        const inst = this.prog.inst[pc];
+        switch (inst.op) {
+          case Inst.FAIL:
+            pc = 0;
+            break;
+          case Inst.ALT:
+          case Inst.ALT_MATCH:
+            stk[nstk++] = inst.arg;
+            stk[nstk++] = 0;
             pc = inst.out;
-            continue;
-          }
-          return;
-        case Inst.NOP:
-          pc = inst.out;
-          continue;
-        case Inst.CAPTURE:
-          if (inst.arg < this.ncap) {
-            const opos = capArray[capOffset + inst.arg];
-            capArray[capOffset + inst.arg] = pos;
-            this.add(q, inst.out, pos, capArray, capOffset, cond);
-            capArray[capOffset + inst.arg] = opos;
-            return;
-          } else {
+            break;
+          case Inst.EMPTY_WIDTH:
+            pc = (inst.arg & ~cond) === 0 ? inst.out : 0;
+            break;
+          case Inst.NOP:
             pc = inst.out;
-            continue;
-          }
-        case Inst.LB_WRITE:
-          this.lbTable[Math.abs(inst.arg)] = pos;
-          pc = inst.out;
-          continue;
-        case Inst.LB_CHECK:
-          if (inst.arg > 0) {
-            if (this.lbTable[inst.arg] === pos) {
-              pc = inst.out;
-              continue;
+            break;
+          case Inst.CAPTURE:
+            if (inst.arg < this.ncap) {
+              stk[nstk++] = -inst.arg - 1;
+              stk[nstk++] = capArray[capOffset + inst.arg];
+              capArray[capOffset + inst.arg] = pos;
             }
-          } else if (this.lbTable[-inst.arg] !== pos) {
             pc = inst.out;
-            continue;
-          }
-          return;
-        case Inst.MATCH:
-        case Inst.RUNE:
-        case Inst.RUNE1:
-        case Inst.RUNE_ANY:
-        case Inst.RUNE_ANY_NOT_NL:
-          if (this.ncap > 0) {
-            const destOffset = d * this.ncap;
-            for (let c2 = 0; c2 < this.ncap; c2++) q.denseCaps[destOffset + c2] = capArray[capOffset + c2];
-          }
-          return;
-        default:
-          throw new RE2JSInternalException("unhandled");
+            break;
+          case Inst.LB_WRITE:
+            this.lbTable[Math.abs(inst.arg)] = pos;
+            pc = inst.out;
+            break;
+          case Inst.LB_CHECK:
+            if (inst.arg > 0) pc = this.lbTable[inst.arg] === pos ? inst.out : 0;
+            else pc = this.lbTable[-inst.arg] !== pos ? inst.out : 0;
+            break;
+          case Inst.MATCH:
+          case Inst.RUNE:
+          case Inst.RUNE1:
+          case Inst.RUNE_ANY:
+          case Inst.RUNE_ANY_NOT_NL:
+            if (this.prog.lbInst[pc] === 0) q.mainThreads++;
+            if (this.ncap > 0) {
+              const destOffset = d * this.ncap;
+              if (destOffset + this.ncap > q.denseCaps.length) q.growCaps(destOffset + this.ncap);
+              for (let c2 = 0; c2 < this.ncap; c2++) q.denseCaps[destOffset + c2] = capArray[capOffset + c2];
+            }
+            pc = 0;
+            break;
+          default:
+            throw new RE2JSInternalException("unhandled");
+        }
       }
+      if (nstk === 0) return;
+      nstk -= 2;
+      const entry = stk[nstk];
+      if (entry < 0) {
+        capArray[capOffset - entry - 1] = stk[nstk + 1];
+        pc = 0;
+      } else pc = entry;
     }
   }
 };
-var hashPCs = (pcs) => {
+var hashState = (pcs, flag, ids) => {
   let h = -2128831035;
   for (let i2 = 0; i2 < pcs.length; i2++) {
     h ^= pcs[i2];
+    h = Math.imul(h, 16777619);
+  }
+  h ^= flag;
+  h = Math.imul(h, 16777619);
+  for (let i2 = 0; i2 < ids.length; i2++) {
+    h ^= ids[i2];
     h = Math.imul(h, 16777619);
   }
   return h;
@@ -6499,46 +6564,108 @@ var arraysEqual = (a, b2) => {
   for (let i2 = 0; i2 < a.length; i2++) if (a[i2] !== b2[i2]) return false;
   return true;
 };
+var isState = (state, pcs, flag, ids) => state.flag === flag && arraysEqual(state.nfaStates, pcs) && arraysEqual(state.matchIDs, ids);
+var NO_IDS = [];
+var END_TEXT = -1;
 var DFAState = class {
-  constructor(nfaStates, isMatch, matchIDs = []) {
+  constructor(nfaStates, flag, matchIDs) {
     this.nfaStates = nfaStates;
-    this.isMatch = isMatch;
+    this.flag = flag;
+    this.isMatch = (flag & DFA.FLAG_MATCH) !== 0;
     this.matchIDs = matchIDs;
-    this.nextLatin1 = new Array(Unicode.MAX_LATIN1 + 1).fill(null);
-    this.nextLatin1Anchored = new Array(Unicode.MAX_LATIN1 + 1).fill(null);
-    this.transKeys = [];
-    this.transVals = [];
-    this.lastSeen = 0;
+    this.next = null;
+    this.nextAnchored = null;
   }
 };
 var DFA = class DFA2 {
-  static MAX_CACHE_CLEARS = 5;
-  static STATE_MEMORY_ESTIMATE = 838;
+  static FLAG_EMPTY_MASK = 255;
+  static FLAG_MATCH = 256;
+  static FLAG_LAST_WORD = 512;
+  static FLAG_NEED_SHIFT = 16;
+  static STATE_OVERHEAD = 150;
+  static ARRAY_OVERHEAD = 40;
+  static ELEMENT_SIZE = 8;
+  static TABLE_OVERHEAD = 48;
+  static PROGRESS_PER_STATE = 10;
   constructor(prog, maxMem = 8388608) {
     this.prog = prog;
+    this.maxMem = maxMem;
     this.stateCache = /* @__PURE__ */ new Map();
     this.stateCount = 0;
-    this.startState = null;
-    this.stateLimit = Math.max(1, Math.floor(maxMem / DFA2.STATE_MEMORY_ESTIMATE));
-    this.cacheClears = 0;
+    this.startStates = /* @__PURE__ */ new Map();
     this.failed = false;
-    this.clock = 0;
+    for (let pc = 0; pc < prog.numInst(); pc++) {
+      const op = prog.getInst(pc).op;
+      if (op === Inst.LB_WRITE || op === Inst.LB_CHECK) {
+        this.failed = true;
+        break;
+      }
+    }
+    this.computeRuneClasses();
+    this.stateBudget = maxMem;
+    this.memBudget = maxMem;
   }
-  computeClosure(pcs) {
+  computeRuneClasses() {
+    const bounds = /* @__PURE__ */ new Set();
+    const addRange = (lo, hi) => {
+      bounds.add(lo);
+      bounds.add(hi + 1);
+    };
+    for (let pc = 0; pc < this.prog.numInst(); pc++) {
+      const inst = this.prog.getInst(pc);
+      switch (inst.op) {
+        case Inst.RUNE:
+        case Inst.RUNE1:
+          if (inst.runes.length === 1) {
+            addRange(inst.runes[0], inst.runes[0]);
+            if ((inst.arg & RE2Flags.FOLD_CASE) !== 0) for (let f = Unicode.simpleFold(inst.runes[0]); f !== inst.runes[0]; f = Unicode.simpleFold(f)) addRange(f, f);
+          } else for (let j = 0; j < inst.runes.length; j += 2) addRange(inst.runes[j], inst.runes[j + 1]);
+          break;
+        case Inst.RUNE_ANY_NOT_NL:
+          addRange(10, 10);
+          break;
+        case Inst.EMPTY_WIDTH:
+          if ((inst.arg & (Utils.EMPTY_BEGIN_LINE | Utils.EMPTY_END_LINE)) !== 0) addRange(10, 10);
+          if ((inst.arg & (Utils.EMPTY_WORD_BOUNDARY | Utils.EMPTY_NO_WORD_BOUNDARY)) !== 0) {
+            addRange(48, 57);
+            addRange(65, 90);
+            addRange(95, 95);
+            addRange(97, 122);
+          }
+      }
+    }
+    bounds.delete(0);
+    this.classBounds = Int32Array.from(bounds).sort();
+    this.numClasses = this.classBounds.length + 1;
+    const latin1Class = new Int32Array(Unicode.MAX_LATIN1 + 1);
+    for (let r2 = 0; r2 <= Unicode.MAX_LATIN1; r2++) latin1Class[r2] = this.searchClass(r2);
+    this.latin1Class = latin1Class;
+  }
+  runeClass(r2) {
+    if (r2 <= Unicode.MAX_LATIN1) return this.latin1Class[r2];
+    return this.searchClass(r2);
+  }
+  searchClass(r2) {
+    const bounds = this.classBounds;
+    let lo = 0;
+    let hi = bounds.length;
+    while (lo < hi) {
+      const mid = lo + hi >> 1;
+      if (bounds[mid] <= r2) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  }
+  closure(pcs, flag) {
     const closure = /* @__PURE__ */ new Set();
-    const stack = [...pcs];
-    let isMatch = false;
-    const matchIDs = [];
+    const stack = Array.from(pcs);
+    let needflags = 0;
     while (stack.length > 0) {
       const pc = stack.pop();
-      if (closure.has(pc)) continue;
+      if (pc === 0 || closure.has(pc)) continue;
       closure.add(pc);
       const inst = this.prog.getInst(pc);
       switch (inst.op) {
-        case Inst.MATCH:
-          isMatch = true;
-          if (!matchIDs.includes(inst.arg)) matchIDs.push(inst.arg);
-          break;
         case Inst.ALT:
         case Inst.ALT_MATCH:
           stack.push(inst.out);
@@ -6549,184 +6676,197 @@ var DFA = class DFA2 {
           stack.push(inst.out);
           break;
         case Inst.EMPTY_WIDTH:
-        case Inst.LB_WRITE:
-        case Inst.LB_CHECK:
-          return null;
+          needflags |= inst.arg;
+          if ((inst.arg & ~flag) === 0) stack.push(inst.out);
       }
     }
-    const sortedPCs = Int32Array.from(closure).sort();
-    matchIDs.sort((a, b2) => a - b2);
     return {
-      pcs: sortedPCs,
-      isMatch,
-      matchIDs
+      pcs: Array.from(closure).sort((a, b2) => a - b2),
+      needflags
     };
   }
-  getState(pcs) {
-    const closureResult = this.computeClosure(pcs);
-    if (!closureResult) return null;
-    const sortedPCs = closureResult.pcs;
-    const hash = hashPCs(sortedPCs);
-    let bucket = this.stateCache.get(hash);
-    if (bucket) for (let i2 = 0; i2 < bucket.length; i2++) {
-      const state2 = bucket[i2];
-      if (arraysEqual(state2.nfaStates, sortedPCs)) {
-        state2.lastSeen = ++this.clock;
-        return state2;
-      }
+  getState(pcs, flag, ids) {
+    const hash = hashState(pcs, flag, ids);
+    const cached = this.stateCache.get(hash);
+    if (cached instanceof DFAState) {
+      if (isState(cached, pcs, flag, ids)) return cached;
+    } else if (cached !== void 0) {
+      for (let i2 = 0; i2 < cached.length; i2++) if (isState(cached[i2], pcs, flag, ids)) return cached[i2];
     }
-    else {
-      bucket = [];
-      this.stateCache.set(hash, bucket);
-    }
-    if (this.failed) return null;
-    if (this.stateCount >= this.stateLimit) {
-      this.cacheClears++;
-      if (this.cacheClears >= DFA2.MAX_CACHE_CLEARS) {
-        this.failed = true;
-        this.stateCache.clear();
-        this.stateCount = 0;
-        this.startState = null;
-        return null;
-      }
-      this.evictCache();
-      bucket = this.stateCache.get(hash);
-      if (!bucket) {
-        bucket = [];
-        this.stateCache.set(hash, bucket);
-      }
-    }
-    const state = new DFAState(sortedPCs, closureResult.isMatch, closureResult.matchIDs);
-    state.lastSeen = ++this.clock;
-    bucket.push(state);
+    const cost = DFA2.stateCost(pcs, ids);
+    if (this.memBudget < cost) return null;
+    this.memBudget -= cost;
+    const state = new DFAState(pcs, flag, ids);
+    if (cached === void 0) this.stateCache.set(hash, state);
+    else if (cached instanceof DFAState) this.stateCache.set(hash, [cached, state]);
+    else cached.push(state);
     this.stateCount++;
     return state;
   }
-  evictCache() {
-    const allStates = [];
-    for (const bucket of this.stateCache.values()) for (let i2 = 0; i2 < bucket.length; i2++) allStates.push(bucket[i2]);
-    allStates.sort((a, b2) => a.lastSeen - b2.lastSeen);
-    const keepCount = Math.max(1, Math.floor(this.stateLimit / 2));
-    const startIndex = allStates.length - keepCount;
-    const survivorsArray = allStates.slice(startIndex);
-    const survivors = new Set(survivorsArray);
+  static stateCost(pcs, ids) {
+    const idsCost = ids.length === 0 ? 0 : DFA2.ARRAY_OVERHEAD + DFA2.ELEMENT_SIZE * ids.length;
+    return DFA2.STATE_OVERHEAD + DFA2.ELEMENT_SIZE * pcs.length + idsCost;
+  }
+  *cachedStates() {
+    for (const cached of this.stateCache.values()) if (cached instanceof DFAState) yield cached;
+    else yield* cached;
+  }
+  makeState(pcs, flag, ids) {
+    const closure = this.closure(pcs, flag & DFA2.FLAG_EMPTY_MASK);
+    let stateFlag = flag;
+    if (closure.needflags === 0) stateFlag &= DFA2.FLAG_MATCH;
+    stateFlag |= closure.needflags << DFA2.FLAG_NEED_SHIFT;
+    return this.getState(closure.pcs, stateFlag, ids);
+  }
+  allocTable(state, anchor) {
+    const size = this.numClasses + 1;
+    const cost = DFA2.TABLE_OVERHEAD + DFA2.ELEMENT_SIZE * size;
+    if (this.memBudget < cost) return null;
+    this.memBudget -= cost;
+    const table = new Array(size).fill(null);
+    if (anchor === RE2Flags.UNANCHORED) state.next = table;
+    else state.nextAnchored = table;
+    return table;
+  }
+  clearCache() {
     this.stateCache.clear();
     this.stateCount = 0;
-    for (let i2 = 0; i2 < survivorsArray.length; i2++) {
-      const state = survivorsArray[i2];
-      state.nextLatin1.fill(null);
-      state.nextLatin1Anchored.fill(null);
-      state.transKeys.length = 0;
-      state.transVals.length = 0;
-      const hash = hashPCs(state.nfaStates);
-      let bucket = this.stateCache.get(hash);
-      if (!bucket) {
-        bucket = [];
-        this.stateCache.set(hash, bucket);
-      }
-      bucket.push(state);
-      this.stateCount++;
-    }
-    if (this.startState && !survivors.has(this.startState)) this.startState = null;
+    this.startStates.clear();
+    this.memBudget = this.stateBudget;
   }
-  step(state, charCode, anchor) {
-    if (charCode <= Unicode.MAX_LATIN1) if (anchor === RE2Flags.UNANCHORED) {
-      const next = state.nextLatin1[charCode];
-      if (next !== null) return next;
+  resetCache(current) {
+    this.clearCache();
+    return this.getState(current.nfaStates, current.flag, current.matchIDs);
+  }
+  step(state, cls, rune, anchor) {
+    let table = anchor === RE2Flags.UNANCHORED ? state.next : state.nextAnchored;
+    if (table !== null) {
+      const cached = table[cls];
+      if (cached !== null) return cached;
     } else {
-      const next = state.nextLatin1Anchored[charCode];
-      if (next !== null) return next;
+      table = this.allocTable(state, anchor);
+      if (table === null) return null;
     }
-    else {
-      const key = charCode + (anchor === RE2Flags.UNANCHORED ? 0 : Unicode.MAX_RUNE + 1);
-      const keys = state.transKeys;
-      const len = keys.length;
-      for (let i2 = 0; i2 < len; i2++) if (keys[i2] === key) return state.transVals[i2];
+    const needflag = state.flag >>> DFA2.FLAG_NEED_SHIFT;
+    const oldbeforeflag = state.flag & DFA2.FLAG_EMPTY_MASK;
+    let beforeflag = oldbeforeflag;
+    let afterflag = 0;
+    if (rune === 10) {
+      beforeflag |= Utils.EMPTY_END_LINE;
+      afterflag |= Utils.EMPTY_BEGIN_LINE;
     }
+    if (rune === END_TEXT) beforeflag |= Utils.EMPTY_END_LINE | Utils.EMPTY_END_TEXT;
+    const islastword = (state.flag & DFA2.FLAG_LAST_WORD) !== 0;
+    const isword = rune !== END_TEXT && Utils.isWordRune(rune);
+    beforeflag |= isword === islastword ? Utils.EMPTY_NO_WORD_BOUNDARY : Utils.EMPTY_WORD_BOUNDARY;
+    let pcs = state.nfaStates;
+    if ((beforeflag & ~oldbeforeflag & needflag) !== 0) pcs = this.closure(pcs, beforeflag).pcs;
     const nextPCs = [];
-    for (let i2 = 0; i2 < state.nfaStates.length; i2++) {
-      const pc = state.nfaStates[i2];
-      const inst = this.prog.getInst(pc);
-      if (Inst.isRuneOp(inst.op) && inst.matchRune(charCode)) nextPCs.push(inst.out);
+    let ismatch = false;
+    let ids = NO_IDS;
+    for (let i2 = 0; i2 < pcs.length; i2++) {
+      const inst = this.prog.getInst(pcs[i2]);
+      if (inst.op === Inst.MATCH) {
+        if (!ismatch) {
+          ismatch = true;
+          ids = [];
+        }
+        ids.push(inst.arg);
+      } else if (rune !== END_TEXT && Inst.isRuneOp(inst.op) && inst.matchRune(rune)) nextPCs.push(inst.out);
     }
-    if (anchor === RE2Flags.UNANCHORED) nextPCs.push(this.prog.start);
-    const nextState = this.getState(nextPCs);
-    if (charCode <= Unicode.MAX_LATIN1) if (anchor === RE2Flags.UNANCHORED) state.nextLatin1[charCode] = nextState;
-    else state.nextLatin1Anchored[charCode] = nextState;
-    else {
-      const key = charCode + (anchor === RE2Flags.UNANCHORED ? 0 : Unicode.MAX_RUNE + 1);
-      state.transKeys.push(key);
-      state.transVals.push(nextState);
-    }
+    if (ids.length > 1) ids.sort((a, b2) => a - b2);
+    if (anchor === RE2Flags.UNANCHORED && rune !== END_TEXT) nextPCs.push(this.prog.start);
+    let flag = afterflag;
+    if (ismatch) flag |= DFA2.FLAG_MATCH;
+    if (isword) flag |= DFA2.FLAG_LAST_WORD;
+    const nextState = this.makeState(nextPCs, flag, ids);
+    if (nextState === null) return null;
+    table[cls] = nextState;
     return nextState;
   }
-  match(input, pos, anchor) {
-    if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && pos !== 0) return false;
-    if (!this.startState) {
-      this.startState = this.getState([this.prog.start]);
-      if (!this.startState) return null;
+  start(input, pos) {
+    const context = input.context(pos);
+    let flags;
+    if ((context & Utils.EMPTY_BEGIN_TEXT) !== 0) flags = Utils.EMPTY_BEGIN_TEXT | Utils.EMPTY_BEGIN_LINE;
+    else if ((context & Utils.EMPTY_BEGIN_LINE) !== 0) flags = Utils.EMPTY_BEGIN_LINE;
+    else {
+      const r2 = input.step(pos);
+      const nextIsWord = r2 >= 0 && Utils.isWordRune(r2 >> 3);
+      flags = (context & Utils.EMPTY_WORD_BOUNDARY) !== 0 !== nextIsWord ? DFA2.FLAG_LAST_WORD : 0;
     }
-    let endPos = input.endPos();
-    let currentState = this.startState;
-    if (currentState.isMatch) if (anchor === RE2Flags.ANCHOR_BOTH) {
-      if (pos === endPos) return true;
-    } else return true;
+    let state = this.startStates.get(flags);
+    if (state === void 0) {
+      state = this.makeState([this.prog.start], flags, NO_IDS);
+      if (state === null) {
+        this.clearCache();
+        state = this.makeState([this.prog.start], flags, NO_IDS);
+        if (state === null) return null;
+      }
+      this.startStates.set(flags, state);
+    }
+    return state;
+  }
+  stepOrReset(state, cls, rune, anchor, pos, search) {
+    let next = this.step(state, cls, rune, anchor);
+    if (next !== null) return next;
+    if (search.resetPos >= 0 && pos - search.resetPos < DFA2.PROGRESS_PER_STATE * this.stateCount) return null;
+    search.resetPos = pos;
+    const restored = this.resetCache(state);
+    if (restored === null) return null;
+    next = this.step(restored, cls, rune, anchor);
+    return next;
+  }
+  run(input, pos, anchor, state, onMatch) {
+    const endPos = input.endPos();
+    const latin1Class = this.latin1Class;
+    const unanchored = anchor === RE2Flags.UNANCHORED;
+    const search = { resetPos: -1 };
     let i2 = pos;
     while (i2 < endPos) {
       const r2 = input.step(i2);
       const rune = r2 >> 3;
       const width = r2 & 7;
       if (width === 0) break;
-      currentState = anchor === RE2Flags.UNANCHORED && rune <= Unicode.MAX_LATIN1 && currentState.nextLatin1[rune] || this.step(currentState, rune, anchor);
-      if (currentState === null) return null;
-      currentState.lastSeen = ++this.clock;
-      if (currentState.isMatch) if (anchor === RE2Flags.ANCHOR_BOTH) {
-        if (i2 + width === endPos) return true;
-      } else return true;
-      if (currentState.nfaStates.length === 0) {
-        if (anchor !== RE2Flags.UNANCHORED) return false;
+      const cls = rune <= Unicode.MAX_LATIN1 ? latin1Class[rune] : this.runeClass(rune);
+      let next = unanchored && state.next !== null ? state.next[cls] : null;
+      if (next === null) {
+        next = this.stepOrReset(state, cls, rune, anchor, i2, search);
+        if (next === null) return null;
       }
+      state = next;
+      if (state.isMatch && onMatch(state, false)) return true;
+      if (!unanchored && state.nfaStates.length === 0) return false;
       i2 += width;
     }
-    return false;
+    state = this.stepOrReset(state, this.numClasses, END_TEXT, anchor, i2, search);
+    if (state === null) return null;
+    return state.isMatch && onMatch(state, true);
+  }
+  match(input, pos, anchor) {
+    if (this.failed) return null;
+    if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && pos !== 0) return false;
+    const startState = this.start(input, pos);
+    if (startState === null) return null;
+    return this.run(input, pos, anchor, startState, (state, atEnd) => anchor !== RE2Flags.ANCHOR_BOTH || atEnd);
   }
   matchSet(input, pos, anchor) {
+    if (this.failed) return null;
     if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && pos !== 0) return [];
-    if (!this.startState) {
-      this.startState = this.getState([this.prog.start]);
-      if (!this.startState) return null;
-    }
-    let endPos = input.endPos();
-    let currentState = this.startState;
+    const startState = this.start(input, pos);
+    if (startState === null) return null;
     const matches = /* @__PURE__ */ new Set();
-    const checkMatch = (state, currentPos) => {
-      if (state.isMatch) if (anchor === RE2Flags.ANCHOR_BOTH) {
-        if (currentPos === endPos) state.matchIDs.forEach((id) => matches.add(id));
-      } else state.matchIDs.forEach((id) => matches.add(id));
+    const collect = (state, atEnd) => {
+      if (anchor !== RE2Flags.ANCHOR_BOTH || atEnd) for (let k2 = 0; k2 < state.matchIDs.length; k2++) matches.add(state.matchIDs[k2]);
+      return false;
     };
-    checkMatch(currentState, pos);
-    let i2 = pos;
-    while (i2 < endPos) {
-      const r2 = input.step(i2);
-      const rune = r2 >> 3;
-      const width = r2 & 7;
-      if (width === 0) break;
-      currentState = anchor === RE2Flags.UNANCHORED && rune <= Unicode.MAX_LATIN1 && currentState.nextLatin1[rune] || this.step(currentState, rune, anchor);
-      if (currentState === null) return null;
-      currentState.lastSeen = ++this.clock;
-      i2 += width;
-      checkMatch(currentState, i2);
-      if (currentState.nfaStates.length === 0) {
-        if (anchor !== RE2Flags.UNANCHORED) break;
-      }
-    }
+    if (this.run(input, pos, anchor, startState, collect) === null) return null;
     return Array.from(matches).sort((a, b2) => a - b2);
   }
 };
 var VISITED_BITS = 32;
 var MAX_BACKTRACK_PROG = 500;
 var INITIAL_JOB_CAPACITY = 256;
-var MAX_BACKTRACK_VECTOR = 256 * 1024;
+var MAX_BACKTRACK_VECTOR = 262144;
 var BitState = class {
   constructor() {
     this.end = 0;
@@ -6796,7 +6936,7 @@ var BitState = class {
         const inst = re2.prog.getInst(currentPc);
         switch (inst.op) {
           case Inst.FAIL:
-            throw new RE2JSInternalException("unexpected InstFail");
+            break;
           case Inst.ALT:
             if (arg) {
               arg = false;
@@ -7012,7 +7152,7 @@ var OnePassProg = class {
       const inst = new Inst(orig.op);
       inst.out = orig.out;
       inst.arg = orig.arg;
-      inst.runes = orig.runes ? orig.runes.slice() : [];
+      inst.runes = orig.runes ? new Int32Array(orig.runes) : /* @__PURE__ */ new Int32Array(0);
       inst.next = null;
       this.inst[i2] = inst;
     }
@@ -7082,7 +7222,7 @@ var makeOnePass = (p2) => {
         const rightRunes = onePassRunes[inst.arg] || [];
         const mergeRes = mergeRuneSets(leftRunes, rightRunes, inst.out, inst.arg);
         if (!mergeRes) return false;
-        onePassRunes[pc] = mergeRes.merged;
+        onePassRunes[pc] = new Int32Array(mergeRes.merged);
         inst.next = new Uint32Array(mergeRes.next);
         break;
       }
@@ -7091,7 +7231,7 @@ var makeOnePass = (p2) => {
       case Inst.NOP:
         ok = check(inst.out);
         m2[pc] = m2[inst.out];
-        onePassRunes[pc] = onePassRunes[inst.out] ? onePassRunes[inst.out].slice() : [];
+        onePassRunes[pc] = onePassRunes[inst.out] ? new Int32Array(onePassRunes[inst.out]) : /* @__PURE__ */ new Int32Array(0);
         inst.next = new Uint32Array(Math.floor(onePassRunes[pc].length / 2) + 1).fill(inst.out);
         break;
       case Inst.MATCH:
@@ -7103,7 +7243,7 @@ var makeOnePass = (p2) => {
         if (inst.next && inst.next.length > 0) break;
         instQueue.insert(inst.out);
         if (!inst.runes || inst.runes.length === 0) {
-          onePassRunes[pc] = [];
+          onePassRunes[pc] = /* @__PURE__ */ new Int32Array(0);
           inst.next = new Uint32Array([inst.out]);
           break;
         }
@@ -7114,7 +7254,7 @@ var makeOnePass = (p2) => {
           for (let r1 = Unicode.simpleFold(r0); r1 !== r0; r1 = Unicode.simpleFold(r1)) runes.push(r1, r1);
           runes.sort((a, b2) => a - b2);
         } else for (let j = 0; j < inst.runes.length; j++) runes.push(inst.runes[j]);
-        onePassRunes[pc] = runes;
+        onePassRunes[pc] = new Int32Array(runes);
         inst.next = new Uint32Array(Math.floor(runes.length / 2) + 1).fill(inst.out);
         inst.op = Inst.RUNE;
         break;
@@ -7130,7 +7270,7 @@ var makeOnePass = (p2) => {
           for (let r1 = Unicode.simpleFold(r0); r1 !== r0; r1 = Unicode.simpleFold(r1)) runes.push(r1, r1);
           runes.sort((a, b2) => a - b2);
         } else runes.push(inst.runes[0], inst.runes[0]);
-        onePassRunes[pc] = runes;
+        onePassRunes[pc] = new Int32Array(runes);
         inst.next = new Uint32Array(Math.floor(runes.length / 2) + 1).fill(inst.out);
         inst.op = Inst.RUNE;
         break;
@@ -7139,21 +7279,20 @@ var makeOnePass = (p2) => {
         m2[pc] = false;
         if (inst.next && inst.next.length > 0) break;
         instQueue.insert(inst.out);
-        onePassRunes[pc] = [0, Unicode.MAX_RUNE];
+        onePassRunes[pc] = new Int32Array([0, Unicode.MAX_RUNE]);
         inst.next = new Uint32Array([inst.out]);
         break;
       case Inst.RUNE_ANY_NOT_NL:
         m2[pc] = false;
         if (inst.next && inst.next.length > 0) break;
         instQueue.insert(inst.out);
-        onePassRunes[pc] = [
+        onePassRunes[pc] = new Int32Array([
           0,
           9,
           11,
           Unicode.MAX_RUNE
-        ];
+        ]);
         inst.next = new Uint32Array(Math.floor(onePassRunes[pc].length / 2) + 1).fill(inst.out);
-        break;
     }
     return ok;
   };
@@ -7186,8 +7325,7 @@ var cleanupOnePass = (p2, original) => {
       case Inst.RUNE_ANY_NOT_NL:
         p2.inst[ix].next = null;
         p2.inst[ix].op = instOriginal.op;
-        p2.inst[ix].runes = instOriginal.runes ? instOriginal.runes.slice() : [];
-        break;
+        p2.inst[ix].runes = instOriginal.runes ? new Int32Array(instOriginal.runes) : /* @__PURE__ */ new Int32Array(0);
     }
   }
 };
@@ -7218,7 +7356,6 @@ var OnePass = class OnePass2 {
           break;
         default:
           if (opOut === Inst.MATCH && hasAlt) return null;
-          break;
       }
     }
     let p2 = onePassCopy(prog);
@@ -7346,7 +7483,7 @@ var Regexp = class Regexp2 {
     return [];
   }
   static quoteIfHyphen(rune) {
-    if (rune === Codepoint.CODES.get("-")) return "\\";
+    if (rune === Codepoint.CODES["-"]) return "\\";
     return "";
   }
   static fromRegexp(re) {
@@ -7366,7 +7503,7 @@ var Regexp = class Regexp2 {
     this.op = op;
     this.flags = 0;
     this.subs = Regexp2.emptySubs();
-    this.runes = [];
+    this.runes = /* @__PURE__ */ new Int32Array(0);
     this.min = 0;
     this.max = 0;
     this.cap = 0;
@@ -7377,7 +7514,7 @@ var Regexp = class Regexp2 {
   reinit() {
     this.flags = 0;
     this.subs = Regexp2.emptySubs();
-    this.runes = [];
+    this.runes = /* @__PURE__ */ new Int32Array(0);
     this.cap = 0;
     this.min = 0;
     this.max = 0;
@@ -7421,7 +7558,6 @@ var Regexp = class Regexp2 {
               if (this.max >= 0) out += this.max;
             }
             out += "}";
-            break;
         }
         if ((this.flags & RE2Flags.NON_GREEDY) !== 0) out += "?";
         break;
@@ -7516,7 +7652,6 @@ var Regexp = class Regexp2 {
         break;
       default:
         out += this.op;
-        break;
     }
     return out;
   }
@@ -7538,6 +7673,7 @@ var Regexp = class Regexp2 {
         break;
       case Regexp2.Op.LITERAL:
       case Regexp2.Op.CHAR_CLASS:
+        if ((this.flags & RE2Flags.FOLD_CASE) !== (that.flags & RE2Flags.FOLD_CASE)) return false;
         if (this.runes === null && that.runes === null) break;
         if (this.runes === null || that.runes === null) return false;
         if (this.runes.length !== that.runes.length) return false;
@@ -7562,66 +7698,137 @@ var Regexp = class Regexp2 {
       case Regexp2.Op.PLB:
       case Regexp2.Op.NLB:
         if (this.lb !== that.lb || !this.subs[0].equals(that.subs[0])) return false;
-        break;
     }
     return true;
   }
 };
-var AhoCorasick = class {
-  constructor(wordArrays) {
-    this.next = [/* @__PURE__ */ Object.create(null)];
-    this.fail = [0];
-    this.match = [false];
-    for (const word of wordArrays) {
-      let node = 0;
-      for (let i2 = 0; i2 < word.length; i2++) {
-        const val = word[i2];
-        if (!(val in this.next[node])) {
-          this.next.push(/* @__PURE__ */ Object.create(null));
-          this.fail.push(0);
-          this.match.push(false);
-          this.next[node][val] = this.next.length - 1;
+var RegexpWalker = class {
+  static walk(root, handler) {
+    const stack = [];
+    let re = root;
+    let result;
+    for (; ; ) {
+      if (re.subs.length === 0) result = handler.leaf(re);
+      else {
+        const state = handler.enter(re);
+        if (state.result === void 0) {
+          stack.push({
+            re,
+            state,
+            i: 0
+          });
+          re = re.subs[0];
+          continue;
         }
-        node = this.next[node][val];
+        result = state.result;
       }
-      this.match[node] = true;
-    }
-    const queue = [];
-    for (const val in this.next[0]) if (Object.prototype.hasOwnProperty.call(this.next[0], val)) {
-      const child = this.next[0][val];
-      this.fail[child] = 0;
-      queue.push(child);
-    }
-    while (queue.length > 0) {
-      const curr = queue.shift();
-      for (const val in this.next[curr]) if (Object.prototype.hasOwnProperty.call(this.next[curr], val)) {
-        const child = this.next[curr][val];
-        let failNode = this.fail[curr];
-        while (failNode !== 0 && !(val in this.next[failNode])) failNode = this.fail[failNode];
-        if (val in this.next[failNode]) this.fail[child] = this.next[failNode][val];
-        else this.fail[child] = 0;
-        this.match[child] = this.match[child] || this.match[this.fail[child]];
-        queue.push(child);
+      for (; ; ) {
+        if (stack.length === 0) return result;
+        const frame = stack[stack.length - 1];
+        handler.child(frame.re, frame.state, result, frame.i);
+        frame.i++;
+        if (frame.state.result === void 0 && frame.i < frame.re.subs.length) {
+          re = frame.re.subs[frame.i];
+          break;
+        }
+        stack.pop();
+        result = frame.state.result !== void 0 ? frame.state.result : handler.leave(frame.re, frame.state);
       }
     }
   }
-  searchUTF16(charSeq, start, end) {
+};
+var AhoCorasick = class {
+  constructor(words, alphabetSize) {
+    const edges = /* @__PURE__ */ new Map();
+    const parent2 = [0];
+    const unit = [0];
+    const depth = [0];
+    const terminal = [0];
+    for (const word of words) {
+      let node = 0;
+      for (let i2 = 0; i2 < word.length; i2++) {
+        const key = node * alphabetSize + word[i2];
+        let child2 = edges.get(key);
+        if (child2 === void 0) {
+          child2 = parent2.length;
+          edges.set(key, child2);
+          parent2.push(node);
+          unit.push(word[i2]);
+          depth.push(depth[node] + 1);
+          terminal.push(0);
+        }
+        node = child2;
+      }
+      terminal[node] = 1;
+    }
+    const numNodes = parent2.length;
+    const children = new Int32Array(numNodes - 1);
+    for (let c2 = 1; c2 < numNodes; c2++) children[c2 - 1] = c2;
+    children.sort((a, b2) => parent2[a] - parent2[b2] || unit[a] - unit[b2]);
+    const childStart = new Int32Array(numNodes + 1);
+    for (let c2 = 1; c2 < numNodes; c2++) childStart[parent2[c2] + 1]++;
+    for (let n2 = 0; n2 < numNodes; n2++) childStart[n2 + 1] += childStart[n2];
+    const childUnit = new Int32Array(numNodes - 1);
+    for (let k2 = 0; k2 < children.length; k2++) childUnit[k2] = unit[children[k2]];
+    this.childStart = childStart;
+    this.childUnit = childUnit;
+    this.childNode = children;
+    const byDepth = new Int32Array(numNodes);
+    for (let n2 = 0; n2 < numNodes; n2++) byDepth[n2] = n2;
+    byDepth.sort((a, b2) => depth[a] - depth[b2]);
+    const fail = new Int32Array(numNodes);
+    const match = Uint8Array.from(terminal);
+    for (let k2 = 1; k2 < numNodes; k2++) {
+      const c2 = byDepth[k2];
+      const p2 = parent2[c2];
+      if (p2 !== 0) {
+        let f = fail[p2];
+        let next = this.next(f, unit[c2]);
+        while (next < 0 && f !== 0) {
+          f = fail[f];
+          next = this.next(f, unit[c2]);
+        }
+        fail[c2] = next >= 0 ? next : 0;
+      }
+      match[c2] |= match[fail[c2]];
+    }
+    this.fail = fail;
+    this.match = match;
+  }
+  next(node, u2) {
+    let lo = this.childStart[node];
+    let hi = this.childStart[node + 1];
+    const units = this.childUnit;
+    while (lo < hi) {
+      const mid = lo + hi >> 1;
+      const m2 = units[mid];
+      if (m2 === u2) return this.childNode[mid];
+      if (m2 < u2) lo = mid + 1;
+      else hi = mid;
+    }
+    return -1;
+  }
+  advance(node, u2) {
+    for (; ; ) {
+      const next = this.next(node, u2);
+      if (next >= 0) return next;
+      if (node === 0) return 0;
+      node = this.fail[node];
+    }
+  }
+  searchUTF16(charSeq, start2, end) {
     let node = 0;
-    for (let i2 = start; i2 < end; i2++) {
-      const val = charSeq.charCodeAt(i2);
-      while (node !== 0 && !(val in this.next[node])) node = this.fail[node];
-      if (val in this.next[node]) node = this.next[node][val];
-      if (this.match[node]) return true;
+    for (let i2 = start2; i2 < end; i2++) {
+      node = this.advance(node, charSeq.charCodeAt(i2));
+      if (this.match[node] === 1) return true;
     }
     return false;
   }
-  searchUTF8(bytes, start, end) {
+  searchUTF8(bytes, start2, end) {
     let node = 0;
-    for (let i2 = start; i2 < end; i2++) {
-      const val = bytes[i2];
-      while (node !== 0 && !(val in this.next[node])) node = this.fail[node];
-      if (val in this.next[node]) node = this.next[node][val];
-      if (this.match[node]) return true;
+    for (let i2 = start2; i2 < end; i2++) {
+      node = this.advance(node, bytes[i2]);
+      if (this.match[node] === 1) return true;
     }
     return false;
   }
@@ -7633,13 +7840,32 @@ var Prefilter = class Prefilter2 {
     AND: 2,
     OR: 3
   };
+  static MAX_SCANS = 32;
+  static MAX_AC_UNITS = 1 << 18;
   constructor(type) {
     this.type = type;
     this.subs = [];
     this.str = "";
     this.bytes = null;
+    this.cost = type === Prefilter2.Type.EXACT ? 1 : 0;
+    this.allExact = false;
     this.ac16 = null;
     this.ac8 = null;
+  }
+  automaton16() {
+    if (this.ac16 === null) {
+      const words = this.subs.map((s2) => {
+        const arr = new Array(s2.str.length);
+        for (let i2 = 0; i2 < s2.str.length; i2++) arr[i2] = s2.str.charCodeAt(i2);
+        return arr;
+      });
+      this.ac16 = new AhoCorasick(words, 65536);
+    }
+    return this.ac16;
+  }
+  automaton8() {
+    if (this.ac8 === null) this.ac8 = new AhoCorasick(this.subs.map((s2) => s2.bytes), 256);
+    return this.ac8;
   }
   eval(input, pos) {
     switch (this.type) {
@@ -7651,7 +7877,7 @@ var Prefilter = class Prefilter2 {
         for (let i2 = 0; i2 < this.subs.length; i2++) if (!this.subs[i2].eval(input, pos)) return false;
         return true;
       case Prefilter2.Type.OR:
-        if (this.ac16 && this.ac8) return input.hasAnyString(this, pos);
+        if (this.allExact) return input.hasAnyString(this, pos);
         for (let i2 = 0; i2 < this.subs.length; i2++) if (this.subs[i2].eval(input, pos)) return true;
         return false;
       default:
@@ -7661,103 +7887,119 @@ var Prefilter = class Prefilter2 {
 };
 var PrefilterTree = class PrefilterTree2 {
   static build(re) {
-    const pf = PrefilterTree2.fromRegexp(re);
-    return PrefilterTree2.simplify(pf);
-  }
-  static fromRegexp(re) {
     if (!re) return new Prefilter(Prefilter.Type.NONE);
+    return RegexpWalker.walk(re, PrefilterTree2.WALKER);
+  }
+  static WALKER = {
+    leaf: (re) => PrefilterTree2.leaf(re),
+    enter: (re) => PrefilterTree2.enter(re),
+    child: (re, state, result) => PrefilterTree2.child(re, state, result),
+    leave: (re, state) => PrefilterTree2.leave(re, state)
+  };
+  static leaf(re) {
+    if (re.op !== Regexp.Op.LITERAL) return new Prefilter(Prefilter.Type.NONE);
+    if (re.runes.length === 0 || (re.flags & RE2Flags.FOLD_CASE) !== 0) return new Prefilter(Prefilter.Type.NONE);
+    let str = "";
+    for (let i2 = 0; i2 < re.runes.length; i2++) {
+      if (Unicode.isUnsearchable(re.runes[i2])) return new Prefilter(Prefilter.Type.NONE);
+      str += String.fromCodePoint(re.runes[i2]);
+    }
+    const pf = new Prefilter(Prefilter.Type.EXACT);
+    pf.str = str;
+    pf.bytes = Utils.stringToUtf8ByteArray(pf.str);
+    return pf;
+  }
+  static enter(re) {
     switch (re.op) {
-      case Regexp.Op.PLB:
-      case Regexp.Op.NLB:
-      case Regexp.Op.NO_MATCH:
-      case Regexp.Op.EMPTY_MATCH:
-      case Regexp.Op.BEGIN_LINE:
-      case Regexp.Op.END_LINE:
-      case Regexp.Op.BEGIN_TEXT:
-      case Regexp.Op.END_TEXT:
-      case Regexp.Op.WORD_BOUNDARY:
-      case Regexp.Op.NO_WORD_BOUNDARY:
-      case Regexp.Op.CHAR_CLASS:
-      case Regexp.Op.ANY_CHAR_NOT_NL:
-      case Regexp.Op.ANY_CHAR:
-        return new Prefilter(Prefilter.Type.NONE);
-      case Regexp.Op.LITERAL: {
-        if (re.runes.length === 0 || (re.flags & RE2Flags.FOLD_CASE) !== 0) return new Prefilter(Prefilter.Type.NONE);
-        const pf = new Prefilter(Prefilter.Type.EXACT);
-        let str = "";
-        for (let i2 = 0; i2 < re.runes.length; i2++) str += String.fromCodePoint(re.runes[i2]);
-        pf.str = str;
-        pf.bytes = Utils.stringToUtf8ByteArray(pf.str);
-        return pf;
-      }
       case Regexp.Op.CAPTURE:
       case Regexp.Op.PLUS:
-        return PrefilterTree2.fromRegexp(re.subs[0]);
+        return { sub: null };
       case Regexp.Op.REPEAT:
-        if (re.min >= 1) return PrefilterTree2.fromRegexp(re.subs[0]);
-        return new Prefilter(Prefilter.Type.NONE);
-      case Regexp.Op.CONCAT: {
-        const pf = new Prefilter(Prefilter.Type.AND);
-        for (const sub of re.subs) pf.subs.push(PrefilterTree2.fromRegexp(sub));
-        return pf;
-      }
-      case Regexp.Op.ALTERNATE: {
-        const pf = new Prefilter(Prefilter.Type.OR);
-        for (const sub of re.subs) pf.subs.push(PrefilterTree2.fromRegexp(sub));
-        return pf;
-      }
+        if (re.min >= 1) return { sub: null };
+        return { result: new Prefilter(Prefilter.Type.NONE) };
+      case Regexp.Op.CONCAT:
+        return {
+          pf: new Prefilter(Prefilter.Type.AND),
+          subs: []
+        };
+      case Regexp.Op.ALTERNATE:
+        return {
+          pf: new Prefilter(Prefilter.Type.OR),
+          subs: []
+        };
       default:
-        return new Prefilter(Prefilter.Type.NONE);
+        return { result: new Prefilter(Prefilter.Type.NONE) };
     }
   }
-  static simplify(pf) {
-    if (pf.type === Prefilter.Type.EXACT || pf.type === Prefilter.Type.NONE) return pf;
+  static child(re, state, s2) {
+    if (state.subs === void 0) {
+      state.sub = s2;
+      return;
+    }
+    if (state.pf.type === Prefilter.Type.AND) {
+      if (s2.type === Prefilter.Type.NONE) return;
+      if (s2.type === Prefilter.Type.AND) {
+        for (let j = 0; j < s2.subs.length; j++) state.subs.push(s2.subs[j]);
+        return;
+      }
+      state.subs.push(s2);
+      return;
+    }
+    if (s2.type === Prefilter.Type.NONE) {
+      state.result = new Prefilter(Prefilter.Type.NONE);
+      return;
+    }
+    if (s2.type === Prefilter.Type.OR) {
+      for (let j = 0; j < s2.subs.length; j++) state.subs.push(s2.subs[j]);
+      return;
+    }
+    state.subs.push(s2);
+  }
+  static leave(re, state) {
+    if (state.subs === void 0) return state.sub;
+    const pf = state.pf;
+    const seen = /* @__PURE__ */ new Set();
+    const subs = [];
+    for (const sub of state.subs) {
+      if (sub.type === Prefilter.Type.EXACT) {
+        if (seen.has(sub.str)) continue;
+        seen.add(sub.str);
+      }
+      subs.push(sub);
+    }
     if (pf.type === Prefilter.Type.AND) {
-      const newSubs = [];
-      for (const sub of pf.subs) {
-        const s2 = PrefilterTree2.simplify(sub);
-        if (s2.type !== Prefilter.Type.NONE) if (s2.type === Prefilter.Type.AND) for (let j = 0; j < s2.subs.length; j++) newSubs.push(s2.subs[j]);
-        else newSubs.push(s2);
+      const kept = [];
+      let cost2 = 0;
+      for (const sub of subs) {
+        if (cost2 + sub.cost > Prefilter.MAX_SCANS) continue;
+        kept.push(sub);
+        cost2 += sub.cost;
       }
-      if (newSubs.length === 0) return new Prefilter(Prefilter.Type.NONE);
-      if (newSubs.length === 1) return newSubs[0];
-      pf.subs = newSubs;
+      if (kept.length === 0) return new Prefilter(Prefilter.Type.NONE);
+      if (kept.length === 1) return kept[0];
+      pf.subs = kept;
+      pf.cost = cost2;
       return pf;
     }
-    if (pf.type === Prefilter.Type.OR) {
-      const newSubs = [];
-      for (const sub of pf.subs) {
-        const s2 = PrefilterTree2.simplify(sub);
-        if (s2.type === Prefilter.Type.NONE) return new Prefilter(Prefilter.Type.NONE);
-        if (s2.type === Prefilter.Type.OR) for (let j = 0; j < s2.subs.length; j++) newSubs.push(s2.subs[j]);
-        else newSubs.push(s2);
-      }
-      if (newSubs.length === 0) return new Prefilter(Prefilter.Type.NONE);
-      if (newSubs.length === 1) return newSubs[0];
-      const seen = /* @__PURE__ */ new Set();
-      const uniqueSubs = [];
-      for (const sub of newSubs) if (sub.type === Prefilter.Type.EXACT) {
-        if (!seen.has(sub.str)) {
-          seen.add(sub.str);
-          uniqueSubs.push(sub);
-        }
-      } else uniqueSubs.push(sub);
-      pf.subs = uniqueSubs;
-      let allExact = true;
-      for (const sub of uniqueSubs) if (sub.type !== Prefilter.Type.EXACT) {
-        allExact = false;
-        break;
-      }
-      if (allExact && uniqueSubs.length > 1) {
-        pf.ac16 = new AhoCorasick(uniqueSubs.map((s2) => {
-          const arr = [];
-          for (let i2 = 0; i2 < s2.str.length; i2++) arr.push(s2.str.charCodeAt(i2));
-          return arr;
-        }));
-        pf.ac8 = new AhoCorasick(uniqueSubs.map((s2) => s2.bytes));
-      }
+    if (subs.length === 0) return new Prefilter(Prefilter.Type.NONE);
+    if (subs.length === 1) return subs[0];
+    pf.subs = subs;
+    let allExact = true;
+    let cost = 0;
+    let units = 0;
+    for (const sub of subs) {
+      if (sub.type !== Prefilter.Type.EXACT) allExact = false;
+      else units += sub.bytes.length;
+      cost += sub.cost;
+    }
+    if (allExact) {
+      if (units > Prefilter.MAX_AC_UNITS) return new Prefilter(Prefilter.Type.NONE);
+      pf.allExact = true;
+      pf.cost = 1;
       return pf;
     }
+    if (cost > Prefilter.MAX_SCANS) return new Prefilter(Prefilter.Type.NONE);
+    pf.cost = cost;
     return pf;
   }
 };
@@ -7778,6 +8020,7 @@ var Prog = class {
     this.numCap = 2;
     this.lbStarts = [];
     this.numLb = 0;
+    this.lbInst = null;
   }
   getInst(pc) {
     return this.inst[pc];
@@ -7788,6 +8031,28 @@ var Prog = class {
   addInst(op) {
     this.inst.push(new Inst(op));
   }
+  markLookbehindInsts() {
+    const lbInst = new Uint8Array(this.inst.length);
+    const pending = this.lbStarts.slice();
+    while (pending.length > 0) {
+      const pc = pending.pop();
+      if (pc === 0 || lbInst[pc] === 1) continue;
+      lbInst[pc] = 1;
+      const i2 = this.inst[pc];
+      switch (i2.op) {
+        case Inst.ALT:
+        case Inst.ALT_MATCH:
+          pending.push(i2.out, i2.arg);
+          break;
+        case Inst.MATCH:
+        case Inst.FAIL:
+          break;
+        default:
+          pending.push(i2.out);
+      }
+    }
+    this.lbInst = lbInst;
+  }
   skipNop(pc) {
     let i2 = this.inst[pc];
     while (i2.op === Inst.NOP || i2.op === Inst.CAPTURE) {
@@ -7796,11 +8061,12 @@ var Prog = class {
     }
     return i2;
   }
+  /** @returns {[boolean, string]} */
   prefix() {
     let prefix = "";
     let i2 = this.skipNop(this.start);
     if (!Inst.isRuneOp(i2.op) || i2.runes.length !== 1) return [i2.op === Inst.MATCH, prefix];
-    while (Inst.isRuneOp(i2.op) && i2.runes.length === 1 && (i2.arg & RE2Flags.FOLD_CASE) === 0) {
+    while (Inst.isRuneOp(i2.op) && i2.runes.length === 1 && (i2.arg & RE2Flags.FOLD_CASE) === 0 && !Unicode.isUnsearchable(i2.runes[0])) {
       prefix += String.fromCodePoint(i2.runes[0]);
       i2 = this.skipNop(i2.out);
     }
@@ -7865,6 +8131,13 @@ var Prog = class {
     return out;
   }
 };
+var ANY_RUNE_NOT_NL = new Int32Array([
+  0,
+  Codepoint.CODES["\n"] - 1,
+  Codepoint.CODES["\n"] + 1,
+  Unicode.MAX_RUNE
+]);
+var ANY_RUNE = new Int32Array([0, Unicode.MAX_RUNE]);
 var Frag = class {
   constructor(i2 = 0, out = new PatchList(), nullable = false) {
     this.i = i2;
@@ -7873,52 +8146,53 @@ var Frag = class {
   }
 };
 var Compiler = class Compiler2 {
-  static ANY_RUNE_NOT_NL() {
-    return [
-      0,
-      Codepoint.CODES.get("\n") - 1,
-      Codepoint.CODES.get("\n") + 1,
-      Unicode.MAX_RUNE
-    ];
-  }
-  static ANY_RUNE() {
-    return [0, Unicode.MAX_RUNE];
-  }
   static compileRegexp(re) {
     const c2 = new Compiler2();
     const f = c2.compile(re);
     c2.prog.patch(f.out, c2.newInst(Inst.MATCH).i);
     c2.prog.start = f.i;
+    c2.prog.markLookbehindInsts();
     return c2.prog;
   }
   static compileSet(regexps) {
     const c2 = new Compiler2();
     if (regexps.length === 0) {
       c2.prog.start = c2.newInst(Inst.FAIL).i;
+      c2.prog.markLookbehindInsts();
       return c2.prog;
     }
     let starts = [];
     for (let i2 = 0; i2 < regexps.length; i2++) {
+      c2.lbOffset = c2.prog.numLb;
       const f = c2.compile(regexps[i2]);
       const m2 = c2.newInst(Inst.MATCH);
       c2.prog.getInst(m2.i).arg = i2;
       c2.prog.patch(f.out, m2.i);
       starts.push(f.i);
     }
-    let start = starts[0];
+    let start2 = starts[0];
     for (let i2 = 1; i2 < starts.length; i2++) {
       const f = c2.newInst(Inst.ALT);
       const inst = c2.prog.getInst(f.i);
-      inst.out = start;
+      inst.out = start2;
       inst.arg = starts[i2];
-      start = f.i;
+      start2 = f.i;
     }
-    c2.prog.start = start;
+    c2.prog.start = start2;
+    c2.prog.markLookbehindInsts();
     return c2.prog;
   }
   constructor() {
     this.prog = new Prog();
     this.newInst(Inst.FAIL);
+    this.lbOffset = 0;
+    this.runeCache = /* @__PURE__ */ new Map();
+    this.walker = {
+      leaf: (re) => this.leaf(re),
+      enter: (re) => this.enter(re),
+      child: (re, state, result) => this.child(re, state, result),
+      leave: (re, state) => this.leave(re, state)
+    };
   }
   newInst(op) {
     this.prog.addInst(op);
@@ -7940,7 +8214,11 @@ var Compiler = class Compiler2 {
     return f;
   }
   cat(f1, f2) {
-    if (f1.i === 0 || f2.i === 0) return this.fail();
+    if (f1.i === 0 || f2.i === 0) {
+      this.prog.patch(f1.out, 0);
+      this.prog.patch(f2.out, 0);
+      return this.fail();
+    }
     this.prog.patch(f1.out, f2.i);
     return new Frag(f1.i, f2.out, f1.nullable && f2.nullable);
   }
@@ -7969,6 +8247,7 @@ var Compiler = class Compiler2 {
     return f;
   }
   quest(f1, nongreedy) {
+    if (f1.i === 0) return this.nop();
     const f = this.newInst(Inst.ALT);
     const i2 = this.prog.getInst(f.i);
     if (nongreedy) {
@@ -7982,10 +8261,12 @@ var Compiler = class Compiler2 {
     return f;
   }
   star(f1, nongreedy) {
+    if (f1.i === 0) return this.nop();
     if (f1.nullable) return this.quest(this.plus(f1, nongreedy), nongreedy);
     return this.loop(f1, nongreedy);
   }
   plus(f1, nongreedy) {
+    if (f1.i === 0) return this.fail();
     return new Frag(f1.i, this.loop(f1, nongreedy).out, f1.nullable);
   }
   empty(op) {
@@ -8005,13 +8286,14 @@ var Compiler = class Compiler2 {
     f.out = new PatchList(f.i << 1, f.i << 1);
     if ((flags & RE2Flags.FOLD_CASE) === 0 && runes.length === 1 || runes.length === 2 && runes[0] === runes[1]) i2.op = Inst.RUNE1;
     else if (runes.length === 2 && runes[0] === 0 && runes[1] === Unicode.MAX_RUNE) i2.op = Inst.RUNE_ANY;
-    else if (runes.length === 4 && runes[0] === 0 && runes[1] === Codepoint.CODES.get("\n") - 1 && runes[2] === Codepoint.CODES.get("\n") + 1 && runes[3] === Unicode.MAX_RUNE) i2.op = Inst.RUNE_ANY_NOT_NL;
+    else if (runes.length === 4 && runes[0] === 0 && runes[1] === Codepoint.CODES["\n"] - 1 && runes[2] === Codepoint.CODES["\n"] + 1 && runes[3] === Unicode.MAX_RUNE) i2.op = Inst.RUNE_ANY_NOT_NL;
     return f;
   }
-  lookBehind(a, lb) {
+  lookBehind(a, parsedLb) {
+    const lb = Math.sign(parsedLb) * (Math.abs(parsedLb) + this.lbOffset);
     const id = this.newInst(Inst.LB_WRITE);
     this.prog.getInst(id.i).arg = lb;
-    const any = this.rune(Compiler2.ANY_RUNE(), 0);
+    const any = this.rune(ANY_RUNE, 0);
     const dotStar = this.star(any, true);
     const lbAutomaton = this.cat(dotStar, a);
     this.prog.patch(lbAutomaton.out, id.i);
@@ -8023,27 +8305,34 @@ var Compiler = class Compiler2 {
     return checkId;
   }
   compile(re) {
+    return RegexpWalker.walk(re, this.walker);
+  }
+  leaf(re) {
     switch (re.op) {
       case Regexp.Op.NO_MATCH:
         return this.fail();
       case Regexp.Op.EMPTY_MATCH:
         return this.nop();
-      case Regexp.Op.LITERAL:
+      case Regexp.Op.LITERAL: {
         if (re.runes.length === 0) return this.nop();
-        else {
-          let f = null;
-          for (let r2 of re.runes) {
-            const f1 = this.rune([r2], re.flags);
-            f = f === null ? f1 : this.cat(f, f1);
+        let f = null;
+        for (let r2 of re.runes) {
+          let singleRune = this.runeCache.get(r2);
+          if (singleRune === void 0) {
+            singleRune = new Int32Array([r2]);
+            this.runeCache.set(r2, singleRune);
           }
-          return f;
+          const f1 = this.rune(singleRune, re.flags);
+          f = f === null ? f1 : this.cat(f, f1);
         }
+        return f;
+      }
       case Regexp.Op.CHAR_CLASS:
         return this.rune(re.runes, re.flags);
       case Regexp.Op.ANY_CHAR_NOT_NL:
-        return this.rune(Compiler2.ANY_RUNE_NOT_NL(), 0);
+        return this.rune(ANY_RUNE_NOT_NL, 0);
       case Regexp.Op.ANY_CHAR:
-        return this.rune(Compiler2.ANY_RUNE(), 0);
+        return this.rune(ANY_RUNE, 0);
       case Regexp.Op.BEGIN_LINE:
         return this.empty(Utils.EMPTY_BEGIN_LINE);
       case Regexp.Op.END_LINE:
@@ -8056,41 +8345,56 @@ var Compiler = class Compiler2 {
         return this.empty(Utils.EMPTY_WORD_BOUNDARY);
       case Regexp.Op.NO_WORD_BOUNDARY:
         return this.empty(Utils.EMPTY_NO_WORD_BOUNDARY);
+      case Regexp.Op.CONCAT:
+      case Regexp.Op.ALTERNATE:
+        return this.nop();
+      default:
+        throw new RE2JSCompileException("regexp: unhandled case in compile");
+    }
+  }
+  enter(re) {
+    switch (re.op) {
       case Regexp.Op.PLB:
       case Regexp.Op.NLB:
-        return this.lookBehind(this.compile(re.subs[0]), re.lb);
+      case Regexp.Op.STAR:
+      case Regexp.Op.PLUS:
+      case Regexp.Op.QUEST:
+        return { sub: null };
+      case Regexp.Op.CAPTURE:
+        return {
+          bra: this.cap(re.cap << 1),
+          sub: null
+        };
+      case Regexp.Op.CONCAT:
+      case Regexp.Op.ALTERNATE:
+        return { f: null };
+      default:
+        throw new RE2JSCompileException("regexp: unhandled case in compile");
+    }
+  }
+  child(re, state, f1) {
+    if (re.op === Regexp.Op.CONCAT) state.f = state.f === null ? f1 : this.cat(state.f, f1);
+    else if (re.op === Regexp.Op.ALTERNATE) state.f = state.f === null ? f1 : this.alt(state.f, f1);
+    else state.sub = f1;
+  }
+  leave(re, state) {
+    switch (re.op) {
+      case Regexp.Op.PLB:
+      case Regexp.Op.NLB:
+        return this.lookBehind(state.sub, re.lb);
       case Regexp.Op.CAPTURE: {
-        const bra = this.cap(re.cap << 1);
-        const sub = this.compile(re.subs[0]);
         const ket = this.cap(re.cap << 1 | 1);
-        return this.cat(this.cat(bra, sub), ket);
+        return this.cat(this.cat(state.bra, state.sub), ket);
       }
       case Regexp.Op.STAR:
-        return this.star(this.compile(re.subs[0]), (re.flags & RE2Flags.NON_GREEDY) !== 0);
+        return this.star(state.sub, (re.flags & RE2Flags.NON_GREEDY) !== 0);
       case Regexp.Op.PLUS:
-        return this.plus(this.compile(re.subs[0]), (re.flags & RE2Flags.NON_GREEDY) !== 0);
+        return this.plus(state.sub, (re.flags & RE2Flags.NON_GREEDY) !== 0);
       case Regexp.Op.QUEST:
-        return this.quest(this.compile(re.subs[0]), (re.flags & RE2Flags.NON_GREEDY) !== 0);
+        return this.quest(state.sub, (re.flags & RE2Flags.NON_GREEDY) !== 0);
       case Regexp.Op.CONCAT:
-        if (re.subs.length === 0) return this.nop();
-        else {
-          let f = null;
-          for (let sub of re.subs) {
-            const f1 = this.compile(sub);
-            f = f === null ? f1 : this.cat(f, f1);
-          }
-          return f;
-        }
       case Regexp.Op.ALTERNATE:
-        if (re.subs.length === 0) return this.nop();
-        else {
-          let f = null;
-          for (let sub of re.subs) {
-            const f1 = this.compile(sub);
-            f = f === null ? f1 : this.alt(f, f1);
-          }
-          return f;
-        }
+        return state.f;
       default:
         throw new RE2JSCompileException("regexp: unhandled case in compile");
     }
@@ -8099,111 +8403,155 @@ var Compiler = class Compiler2 {
 var Simplify = class Simplify2 {
   static simplify(re) {
     if (re === null) return null;
+    return RegexpWalker.walk(re, Simplify2.WALKER);
+  }
+  static WALKER = {
+    leaf: (re) => Simplify2.leaf(re),
+    enter: (re) => Simplify2.enter(re),
+    child: (re, state, result, i2) => Simplify2.child(re, state, result, i2),
+    leave: (re, state) => Simplify2.leave(re, state)
+  };
+  static leaf(re) {
+    if (re.op === Regexp.Op.CHAR_CLASS) {
+      if (re.runes === null) return re;
+      if (re.runes.length === 0) return new Regexp(Regexp.Op.NO_MATCH);
+      if (re.runes.length === 2 && re.runes[0] === 0 && re.runes[1] === Unicode.MAX_RUNE) return new Regexp(Regexp.Op.ANY_CHAR);
+      if (re.runes.length === 4 && re.runes[0] === 0 && re.runes[1] === Codepoint.CODES["\n"] - 1 && re.runes[2] === Codepoint.CODES["\n"] + 1 && re.runes[3] === Unicode.MAX_RUNE) return new Regexp(Regexp.Op.ANY_CHAR_NOT_NL);
+    }
+    return re;
+  }
+  static enter(re) {
+    switch (re.op) {
+      case Regexp.Op.PLB:
+      case Regexp.Op.NLB:
+      case Regexp.Op.CAPTURE:
+      case Regexp.Op.STAR:
+      case Regexp.Op.PLUS:
+      case Regexp.Op.QUEST:
+        return { sub: null };
+      case Regexp.Op.CONCAT:
+      case Regexp.Op.ALTERNATE:
+        return {
+          subs: [],
+          changed: false
+        };
+      case Regexp.Op.REPEAT:
+        if (re.min === 0 && re.max === 0) return { result: new Regexp(Regexp.Op.EMPTY_MATCH) };
+        return { sub: null };
+      default:
+        return { result: re };
+    }
+  }
+  static child(re, state, nsub, i2) {
+    if (state.subs === void 0) {
+      state.sub = nsub;
+      return;
+    }
+    if (nsub !== re.subs[i2]) state.changed = true;
+    if (re.op === Regexp.Op.CONCAT) {
+      if (nsub.op === Regexp.Op.NO_MATCH) {
+        state.result = new Regexp(Regexp.Op.NO_MATCH);
+        return;
+      }
+      if (nsub.op === Regexp.Op.EMPTY_MATCH) {
+        state.changed = true;
+        return;
+      }
+      if (nsub.op === Regexp.Op.CONCAT) {
+        state.changed = true;
+        for (let j = 0; j < nsub.subs.length; j++) state.subs.push(nsub.subs[j]);
+        return;
+      }
+    } else {
+      if (nsub.op === Regexp.Op.NO_MATCH) {
+        state.changed = true;
+        return;
+      }
+      if (nsub.op === Regexp.Op.ALTERNATE) {
+        state.changed = true;
+        for (let j = 0; j < nsub.subs.length; j++) state.subs.push(nsub.subs[j]);
+        return;
+      }
+    }
+    state.subs.push(nsub);
+  }
+  static leave(re, state) {
     switch (re.op) {
       case Regexp.Op.PLB:
       case Regexp.Op.NLB:
       case Regexp.Op.CAPTURE: {
-        const sub = Simplify2.simplify(re.subs[0]);
+        const sub = state.sub;
         if (sub !== re.subs[0]) {
           const nre = Regexp.fromRegexp(re);
-          nre.runes = [];
+          nre.runes = /* @__PURE__ */ new Int32Array(0);
           nre.subs = [sub];
           return nre;
         }
         return re;
       }
       case Regexp.Op.CONCAT:
-      case Regexp.Op.ALTERNATE: {
-        const newSubs = [];
-        let changed = false;
-        for (let i2 = 0; i2 < re.subs.length; i2++) {
-          const sub = re.subs[i2];
-          const nsub = Simplify2.simplify(sub);
-          if (nsub !== sub) changed = true;
-          if (re.op === Regexp.Op.CONCAT) {
-            if (nsub.op === Regexp.Op.NO_MATCH) return new Regexp(Regexp.Op.NO_MATCH);
-            if (nsub.op === Regexp.Op.EMPTY_MATCH) {
-              changed = true;
-              continue;
-            }
-            if (nsub.op === Regexp.Op.CONCAT) {
-              changed = true;
-              for (let j = 0; j < nsub.subs.length; j++) newSubs.push(nsub.subs[j]);
-              continue;
-            }
-          } else if (re.op === Regexp.Op.ALTERNATE) {
-            if (nsub.op === Regexp.Op.NO_MATCH) {
-              changed = true;
-              continue;
-            }
-            if (nsub.op === Regexp.Op.ALTERNATE) {
-              changed = true;
-              for (let j = 0; j < nsub.subs.length; j++) newSubs.push(nsub.subs[j]);
-              continue;
-            }
-          }
-          newSubs.push(nsub);
-        }
-        if (changed) {
+      case Regexp.Op.ALTERNATE:
+        if (state.changed) {
+          const newSubs = state.subs;
           if (newSubs.length === 0) return new Regexp(re.op === Regexp.Op.CONCAT ? Regexp.Op.EMPTY_MATCH : Regexp.Op.NO_MATCH);
           if (newSubs.length === 1) return newSubs[0];
           const nre = Regexp.fromRegexp(re);
-          nre.runes = [];
+          nre.runes = /* @__PURE__ */ new Int32Array(0);
           nre.subs = newSubs;
           return nre;
         }
         return re;
-      }
-      case Regexp.Op.CHAR_CLASS:
-        if (re.runes === null) return re;
-        if (re.runes.length === 0) return new Regexp(Regexp.Op.NO_MATCH);
-        if (re.runes.length === 2 && re.runes[0] === 0 && re.runes[1] === Unicode.MAX_RUNE) return new Regexp(Regexp.Op.ANY_CHAR);
-        if (re.runes.length === 4 && re.runes[0] === 0 && re.runes[1] === Codepoint.CODES.get("\n") - 1 && re.runes[2] === Codepoint.CODES.get("\n") + 1 && re.runes[3] === Unicode.MAX_RUNE) return new Regexp(Regexp.Op.ANY_CHAR_NOT_NL);
-        return re;
       case Regexp.Op.STAR:
       case Regexp.Op.PLUS:
-      case Regexp.Op.QUEST: {
-        const sub = Simplify2.simplify(re.subs[0]);
-        return Simplify2.simplify1(re.op, re.flags, sub, re);
-      }
-      case Regexp.Op.REPEAT: {
-        if (re.min === 0 && re.max === 0) return new Regexp(Regexp.Op.EMPTY_MATCH);
-        const sub = Simplify2.simplify(re.subs[0]);
-        if (re.max === -1) {
-          if (re.min === 0) return Simplify2.simplify1(Regexp.Op.STAR, re.flags, sub, null);
-          if (re.min === 1) return Simplify2.simplify1(Regexp.Op.PLUS, re.flags, sub, null);
-          const nre = new Regexp(Regexp.Op.CONCAT);
-          const subs = [];
-          for (let i2 = 0; i2 < re.min - 1; i2++) subs.push(sub);
-          subs.push(Simplify2.simplify1(Regexp.Op.PLUS, re.flags, sub, null));
-          nre.subs = subs.slice(0);
-          return Simplify2.simplify(nre);
-        }
-        if (re.min === 1 && re.max === 1) return sub;
-        let prefixSubs = null;
-        if (re.min > 0) {
-          prefixSubs = [];
-          for (let i2 = 0; i2 < re.min; i2++) prefixSubs.push(sub);
-        }
-        if (re.max > re.min) {
-          let suffix = Simplify2.simplify1(Regexp.Op.QUEST, re.flags, sub, null);
-          for (let i2 = re.min + 1; i2 < re.max; i2++) {
-            const nre2 = new Regexp(Regexp.Op.CONCAT);
-            nre2.subs = [sub, suffix];
-            suffix = Simplify2.simplify1(Regexp.Op.QUEST, re.flags, nre2, null);
-          }
-          if (prefixSubs === null) return suffix;
-          prefixSubs.push(suffix);
-        }
-        if (prefixSubs !== null) {
-          const prefix = new Regexp(Regexp.Op.CONCAT);
-          prefix.subs = prefixSubs.slice(0);
-          return Simplify2.simplify(prefix);
-        }
-        return new Regexp(Regexp.Op.NO_MATCH);
-      }
+      case Regexp.Op.QUEST:
+        return Simplify2.simplify1(re.op, re.flags, state.sub, re);
+      case Regexp.Op.REPEAT:
+        return Simplify2.simplifyRepeat(re, state.sub);
+      default:
+        return re;
     }
-    return re;
+  }
+  static simplifyRepeat(re, sub) {
+    if (re.max === -1) {
+      if (re.min === 0) return Simplify2.simplify1(Regexp.Op.STAR, re.flags, sub, null);
+      if (re.min === 1) return Simplify2.simplify1(Regexp.Op.PLUS, re.flags, sub, null);
+      const subs = [];
+      for (let i2 = 0; i2 < re.min - 1; i2++) subs.push(sub);
+      subs.push(Simplify2.simplify1(Regexp.Op.PLUS, re.flags, sub, null));
+      return Simplify2.concat(subs);
+    }
+    if (re.min === 1 && re.max === 1) return sub;
+    let prefixSubs = null;
+    if (re.min > 0) {
+      prefixSubs = [];
+      for (let i2 = 0; i2 < re.min; i2++) prefixSubs.push(sub);
+    }
+    if (re.max > re.min) {
+      let suffix = Simplify2.simplify1(Regexp.Op.QUEST, re.flags, sub, null);
+      for (let i2 = re.min + 1; i2 < re.max; i2++) suffix = Simplify2.simplify1(Regexp.Op.QUEST, re.flags, Simplify2.concat([sub, suffix]), null);
+      if (prefixSubs === null) return suffix;
+      prefixSubs.push(suffix);
+    }
+    if (prefixSubs !== null) return Simplify2.concat(prefixSubs);
+    return new Regexp(Regexp.Op.NO_MATCH);
+  }
+  static concat(subs) {
+    const newSubs = [];
+    for (let i2 = 0; i2 < subs.length; i2++) {
+      const sub = subs[i2];
+      if (sub.op === Regexp.Op.NO_MATCH) return new Regexp(Regexp.Op.NO_MATCH);
+      if (sub.op === Regexp.Op.EMPTY_MATCH) continue;
+      if (sub.op === Regexp.Op.CONCAT) {
+        for (let j = 0; j < sub.subs.length; j++) newSubs.push(sub.subs[j]);
+        continue;
+      }
+      newSubs.push(sub);
+    }
+    if (newSubs.length === 0) return new Regexp(Regexp.Op.EMPTY_MATCH);
+    if (newSubs.length === 1) return newSubs[0];
+    const nre = new Regexp(Regexp.Op.CONCAT);
+    nre.subs = newSubs;
+    return nre;
   }
   static simplify1(op, flags, sub, re) {
     if (sub.op === Regexp.Op.EMPTY_MATCH) return sub;
@@ -8361,46 +8709,38 @@ var CharClass = class CharClass2 {
     result += "]";
     return result;
   }
-  static cmp(array, i2, pivotFrom, pivotTo) {
-    const cmp = array[i2] - pivotFrom;
-    return cmp !== 0 ? cmp : pivotTo - array[i2 + 1];
-  }
-  static qsortIntPair(array, left, right) {
-    const pivotIndex = ((left + right) / 2 | 0) & -2;
-    const pivotFrom = array[pivotIndex];
-    const pivotTo = array[pivotIndex + 1];
-    let i2 = left;
-    let j = right;
-    while (i2 <= j) {
-      while (i2 < right && CharClass2.cmp(array, i2, pivotFrom, pivotTo) < 0) i2 += 2;
-      while (j > left && CharClass2.cmp(array, j, pivotFrom, pivotTo) > 0) j -= 2;
-      if (i2 <= j) {
-        if (i2 !== j) {
-          let temp = array[i2];
-          array[i2] = array[j];
-          array[j] = temp;
-          temp = array[i2 + 1];
-          array[i2 + 1] = array[j + 1];
-          array[j + 1] = temp;
-        }
-        i2 += 2;
-        j -= 2;
-      }
+  static sortRanges(array, len) {
+    const n2 = len >> 1;
+    const order = new Array(n2);
+    for (let i2 = 0; i2 < n2; i2++) order[i2] = i2;
+    order.sort((a, b2) => array[2 * a] - array[2 * b2] || array[2 * b2 + 1] - array[2 * a + 1]);
+    const sorted = array.slice(0, len);
+    for (let i2 = 0; i2 < n2; i2++) {
+      array[2 * i2] = sorted[2 * order[i2]];
+      array[2 * i2 + 1] = sorted[2 * order[i2] + 1];
     }
-    if (left < j) CharClass2.qsortIntPair(array, left, j);
-    if (i2 < right) CharClass2.qsortIntPair(array, i2, right);
   }
+  /**
+  * @param {number[]|Int32Array} [r]
+  */
   constructor(r2 = Utils.emptyInts()) {
     this.r = r2;
     this.len = r2.length;
   }
   toArray() {
-    if (this.len === this.r.length) return this.r;
-    else return this.r.slice(0, this.len);
+    if (this.r instanceof Int32Array) return this.len === this.r.length ? this.r : this.r.subarray(0, this.len);
+    return new Int32Array(this.len === this.r.length ? this.r : this.r.slice(0, this.len));
+  }
+  toGrowableArray() {
+    if (Array.isArray(this.r)) {
+      this.r.length = this.len;
+      return this.r;
+    }
+    return Array.from(this.r.subarray(0, this.len));
   }
   cleanClass() {
     if (this.len < 4) return this;
-    CharClass2.qsortIntPair(this.r, 0, this.len - 2);
+    CharClass2.sortRanges(this.r, this.len);
     let w2 = 2;
     for (let i2 = 2; i2 < this.len; i2 += 2) {
       const lo = this.r[i2];
@@ -8597,7 +8937,7 @@ var Parser = class Parser2 {
   static ERR_LARGE = "expression too large";
   static ERR_INVALID_CAPTURE_IN_LOOKBEHIND = "invalid capture in lookbehind";
   static MAX_HEIGHT = 1e3;
-  static MAX_SIZE = 3355443;
+  static MAX_SIZE = 1398101;
   static MAX_RUNES = 33554432;
   static ANY_TABLE = new UnicodeRangeTable(new Uint32Array([
     0,
@@ -8620,35 +8960,35 @@ var Parser = class Parser2 {
     8490,
     1
   ]));
-  static unicodeTable(name4) {
-    if (name4 === "Any") return {
+  static unicodeTable(name5) {
+    if (name5 === "Any") return {
       tab: Parser2.ANY_TABLE,
       fold: Parser2.ANY_TABLE,
       sign: 1
     };
-    if (name4 === "Ascii") return {
+    if (name5 === "Ascii") return {
       tab: Parser2.ASCII_TABLE,
       fold: Parser2.ASCII_FOLD_TABLE,
       sign: 1
     };
-    if (name4 === "Assigned") return {
+    if (name5 === "Assigned") return {
       tab: UnicodeTables.CATEGORIES.get("Cn"),
       fold: UnicodeTables.CATEGORIES.get("Cn"),
       sign: -1
     };
-    if (name4 === "Lc") return {
+    if (name5 === "Lc") return {
       tab: UnicodeTables.CATEGORIES.get("LC"),
       fold: UnicodeTables.FOLD_CATEGORIES.get("LC"),
       sign: 1
     };
-    if (UnicodeTables.CATEGORIES.has(name4)) return {
-      tab: UnicodeTables.CATEGORIES.get(name4),
-      fold: UnicodeTables.FOLD_CATEGORIES.get(name4),
+    if (UnicodeTables.CATEGORIES.has(name5)) return {
+      tab: UnicodeTables.CATEGORIES.get(name5),
+      fold: UnicodeTables.FOLD_CATEGORIES.get(name5),
       sign: 1
     };
-    if (UnicodeTables.SCRIPTS.has(name4)) return {
-      tab: UnicodeTables.SCRIPTS.get(name4),
-      fold: UnicodeTables.FOLD_SCRIPT.get(name4),
+    if (UnicodeTables.SCRIPTS.has(name5)) return {
+      tab: UnicodeTables.SCRIPTS.get(name5),
+      fold: UnicodeTables.FOLD_SCRIPT.get(name5),
       sign: 1
     };
     return null;
@@ -8684,7 +9024,7 @@ var Parser = class Parser2 {
     return new Parser2(pattern, flags).parseInternal();
   }
   static parseRepeat(t2) {
-    const start = t2.pos();
+    const start2 = t2.pos();
     if (!t2.more() || !t2.lookingAt("{")) return -1;
     t2.skip(1);
     const min = Parser2.parseInt(t2);
@@ -8700,22 +9040,22 @@ var Parser = class Parser2 {
     }
     if (!t2.more() || !t2.lookingAt("}")) return -1;
     t2.skip(1);
-    if (min < 0 || min > 1e3 || max === -2 || max > 1e3 || max >= 0 && min > max) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_REPEAT_SIZE, t2.from(start));
+    if (min < 0 || min > 1e3 || max === -2 || max > 1e3 || max >= 0 && min > max) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_REPEAT_SIZE, t2.from(start2));
     return min << 16 | max & Unicode.MAX_BMP;
   }
-  static isValidCaptureName(name4) {
-    if (name4.length === 0) return false;
-    for (let i2 = 0; i2 < name4.length; i2++) {
-      const c2 = name4.codePointAt(i2);
-      if (c2 !== Codepoint.CODES.get("_") && !Utils.isalnum(c2)) return false;
+  static isValidCaptureName(name5) {
+    if (name5.length === 0) return false;
+    for (let i2 = 0; i2 < name5.length; i2++) {
+      const c2 = name5.codePointAt(i2);
+      if (c2 !== Codepoint.CODES["_"] && !Utils.isalnum(c2)) return false;
     }
     return true;
   }
   static parseInt(t2) {
-    const start = t2.pos();
-    while (t2.more() && t2.peek() >= Codepoint.CODES.get("0") && t2.peek() <= Codepoint.CODES.get("9")) t2.skip(1);
-    const n2 = t2.from(start);
-    if (n2.length === 0 || n2.length > 1 && n2.codePointAt(0) === Codepoint.CODES.get("0")) return -1;
+    const start2 = t2.pos();
+    while (t2.more() && t2.peek() >= Codepoint.CODES["0"] && t2.peek() <= Codepoint.CODES["9"]) t2.skip(1);
+    const n2 = t2.from(start2);
+    if (n2.length === 0 || n2.length > 1 && n2.codePointAt(0) === Codepoint.CODES["0"]) return -1;
     if (n2.length > 8) return -2;
     return parseInt(n2, 10);
   }
@@ -8730,7 +9070,7 @@ var Parser = class Parser2 {
         for (let i2 = 0; i2 < re.runes.length; i2 += 2) if (re.runes[i2] <= r2 && r2 <= re.runes[i2 + 1]) return true;
         return false;
       case Regexp.Op.ANY_CHAR_NOT_NL:
-        return r2 !== Codepoint.CODES.get("\n");
+        return r2 !== Codepoint.CODES["\n"];
       case Regexp.Op.ANY_CHAR:
         return true;
     }
@@ -8741,17 +9081,19 @@ var Parser = class Parser2 {
       case Regexp.Op.ANY_CHAR:
         break;
       case Regexp.Op.ANY_CHAR_NOT_NL:
-        if (Parser2.matchRune(src, Codepoint.CODES.get("\n"))) dst.op = Regexp.Op.ANY_CHAR;
+        if (Parser2.matchRune(src, Codepoint.CODES["\n"])) dst.op = Regexp.Op.ANY_CHAR;
         break;
-      case Regexp.Op.CHAR_CLASS:
-        if (src.op === Regexp.Op.LITERAL) dst.runes = new CharClass(dst.runes).appendLiteral(src.runes[0], src.flags).toArray();
-        else dst.runes = new CharClass(dst.runes).appendClass(src.runes).toArray();
+      case Regexp.Op.CHAR_CLASS: {
+        const cc = new CharClass(Array.isArray(dst.runes) ? dst.runes : Array.from(dst.runes));
+        if (src.op === Regexp.Op.LITERAL) cc.appendLiteral(src.runes[0], src.flags);
+        else cc.appendClass(src.runes);
+        dst.runes = cc.toGrowableArray();
         break;
+      }
       case Regexp.Op.LITERAL:
         if (src.runes[0] === dst.runes[0] && src.flags === dst.flags) break;
         dst.op = Regexp.Op.CHAR_CLASS;
-        dst.runes = new CharClass().appendLiteral(dst.runes[0], dst.flags).appendLiteral(src.runes[0], src.flags).toArray();
-        break;
+        dst.runes = new CharClass().appendLiteral(dst.runes[0], dst.flags).appendLiteral(src.runes[0], src.flags).toGrowableArray();
     }
   }
   static parseEscape(t2) {
@@ -8760,33 +9102,33 @@ var Parser = class Parser2 {
     if (!t2.more()) throw new RE2JSSyntaxException(Parser2.ERR_TRAILING_BACKSLASH);
     let c2 = t2.pop();
     bigswitch: switch (c2) {
-      case Codepoint.CODES.get("1"):
-      case Codepoint.CODES.get("2"):
-      case Codepoint.CODES.get("3"):
-      case Codepoint.CODES.get("4"):
-      case Codepoint.CODES.get("5"):
-      case Codepoint.CODES.get("6"):
-      case Codepoint.CODES.get("7"):
-        if (!t2.more() || t2.peek() < Codepoint.CODES.get("0") || t2.peek() > Codepoint.CODES.get("7")) break;
-      case Codepoint.CODES.get("0"): {
-        let r2 = c2 - Codepoint.CODES.get("0");
+      case Codepoint.CODES["1"]:
+      case Codepoint.CODES["2"]:
+      case Codepoint.CODES["3"]:
+      case Codepoint.CODES["4"]:
+      case Codepoint.CODES["5"]:
+      case Codepoint.CODES["6"]:
+      case Codepoint.CODES["7"]:
+        if (!t2.more() || t2.peek() < Codepoint.CODES["0"] || t2.peek() > Codepoint.CODES["7"]) break;
+      case Codepoint.CODES["0"]: {
+        let r2 = c2 - Codepoint.CODES["0"];
         for (let i2 = 1; i2 < 3; i2++) {
-          if (!t2.more() || t2.peek() < Codepoint.CODES.get("0") || t2.peek() > Codepoint.CODES.get("7")) break;
-          r2 = r2 * 8 + t2.peek() - Codepoint.CODES.get("0");
+          if (!t2.more() || t2.peek() < Codepoint.CODES["0"] || t2.peek() > Codepoint.CODES["7"]) break;
+          r2 = r2 * 8 + t2.peek() - Codepoint.CODES["0"];
           t2.skip(1);
         }
         return r2;
       }
-      case Codepoint.CODES.get("x"): {
+      case Codepoint.CODES["x"]: {
         if (!t2.more()) break;
         c2 = t2.pop();
-        if (c2 === Codepoint.CODES.get("{")) {
+        if (c2 === Codepoint.CODES["{"]) {
           let nhex = 0;
           let r2 = 0;
           while (true) {
             if (!t2.more()) break bigswitch;
             c2 = t2.pop();
-            if (c2 === Codepoint.CODES.get("}")) break;
+            if (c2 === Codepoint.CODES["}"]) break;
             const v2 = Utils.unhex(c2);
             if (v2 < 0) break bigswitch;
             r2 = r2 * 16 + v2;
@@ -8803,21 +9145,20 @@ var Parser = class Parser2 {
         if (x2 < 0 || y2 < 0) break;
         return x2 * 16 + y2;
       }
-      case Codepoint.CODES.get("a"):
-        return Codepoint.CODES.get("\x07");
-      case Codepoint.CODES.get("f"):
-        return Codepoint.CODES.get("\f");
-      case Codepoint.CODES.get("n"):
-        return Codepoint.CODES.get("\n");
-      case Codepoint.CODES.get("r"):
-        return Codepoint.CODES.get("\r");
-      case Codepoint.CODES.get("t"):
-        return Codepoint.CODES.get("	");
-      case Codepoint.CODES.get("v"):
-        return Codepoint.CODES.get("\v");
+      case Codepoint.CODES["a"]:
+        return Codepoint.CODES["\x07"];
+      case Codepoint.CODES["f"]:
+        return Codepoint.CODES["\f"];
+      case Codepoint.CODES["n"]:
+        return Codepoint.CODES["\n"];
+      case Codepoint.CODES["r"]:
+        return Codepoint.CODES["\r"];
+      case Codepoint.CODES["t"]:
+        return Codepoint.CODES["	"];
+      case Codepoint.CODES["v"]:
+        return Codepoint.CODES["\v"];
       default:
         if (c2 <= Unicode.MAX_ASCII && !Utils.isalnum(c2)) return c2;
-        break;
     }
     throw new RE2JSSyntaxException(Parser2.ERR_INVALID_ESCAPE, t2.from(startPos));
   }
@@ -8825,10 +9166,6 @@ var Parser = class Parser2 {
     if (!t2.more()) throw new RE2JSSyntaxException(Parser2.ERR_MISSING_BRACKET, t2.from(wholeClassPos));
     if (t2.lookingAt("\\")) return Parser2.parseEscape(t2);
     return t2.pop();
-  }
-  static concatRunes(x2, y2) {
-    for (let i2 = 0; i2 < y2.length; i2++) x2.push(y2[i2]);
-    return x2;
   }
   static hasCapture(re) {
     if (re === null) return false;
@@ -8960,9 +9297,7 @@ var Parser = class Parser2 {
     const n2 = this.stack.length;
     let i2 = n2;
     while (i2 > 0 && !Regexp.isPseudoOp(this.stack[i2 - 1].op)) i2--;
-    const r2 = this.stack.slice(i2, n2);
-    this.stack = this.stack.slice(0, i2);
-    return r2;
+    return this.stack.splice(i2, n2 - i2);
   }
   push(re) {
     this.numRunes += re.runes.length;
@@ -8987,7 +9322,8 @@ var Parser = class Parser2 {
     const re1 = this.stack[n2 - 1];
     const re2 = this.stack[n2 - 2];
     if (re1.op !== Regexp.Op.LITERAL || re2.op !== Regexp.Op.LITERAL || (re1.flags & RE2Flags.FOLD_CASE) !== (re2.flags & RE2Flags.FOLD_CASE)) return false;
-    re2.runes = Parser2.concatRunes(re2.runes, re1.runes);
+    if (!Array.isArray(re2.runes)) re2.runes = Array.from(re2.runes);
+    for (let i2 = 0; i2 < re1.runes.length; i2++) re2.runes.push(re1.runes[i2]);
     if (r2 >= 0) {
       re1.runes = [r2];
       re1.flags = flags;
@@ -9059,12 +9395,12 @@ var Parser = class Parser2 {
   }
   cleanAlt(re) {
     if (re.op === Regexp.Op.CHAR_CLASS) {
-      re.runes = new CharClass(re.runes).cleanClass().toArray();
+      re.runes = new CharClass(Array.from(re.runes)).cleanClass().toArray();
       if (re.runes.length === 2 && re.runes[0] === 0 && re.runes[1] === Unicode.MAX_RUNE) {
-        re.runes = [];
+        re.runes = /* @__PURE__ */ new Int32Array(0);
         re.op = Regexp.Op.ANY_CHAR;
-      } else if (re.runes.length === 4 && re.runes[0] === 0 && re.runes[1] === Codepoint.CODES.get("\n") - 1 && re.runes[2] === Codepoint.CODES.get("\n") + 1 && re.runes[3] === Unicode.MAX_RUNE) {
-        re.runes = [];
+      } else if (re.runes.length === 4 && re.runes[0] === 0 && re.runes[1] === Codepoint.CODES["\n"] - 1 && re.runes[2] === Codepoint.CODES["\n"] + 1 && re.runes[3] === Unicode.MAX_RUNE) {
+        re.runes = /* @__PURE__ */ new Int32Array(0);
         re.op = Regexp.Op.ANY_CHAR_NOT_NL;
       }
     }
@@ -9099,7 +9435,7 @@ var Parser = class Parser2 {
     let str = null;
     let strlen = 0;
     let strflags = 0;
-    let start = 0;
+    let start2 = 0;
     for (let i2 = 0; i2 <= lensub; i2++) {
       let istr = null;
       let istrlen = 0;
@@ -9121,29 +9457,29 @@ var Parser = class Parser2 {
           }
         }
       }
-      if (i2 === start) {
-      } else if (i2 === start + 1) array[lenout++] = array[s2 + start];
+      if (i2 === start2) {
+      } else if (i2 === start2 + 1) array[lenout++] = array[s2 + start2];
       else {
         const prefix = this.newRegexp(Regexp.Op.LITERAL);
         prefix.flags = strflags;
         prefix.runes = str.slice(0, strlen);
-        for (let j = start; j < i2; j++) {
+        for (let j = start2; j < i2; j++) {
           array[s2 + j] = this.removeLeadingString(array[s2 + j], strlen);
           this.checkLimits(array[s2 + j]);
         }
-        const suffix = this.collapse(array.slice(s2 + start, s2 + i2), Regexp.Op.ALTERNATE);
+        const suffix = this.collapse(array.slice(s2 + start2, s2 + i2), Regexp.Op.ALTERNATE);
         const re = this.newRegexp(Regexp.Op.CONCAT);
         re.subs = [prefix, suffix];
         array[lenout++] = re;
       }
-      start = i2;
+      start2 = i2;
       str = istr;
       strlen = istrlen;
       strflags = iflags;
     }
     lensub = lenout;
     s2 = 0;
-    start = 0;
+    start2 = 0;
     lenout = 0;
     let first = null;
     for (let i2 = 0; i2 <= lensub; i2++) {
@@ -9152,54 +9488,54 @@ var Parser = class Parser2 {
         ifirst = Parser2.leadingRegexp(array[s2 + i2]);
         if (first !== null && first.equals(ifirst) && (Parser2.isCharClass(first) || first.op === Regexp.Op.REPEAT && first.min === first.max && Parser2.isCharClass(first.subs[0]))) continue;
       }
-      if (i2 === start) {
-      } else if (i2 === start + 1) array[lenout++] = array[s2 + start];
+      if (i2 === start2) {
+      } else if (i2 === start2 + 1) array[lenout++] = array[s2 + start2];
       else {
         const prefix = first;
-        for (let j = start; j < i2; j++) {
-          const reuse = j !== start;
+        for (let j = start2; j < i2; j++) {
+          const reuse = j !== start2;
           array[s2 + j] = this.removeLeadingRegexp(array[s2 + j], reuse);
           this.checkLimits(array[s2 + j]);
         }
-        const suffix = this.collapse(array.slice(s2 + start, s2 + i2), Regexp.Op.ALTERNATE);
+        const suffix = this.collapse(array.slice(s2 + start2, s2 + i2), Regexp.Op.ALTERNATE);
         const re = this.newRegexp(Regexp.Op.CONCAT);
         re.subs = [prefix, suffix];
         array[lenout++] = re;
       }
-      start = i2;
+      start2 = i2;
       first = ifirst;
     }
     lensub = lenout;
     s2 = 0;
-    start = 0;
+    start2 = 0;
     lenout = 0;
     for (let i2 = 0; i2 <= lensub; i2++) {
       if (i2 < lensub && Parser2.isCharClass(array[s2 + i2])) continue;
-      if (i2 === start) {
-      } else if (i2 === start + 1) array[lenout++] = array[s2 + start];
+      if (i2 === start2) {
+      } else if (i2 === start2 + 1) array[lenout++] = array[s2 + start2];
       else {
-        let max = start;
-        for (let j = start + 1; j < i2; j++) {
+        let max = start2;
+        for (let j = start2 + 1; j < i2; j++) {
           const subMax = array[s2 + max];
           const subJ = array[s2 + j];
           if (subMax.op < subJ.op || subMax.op === subJ.op && (subMax.runes !== null ? subMax.runes.length : 0) < (subJ.runes !== null ? subJ.runes.length : 0)) max = j;
         }
-        const tmp = array[s2 + start];
-        array[s2 + start] = array[s2 + max];
+        const tmp = array[s2 + start2];
+        array[s2 + start2] = array[s2 + max];
         array[s2 + max] = tmp;
-        for (let j = start + 1; j < i2; j++) {
-          Parser2.mergeCharClass(array[s2 + start], array[s2 + j]);
+        for (let j = start2 + 1; j < i2; j++) {
+          Parser2.mergeCharClass(array[s2 + start2], array[s2 + j]);
           this.reuse(array[s2 + j]);
         }
-        this.cleanAlt(array[s2 + start]);
-        array[lenout++] = array[s2 + start];
+        this.cleanAlt(array[s2 + start2]);
+        array[lenout++] = array[s2 + start2];
       }
       if (i2 < lensub) array[lenout++] = array[s2 + i2];
-      start = i2 + 1;
+      start2 = i2 + 1;
     }
     lensub = lenout;
     s2 = 0;
-    start = 0;
+    start2 = 0;
     lenout = 0;
     for (let i2 = 0; i2 < lensub; ++i2) {
       if (i2 + 1 < lensub && array[s2 + i2].op === Regexp.Op.EMPTY_MATCH && array[s2 + i2 + 1].op === Regexp.Op.EMPTY_MATCH) continue;
@@ -9229,7 +9565,6 @@ var Parser = class Parser2 {
           }
           default:
             re.subs = re.subs.slice(1, re.subs.length);
-            break;
         }
       }
       return re;
@@ -9270,7 +9605,7 @@ var Parser = class Parser2 {
     while (t2.more()) {
       let repeatPos = -1;
       bigswitch: switch (t2.peek()) {
-        case Codepoint.CODES.get("("):
+        case Codepoint.CODES["("]:
           if ((this.flags & RE2Flags.LOOKBEHIND) !== 0) {
             if (t2.lookingAt("(?<=")) {
               this.parsePosLookBehind();
@@ -9290,80 +9625,80 @@ var Parser = class Parser2 {
           this.op(Regexp.Op.LEFT_PAREN).cap = ++this.numCap;
           t2.skip(1);
           break;
-        case Codepoint.CODES.get("|"):
+        case Codepoint.CODES["|"]:
           this.parseVerticalBar();
           t2.skip(1);
           break;
-        case Codepoint.CODES.get(")"):
+        case Codepoint.CODES[")"]:
           this.parseRightParen();
           t2.skip(1);
           break;
-        case Codepoint.CODES.get("^"):
+        case Codepoint.CODES["^"]:
           if ((this.flags & RE2Flags.ONE_LINE) !== 0) this.op(Regexp.Op.BEGIN_TEXT);
           else this.op(Regexp.Op.BEGIN_LINE);
           t2.skip(1);
           break;
-        case Codepoint.CODES.get("$"):
+        case Codepoint.CODES["$"]:
           if ((this.flags & RE2Flags.ONE_LINE) !== 0) this.op(Regexp.Op.END_TEXT).flags |= RE2Flags.WAS_DOLLAR;
           else this.op(Regexp.Op.END_LINE);
           t2.skip(1);
           break;
-        case Codepoint.CODES.get("."):
+        case Codepoint.CODES["."]:
           if ((this.flags & RE2Flags.DOT_NL) !== 0) this.op(Regexp.Op.ANY_CHAR);
           else this.op(Regexp.Op.ANY_CHAR_NOT_NL);
           t2.skip(1);
           break;
-        case Codepoint.CODES.get("["):
+        case Codepoint.CODES["["]:
           this.parseClass(t2);
           break;
-        case Codepoint.CODES.get("*"):
-        case Codepoint.CODES.get("+"):
-        case Codepoint.CODES.get("?"): {
+        case Codepoint.CODES["*"]:
+        case Codepoint.CODES["+"]:
+        case Codepoint.CODES["?"]: {
           repeatPos = t2.pos();
           let op = null;
           switch (t2.pop()) {
-            case Codepoint.CODES.get("*"):
+            case Codepoint.CODES["*"]:
               op = Regexp.Op.STAR;
               break;
-            case Codepoint.CODES.get("+"):
+            case Codepoint.CODES["+"]:
               op = Regexp.Op.PLUS;
               break;
-            case Codepoint.CODES.get("?"):
+            case Codepoint.CODES["?"]:
               op = Regexp.Op.QUEST;
-              break;
           }
           this.repeat(op, min, max, repeatPos, t2, lastRepeatPos);
           break;
         }
-        case Codepoint.CODES.get("{"): {
-          repeatPos = t2.pos();
+        case Codepoint.CODES["{"]: {
+          const before = t2.pos();
           const minMax = Parser2.parseRepeat(t2);
           if (minMax < 0) {
-            t2.rewindTo(repeatPos);
+            t2.rewindTo(before);
             this.literal(t2.pop());
             break;
           }
+          repeatPos = before;
           min = minMax >> 16;
           max = (minMax & Unicode.MAX_BMP) << 16 >> 16;
           this.repeat(Regexp.Op.REPEAT, min, max, repeatPos, t2, lastRepeatPos);
           break;
         }
-        case Codepoint.CODES.get("\\"): {
+        case Codepoint.CODES["\\"]: {
           const savedPos = t2.pos();
           t2.skip(1);
           if ((this.flags & RE2Flags.PERL_X) !== 0 && t2.more()) switch (t2.pop()) {
-            case Codepoint.CODES.get("A"):
+            case Codepoint.CODES["A"]:
               this.op(Regexp.Op.BEGIN_TEXT);
               break bigswitch;
-            case Codepoint.CODES.get("b"):
+            case Codepoint.CODES["b"]:
               this.op(Regexp.Op.WORD_BOUNDARY);
               break bigswitch;
-            case Codepoint.CODES.get("B"):
+            case Codepoint.CODES["B"]:
               this.op(Regexp.Op.NO_WORD_BOUNDARY);
               break bigswitch;
-            case Codepoint.CODES.get("C"):
+            case Codepoint.CODES["C"]:
               throw new RE2JSSyntaxException(Parser2.ERR_INVALID_ESCAPE, "\\C");
-            case Codepoint.CODES.get("Q"): {
+            case Codepoint.CODES["Q"]: {
               let lit = t2.rest();
               const i2 = lit.indexOf("\\E");
               if (i2 >= 0) {
@@ -9379,12 +9714,11 @@ var Parser = class Parser2 {
               }
               break bigswitch;
             }
-            case Codepoint.CODES.get("z"):
+            case Codepoint.CODES["z"]:
               this.op(Regexp.Op.END_TEXT);
               break bigswitch;
             default:
               t2.rewindTo(savedPos);
-              break;
           }
           else t2.rewindTo(savedPos);
           const re = this.newRegexp(Regexp.Op.CHAR_CLASS);
@@ -9410,7 +9744,6 @@ var Parser = class Parser2 {
         }
         default:
           this.literal(t2.pop());
-          break;
       }
       lastRepeatPos = repeatPos;
     }
@@ -9428,15 +9761,15 @@ var Parser = class Parser2 {
       const begin = s2.charAt(2) === "P" ? 4 : 3;
       const end = s2.indexOf(">");
       if (end < 0) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_NAMED_CAPTURE, s2);
-      const name4 = s2.substring(begin, end);
-      t2.skipString(name4);
+      const name5 = s2.substring(begin, end);
+      t2.skipString(name5);
       t2.skip(begin + 1);
-      if (!Parser2.isValidCaptureName(name4)) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_NAMED_CAPTURE, s2.substring(0, end + 1));
+      if (!Parser2.isValidCaptureName(name5)) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_NAMED_CAPTURE, s2.substring(0, end + 1));
       const re = this.op(Regexp.Op.LEFT_PAREN);
       re.cap = ++this.numCap;
-      if (this.namedGroups[name4]) throw new RE2JSSyntaxException(Parser2.ERR_DUPLICATE_NAMED_CAPTURE, name4);
-      this.namedGroups[name4] = this.numCap;
-      re.name = name4;
+      if (this.namedGroups[name5]) throw new RE2JSSyntaxException(Parser2.ERR_DUPLICATE_NAMED_CAPTURE, name5);
+      this.namedGroups[name5] = this.numCap;
+      re.name = name5;
       return;
     }
     t2.skip(2);
@@ -9446,35 +9779,35 @@ var Parser = class Parser2 {
     loop: while (t2.more()) {
       const c2 = t2.pop();
       switch (c2) {
-        case Codepoint.CODES.get("i"):
+        case Codepoint.CODES["i"]:
           flags |= RE2Flags.FOLD_CASE;
           sawFlag = true;
           break;
-        case Codepoint.CODES.get("m"):
+        case Codepoint.CODES["m"]:
           flags &= ~RE2Flags.ONE_LINE;
           sawFlag = true;
           break;
-        case Codepoint.CODES.get("s"):
+        case Codepoint.CODES["s"]:
           flags |= RE2Flags.DOT_NL;
           sawFlag = true;
           break;
-        case Codepoint.CODES.get("U"):
+        case Codepoint.CODES["U"]:
           flags |= RE2Flags.NON_GREEDY;
           sawFlag = true;
           break;
-        case Codepoint.CODES.get("-"):
+        case Codepoint.CODES["-"]:
           if (sign < 0) break loop;
           sign = -1;
           flags = ~flags;
           sawFlag = false;
           break;
-        case Codepoint.CODES.get(":"):
-        case Codepoint.CODES.get(")"):
+        case Codepoint.CODES[":"]:
+        case Codepoint.CODES[")"]:
           if (sign < 0) {
             if (!sawFlag) break loop;
             flags = ~flags;
           }
-          if (c2 === Codepoint.CODES.get(":")) this.op(Regexp.Op.LEFT_PAREN);
+          if (c2 === Codepoint.CODES[":"]) this.op(Regexp.Op.LEFT_PAREN);
           this.flags = flags;
           return;
         default:
@@ -9553,7 +9886,7 @@ var Parser = class Parser2 {
   }
   parsePerlClassEscape(t2, cc) {
     const beforePos = t2.pos();
-    if ((this.flags & RE2Flags.PERL_X) === 0 || !t2.more() || t2.pop() !== Codepoint.CODES.get("\\") || !t2.more()) return false;
+    if ((this.flags & RE2Flags.PERL_X) === 0 || !t2.more() || t2.pop() !== Codepoint.CODES["\\"] || !t2.more()) return false;
     t2.pop();
     const p2 = t2.from(beforePos);
     const g = PERL_GROUPS.has(p2) ? PERL_GROUPS.get(p2) : null;
@@ -9565,10 +9898,10 @@ var Parser = class Parser2 {
     const cls = t2.rest();
     const i2 = cls.indexOf(":]");
     if (i2 < 0) return false;
-    const name4 = cls.substring(0, i2 + 2);
-    t2.skipString(name4);
-    const g = POSIX_GROUPS.has(name4) ? POSIX_GROUPS.get(name4) : null;
-    if (g === null) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_CHAR_RANGE, name4);
+    const name5 = cls.substring(0, i2 + 2);
+    t2.skipString(name5);
+    const g = POSIX_GROUPS.has(name5) ? POSIX_GROUPS.get(name5) : null;
+    if (g === null) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_CHAR_RANGE, name5);
     cc.appendGroup(g, (this.flags & RE2Flags.FOLD_CASE) !== 0);
     return true;
   }
@@ -9578,14 +9911,14 @@ var Parser = class Parser2 {
     t2.skip(1);
     let sign = 1;
     let c2 = t2.pop();
-    if (c2 === Codepoint.CODES.get("P")) sign = -1;
+    if (c2 === Codepoint.CODES["P"]) sign = -1;
     if (!t2.more()) {
       t2.rewindTo(startPos);
       throw new RE2JSSyntaxException(Parser2.ERR_INVALID_CHAR_RANGE, t2.rest());
     }
     c2 = t2.pop();
-    let name4;
-    if (c2 !== Codepoint.CODES.get("{")) name4 = Utils.runeToString(c2);
+    let name5;
+    if (c2 !== Codepoint.CODES["{"]) name5 = Utils.runeToString(c2);
     else {
       const rest = t2.rest();
       const end = rest.indexOf("}");
@@ -9593,15 +9926,15 @@ var Parser = class Parser2 {
         t2.rewindTo(startPos);
         throw new RE2JSSyntaxException(Parser2.ERR_INVALID_CHAR_RANGE, t2.rest());
       }
-      name4 = rest.substring(0, end);
-      t2.skipString(name4);
+      name5 = rest.substring(0, end);
+      t2.skipString(name5);
       t2.skip(1);
     }
-    if (!(name4.length === 0) && name4.codePointAt(0) === Codepoint.CODES.get("^")) {
+    if (!(name5.length === 0) && name5.codePointAt(0) === Codepoint.CODES["^"]) {
       sign = 0 - sign;
-      name4 = name4.substring(1);
+      name5 = name5.substring(1);
     }
-    const pair = Parser2.unicodeTable(name4);
+    const pair = Parser2.unicodeTable(name5);
     if (pair === null) throw new RE2JSSyntaxException(Parser2.ERR_INVALID_CHAR_RANGE, t2.from(startPos));
     if (pair.sign < 0) sign = 0 - sign;
     const tab = pair.tab;
@@ -9609,7 +9942,7 @@ var Parser = class Parser2 {
     if ((this.flags & RE2Flags.FOLD_CASE) === 0 || fold === null) cc.appendTableWithSign(tab, sign);
     else {
       const tmp = new CharClass().appendTable(tab).appendTable(fold).cleanClass().toArray();
-      cc.appendClassWithSign(tmp, sign);
+      cc.appendClassWithSign(Array.from(tmp), sign);
     }
     return true;
   }
@@ -9623,10 +9956,10 @@ var Parser = class Parser2 {
     if (t2.more() && t2.lookingAt("^")) {
       sign = -1;
       t2.skip(1);
-      if ((this.flags & RE2Flags.CLASS_NL) === 0) cc.appendRange(Codepoint.CODES.get("\n"), Codepoint.CODES.get("\n"));
+      if ((this.flags & RE2Flags.CLASS_NL) === 0) cc.appendRange(Codepoint.CODES["\n"], Codepoint.CODES["\n"]);
     }
     let first = true;
-    while (!t2.more() || t2.peek() !== Codepoint.CODES.get("]") || first) {
+    while (!t2.more() || t2.peek() !== Codepoint.CODES["]"] || first) {
       if (t2.more() && t2.lookingAt("-") && (this.flags & RE2Flags.PERL_X) === 0 && !first) {
         const s2 = t2.rest();
         if (s2 === "-" || !s2.startsWith("-]")) {
@@ -9673,6 +10006,7 @@ var RE2 = class RE22 {
     res.prefixComplete = re2.prefixComplete;
     res.prefixRune = re2.prefixRune;
     res.prefilter = re2.prefilter;
+    res.namedGroups = re2.namedGroups;
     return res;
   }
   /**
@@ -9710,6 +10044,7 @@ var RE2 = class RE22 {
   static compileImpl(expr, mode, longest) {
     let re = Parser.parse(expr, mode);
     const maxCap = re.maxCap();
+    const namedGroups = re.namedGroups;
     re = Simplify.simplify(re);
     const prefilter = PrefilterTree.build(re);
     const prog = Compiler.compileRegexp(re);
@@ -9720,7 +10055,7 @@ var RE2 = class RE22 {
     re2.prefix = prefixStr;
     re2.prefixUTF8 = Utils.stringToUtf8ByteArray(re2.prefix);
     if (re2.prefix.length > 0) re2.prefixRune = re2.prefix.codePointAt(0);
-    re2.namedGroups = re.namedGroups;
+    re2.namedGroups = namedGroups;
     return re2;
   }
   /**
@@ -9741,10 +10076,15 @@ var RE2 = class RE22 {
     this.prefixUTF8 = null;
     this.prefixComplete = false;
     this.prefixRune = 0;
+    this.namedGroups = /* @__PURE__ */ Object.create(null);
     this.machinePool = [];
-    this.dfa = new DFA(this.prog);
+    this.lazyDFA = null;
     this.onepass = OnePass.compile(this.prog);
     this.prefilter = null;
+  }
+  get dfa() {
+    if (this.lazyDFA === null) this.lazyDFA = new DFA(this.prog);
+    return this.lazyDFA;
   }
   matchPrefixComplete(input, pos, anchor, ncap) {
     if ((anchor === RE2Flags.ANCHOR_START || anchor === RE2Flags.ANCHOR_BOTH) && pos !== 0) return null;
@@ -9775,7 +10115,10 @@ var RE2 = class RE22 {
     }
     return [];
   }
-  executeEngine(input, pos, anchor, ncap) {
+  createLookbehindState() {
+    return this.prog.numLb > 0 ? new LookbehindState(this.prog) : null;
+  }
+  executeEngine(input, pos, anchor, ncap, lbState = null) {
     if (this.prefixComplete && (ncap === 0 || this.numSubexp === 0)) return this.matchPrefixComplete(input, pos, anchor, ncap);
     if (this.prefilter !== null && anchor === RE2Flags.UNANCHORED) {
       if (!this.prefilter.eval(input, pos)) return null;
@@ -9783,14 +10126,14 @@ var RE2 = class RE22 {
     if (this.onepass !== null) return OnePass.execute(this, input, pos, anchor, ncap);
     if (ncap > 0) {
       if (this.prog.numLb === 0 && input.endPos() <= Backtracker.maxBitStateLen(this.prog)) return Backtracker.execute(this, input, pos, anchor, ncap);
-      return this.doExecuteNFA(input, pos, anchor, ncap);
+      return this.doExecuteNFA(input, pos, anchor, ncap, lbState);
     }
     if (this.prog.numLb === 0) {
       const dfaResult = this.dfa.match(input, pos, anchor);
       if (dfaResult !== null) return dfaResult ? [] : null;
       if (input.endPos() <= Backtracker.maxBitStateLen(this.prog)) return Backtracker.execute(this, input, pos, anchor, ncap);
     }
-    return this.doExecuteNFA(input, pos, anchor, ncap);
+    return this.doExecuteNFA(input, pos, anchor, ncap, lbState);
   }
   /**
   * Returns the number of parenthesized subexpressions in this regular expression.
@@ -9816,11 +10159,11 @@ var RE2 = class RE22 {
   toString() {
     return this.expr;
   }
-  doExecuteNFA(input, pos, anchor, ncap) {
+  doExecuteNFA(input, pos, anchor, ncap, lbState = null) {
     let m2 = this.get();
     if (!m2) m2 = Machine.fromRE2(this);
     m2.init(ncap);
-    const cap = m2.match(input, pos, anchor) ? m2.submatches() : null;
+    const cap = m2.match(input, pos, anchor, lbState) ? m2.submatches() : null;
     this.put(m2);
     return cap;
   }
@@ -9839,17 +10182,21 @@ var RE2 = class RE22 {
   * @param anchor the anchoring flag (UNANCHORED, ANCHOR_START, ANCHOR_BOTH)
   * @param group the array to fill with submatch positions
   * @param ngroup the number of array pairs to fill in
+  * @param lbState optional state carried between successive matches over the same input (see
+  *   createLookbehindState); omit it to evaluate lookbehinds from the beginning of the input
   * @returns true if a match was found
   */
-  matchWithGroup(input, start, end, anchor, ngroup) {
-    if (!(input instanceof MatcherInputBase)) if (Utils.isByteArray(input)) input = MatcherInput.utf8(input);
-    else input = MatcherInput.utf16(input);
-    return this.matchMachineInput(input, start, end, anchor, ngroup);
+  matchWithGroup(input, start2, end, anchor, ngroup, lbState = null) {
+    if (!(input instanceof MatcherInputBase)) {
+      if (Utils.isByteArray(input)) input = MatcherInput.utf8(input);
+      else input = MatcherInput.utf16(input);
+    }
+    return this.matchMachineInput(input, start2, end, anchor, ngroup, lbState);
   }
-  matchMachineInput(input, start, end, anchor, ngroup) {
-    if (start > end) return [false, null];
+  matchMachineInput(input, start2, end, anchor, ngroup, lbState = null) {
+    if (start2 > end) return [false, null];
     const machineInput = input.isUTF16Encoding() ? MachineInput.fromUTF16(input.asCharSequence(), 0, end) : MachineInput.fromUTF8(input.asBytes(), 0, end);
-    const groupMatch = this.executeEngine(machineInput, start, anchor, 2 * ngroup);
+    const groupMatch = this.executeEngine(machineInput, start2, anchor, 2 * ngroup, lbState);
     if (groupMatch === null) return [false, null];
     return [true, groupMatch];
   }
@@ -9886,9 +10233,10 @@ var RE2 = class RE22 {
     let searchPos = 0;
     let out = "";
     const input = MachineInput.fromUTF16(src);
+    const lbState = this.createLookbehindState();
     let numReplaces = 0;
     while (searchPos <= src.length) {
-      const a = this.executeEngine(input, searchPos, RE2Flags.UNANCHORED, 2);
+      const a = this.executeEngine(input, searchPos, RE2Flags.UNANCHORED, 2, lbState);
       if (a === null || a.length === 0) break;
       out += src.substring(lastMatchEnd, a[0]);
       if (a[1] > lastMatchEnd || a[0] === 0) {
@@ -9922,8 +10270,9 @@ var RE2 = class RE22 {
     let pos = 0;
     let i2 = 0;
     let prevMatchEnd = -1;
+    const lbState = this.createLookbehindState();
     while (i2 < n2 && pos <= end) {
-      const matches = this.executeEngine(input, pos, RE2Flags.UNANCHORED, this.prog.numCap);
+      const matches = this.executeEngine(input, pos, RE2Flags.UNANCHORED, this.prog.numCap, lbState);
       if (matches === null || matches.length === 0) break;
       let accept = true;
       if (matches[1] === pos) {
@@ -10191,7 +10540,9 @@ var RE2Set = class RE2Set2 {
   */
   compile() {
     if (this.prog) return;
-    this.prog = Compiler.compileSet(this.regexps);
+    const prog = Compiler.compileSet(this.regexps);
+    if (prog.numInst() > Parser.MAX_SIZE) throw new RE2JSCompileException(`${Parser.ERR_LARGE}: the set compiles to ${prog.numInst()} instructions, more than ${Parser.MAX_SIZE}`);
+    this.prog = prog;
     this.dfa = new DFA(this.prog, this.maxMem);
     this.dummyRe2 = {
       prog: this.prog,
@@ -10389,8 +10740,21 @@ var TranslateRegExpString = class TranslateRegExpString2 {
         i2 += 1;
         changed = true;
         continue;
-      } else if (ch === "[") inCharClass = true;
-      else if (ch === "]") inCharClass = false;
+      } else if (ch === "[") {
+        if (!inCharClass && data[i2 + 1] === "]") {
+          result += "[^\\x00-\\x{10FFFF}]";
+          i2 += 2;
+          changed = true;
+          continue;
+        }
+        if (!inCharClass && data[i2 + 1] === "^" && data[i2 + 2] === "]") {
+          result += "[\\x00-\\x{10FFFF}]";
+          i2 += 3;
+          changed = true;
+          continue;
+        }
+        inCharClass = true;
+      } else if (ch === "]") inCharClass = false;
       else if (!inCharClass && ch === "(" && i2 + 2 < size && data[i2 + 1] === "?" && data[i2 + 2] === "<") {
         if (i2 + 3 < size && !"=!>)".includes(data[i2 + 3])) {
           result += "(?P<";
@@ -10408,6 +10772,13 @@ var TranslateRegExpString = class TranslateRegExpString2 {
     if (prefixFlags.length > 0) return `(?${prefixFlags})${finalResult}`;
     return finalResult;
   }
+};
+var execResult = (m2, input) => {
+  const result = m2.matchArray();
+  result.index = m2.start(0);
+  result.input = input;
+  result.groups = m2.namedGroupsObject();
+  return result;
 };
 var RE2JS = class RE2JS2 {
   /**
@@ -10607,21 +10978,7 @@ var RE2JS = class RE2JS2 {
   */
   exec(input) {
     const m2 = this.matcher(input);
-    if (!m2.find()) return null;
-    const result = [m2.group(0)];
-    for (let i2 = 1; i2 <= m2.groupCount(); i2++) {
-      const val = m2.group(i2);
-      result.push(val === null ? void 0 : val);
-    }
-    result.index = m2.start(0);
-    result.input = input;
-    const namedGroups = this.namedGroups();
-    if (Object.keys(namedGroups).length > 0) {
-      const parsedGroups = m2.getNamedGroups();
-      for (const key in parsedGroups) if (parsedGroups[key] === null) parsedGroups[key] = void 0;
-      result.groups = parsedGroups;
-    } else result.groups = void 0;
-    return result;
+    return m2.find() ? execResult(m2, input) : null;
   }
   /**
   * Splits input around instances of the regular expression. It returns an array giving the strings
@@ -10679,22 +11036,7 @@ var RE2JS = class RE2JS2 {
   */
   *matchAll(input) {
     const m2 = this.matcher(input);
-    while (m2.find()) {
-      const result = [m2.group(0)];
-      for (let i2 = 1; i2 <= m2.groupCount(); i2++) {
-        const groupVal = m2.group(i2);
-        result.push(groupVal === null ? void 0 : groupVal);
-      }
-      result.index = m2.start(0);
-      result.input = input;
-      const namedGroups = this.namedGroups();
-      if (Object.keys(namedGroups).length > 0) {
-        const parsedGroups = m2.getNamedGroups();
-        for (const key in parsedGroups) if (parsedGroups[key] === null) parsedGroups[key] = void 0;
-        result.groups = parsedGroups;
-      } else result.groups = void 0;
-      yield result;
-    }
+    while (m2.find()) yield execResult(m2, input);
   }
   /**
   *
@@ -25666,8 +26008,8 @@ function _errorWithCustomMessage(auth, code, message) {
     ...prodErrorMap(),
     [code]: message
   };
-  const factory = new ErrorFactory("auth", "Firebase", errorMap);
-  return factory.create(code, {
+  const factory2 = new ErrorFactory("auth", "Firebase", errorMap);
+  return factory2.create(code, {
     appName: auth.name
   });
 }
@@ -26947,9 +27289,9 @@ var PersistenceUserManager = class _PersistenceUserManager {
     this.persistence = persistence;
     this.auth = auth;
     this.userKey = userKey;
-    const { config, name: name4 } = this.auth;
-    this.fullUserKey = _persistenceKeyName(this.userKey, config.apiKey, name4);
-    this.fullPersistenceKey = _persistenceKeyName("persistence", config.apiKey, name4);
+    const { config, name: name5 } = this.auth;
+    this.fullUserKey = _persistenceKeyName(this.userKey, config.apiKey, name5);
+    this.fullPersistenceKey = _persistenceKeyName("persistence", config.apiKey, name5);
     this.boundEventHandler = auth._onStorageEvent.bind(auth);
     try {
       this.persistence._addListener(this.fullUserKey, this.boundEventHandler);
@@ -29477,8 +29819,8 @@ var BrowserLocalPersistence = class extends BrowserPersistenceClass {
 BrowserLocalPersistence.type = "LOCAL";
 var browserLocalPersistence = BrowserLocalPersistence;
 var POLLING_INTERVAL_MS = 1e3;
-function getDocumentCookie(name4) {
-  const escapedName = name4.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+function getDocumentCookie(name5) {
+  const escapedName = name5.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
   const matcher = RegExp(`${escapedName}=([^;]+)`);
   return document.cookie.match(matcher)?.[1] ?? null;
 }
@@ -29521,12 +29863,12 @@ var CookiePersistence = class {
     if (!this._isAvailable()) {
       return null;
     }
-    const name4 = getCookieName(key);
+    const name5 = getCookieName(key);
     if (window.cookieStore) {
-      const cookie = await window.cookieStore.get(name4);
+      const cookie = await window.cookieStore.get(name5);
       return cookie?.value;
     }
-    return getDocumentCookie(name4);
+    return getDocumentCookie(name5);
   }
   // Log out by overriding the idToken with a sentinel value of ""
   async _remove(key) {
@@ -29537,8 +29879,8 @@ var CookiePersistence = class {
     if (!existingValue) {
       return;
     }
-    const name4 = getCookieName(key);
-    document.cookie = `${name4}=;Max-Age=34560000;Partitioned;Secure;SameSite=Strict;Path=/;Priority=High`;
+    const name5 = getCookieName(key);
+    document.cookie = `${name5}=;Max-Age=34560000;Partitioned;Secure;SameSite=Strict;Path=/;Priority=High`;
     await fetch(`/__cookies__`, { method: "DELETE" }).catch(() => void 0);
   }
   // Listen for cookie changes, both cookieStore and fallback to polling document.cookie
@@ -29546,14 +29888,14 @@ var CookiePersistence = class {
     if (!this._isAvailable()) {
       return;
     }
-    const name4 = getCookieName(key);
+    const name5 = getCookieName(key);
     if (window.cookieStore) {
       const cb = ((event) => {
-        const changedCookie = event.changed.find((change) => change.name === name4);
+        const changedCookie = event.changed.find((change) => change.name === name5);
         if (changedCookie) {
           listener(changedCookie.value);
         }
-        const deletedCookie = event.deleted.find((change) => change.name === name4);
+        const deletedCookie = event.deleted.find((change) => change.name === name5);
         if (deletedCookie) {
           listener(null);
         }
@@ -29562,9 +29904,9 @@ var CookiePersistence = class {
       this.listenerUnsubscribes.set(listener, unsubscribe2);
       return window.cookieStore.addEventListener("change", cb);
     }
-    let lastValue = getDocumentCookie(name4);
+    let lastValue = getDocumentCookie(name5);
     const interval = setInterval(() => {
-      const currentValue = getDocumentCookie(name4);
+      const currentValue = getDocumentCookie(name5);
       if (currentValue !== lastValue) {
         listener(currentValue);
         lastValue = currentValue;
@@ -31160,7 +31502,7 @@ var AuthPopup = class {
     }
   }
 };
-function _open(auth, url, name4, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT) {
+function _open(auth, url, name5, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT) {
   const top = Math.max((window.screen.availHeight - height) / 2, 0).toString();
   const left = Math.max((window.screen.availWidth - width) / 2, 0).toString();
   let target = "";
@@ -31172,8 +31514,8 @@ function _open(auth, url, name4, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT)
     left
   };
   const ua2 = getUA().toLowerCase();
-  if (name4) {
-    target = _isChromeIOS(ua2) ? TARGET_BLANK : name4;
+  if (name5) {
+    target = _isChromeIOS(ua2) ? TARGET_BLANK : name5;
   }
   if (_isFirefox(ua2)) {
     url = url || FIREFOX_EMPTY_URL;
@@ -31762,10 +32104,2262 @@ registerAuth(
   "Browser"
   /* ClientPlatform.BROWSER */
 );
+
+// node_modules/@firebase/storage/dist/index.esm.js
+var DEFAULT_HOST = "firebasestorage.googleapis.com";
+var CONFIG_STORAGE_BUCKET_KEY = "storageBucket";
+var DEFAULT_MAX_OPERATION_RETRY_TIME = 2 * 60 * 1e3;
+var DEFAULT_MAX_UPLOAD_RETRY_TIME = 10 * 60 * 1e3;
+var DEFAULT_MIN_SLEEP_TIME_MILLIS = 1e3;
+var StorageError = class _StorageError extends FirebaseError {
+  /**
+   * @param code - A `StorageErrorCode` string to be prefixed with 'storage/' and
+   *  added to the end of the message.
+   * @param message  - Error message.
+   * @param status_ - Corresponding HTTP Status Code
+   */
+  constructor(code, message, status_ = 0) {
+    super(prependCode(code), `Firebase Storage: ${message} (${prependCode(code)})`);
+    this.status_ = status_;
+    this.customData = { serverResponse: null };
+    this._baseMessage = this.message;
+    Object.setPrototypeOf(this, _StorageError.prototype);
+  }
+  get status() {
+    return this.status_;
+  }
+  set status(status) {
+    this.status_ = status;
+  }
+  /**
+   * Compares a `StorageErrorCode` against this error's code, filtering out the prefix.
+   */
+  _codeEquals(code) {
+    return prependCode(code) === this.code;
+  }
+  /**
+   * Optional response message that was added by the server.
+   */
+  get serverResponse() {
+    return this.customData.serverResponse;
+  }
+  set serverResponse(serverResponse) {
+    this.customData.serverResponse = serverResponse;
+    if (this.customData.serverResponse) {
+      this.message = `${this._baseMessage}
+${this.customData.serverResponse}`;
+    } else {
+      this.message = this._baseMessage;
+    }
+  }
+};
+var StorageErrorCode;
+(function(StorageErrorCode2) {
+  StorageErrorCode2["UNKNOWN"] = "unknown";
+  StorageErrorCode2["OBJECT_NOT_FOUND"] = "object-not-found";
+  StorageErrorCode2["BUCKET_NOT_FOUND"] = "bucket-not-found";
+  StorageErrorCode2["PROJECT_NOT_FOUND"] = "project-not-found";
+  StorageErrorCode2["QUOTA_EXCEEDED"] = "quota-exceeded";
+  StorageErrorCode2["UNAUTHENTICATED"] = "unauthenticated";
+  StorageErrorCode2["UNAUTHORIZED"] = "unauthorized";
+  StorageErrorCode2["UNAUTHORIZED_APP"] = "unauthorized-app";
+  StorageErrorCode2["RETRY_LIMIT_EXCEEDED"] = "retry-limit-exceeded";
+  StorageErrorCode2["INVALID_CHECKSUM"] = "invalid-checksum";
+  StorageErrorCode2["CANCELED"] = "canceled";
+  StorageErrorCode2["INVALID_EVENT_NAME"] = "invalid-event-name";
+  StorageErrorCode2["INVALID_URL"] = "invalid-url";
+  StorageErrorCode2["INVALID_DEFAULT_BUCKET"] = "invalid-default-bucket";
+  StorageErrorCode2["NO_DEFAULT_BUCKET"] = "no-default-bucket";
+  StorageErrorCode2["CANNOT_SLICE_BLOB"] = "cannot-slice-blob";
+  StorageErrorCode2["SERVER_FILE_WRONG_SIZE"] = "server-file-wrong-size";
+  StorageErrorCode2["NO_DOWNLOAD_URL"] = "no-download-url";
+  StorageErrorCode2["INVALID_ARGUMENT"] = "invalid-argument";
+  StorageErrorCode2["INVALID_ARGUMENT_COUNT"] = "invalid-argument-count";
+  StorageErrorCode2["APP_DELETED"] = "app-deleted";
+  StorageErrorCode2["INVALID_ROOT_OPERATION"] = "invalid-root-operation";
+  StorageErrorCode2["INVALID_FORMAT"] = "invalid-format";
+  StorageErrorCode2["INTERNAL_ERROR"] = "internal-error";
+  StorageErrorCode2["UNSUPPORTED_ENVIRONMENT"] = "unsupported-environment";
+})(StorageErrorCode || (StorageErrorCode = {}));
+function prependCode(code) {
+  return "storage/" + code;
+}
+function unknown() {
+  const message = "An unknown error occurred, please check the error payload for server response.";
+  return new StorageError(StorageErrorCode.UNKNOWN, message);
+}
+function objectNotFound(path) {
+  return new StorageError(StorageErrorCode.OBJECT_NOT_FOUND, "Object '" + path + "' does not exist.");
+}
+function quotaExceeded(bucket) {
+  return new StorageError(StorageErrorCode.QUOTA_EXCEEDED, "Quota for bucket '" + bucket + "' exceeded, please view quota on https://firebase.google.com/pricing/.");
+}
+function unauthenticated() {
+  const message = "User is not authenticated, please authenticate using Firebase Authentication and try again.";
+  return new StorageError(StorageErrorCode.UNAUTHENTICATED, message);
+}
+function unauthorizedApp() {
+  return new StorageError(StorageErrorCode.UNAUTHORIZED_APP, "This app does not have permission to access Firebase Storage on this project.");
+}
+function unauthorized(path) {
+  return new StorageError(StorageErrorCode.UNAUTHORIZED, "User does not have permission to access '" + path + "'.");
+}
+function retryLimitExceeded() {
+  return new StorageError(StorageErrorCode.RETRY_LIMIT_EXCEEDED, "Max retry time for operation exceeded, please try again.");
+}
+function canceled() {
+  return new StorageError(StorageErrorCode.CANCELED, "User canceled the upload/download.");
+}
+function invalidUrl(url) {
+  return new StorageError(StorageErrorCode.INVALID_URL, "Invalid URL '" + url + "'.");
+}
+function invalidDefaultBucket(bucket) {
+  return new StorageError(StorageErrorCode.INVALID_DEFAULT_BUCKET, "Invalid default bucket '" + bucket + "'.");
+}
+function noDefaultBucket() {
+  return new StorageError(StorageErrorCode.NO_DEFAULT_BUCKET, "No default bucket found. Did you set the '" + CONFIG_STORAGE_BUCKET_KEY + "' property when initializing the app?");
+}
+function cannotSliceBlob() {
+  return new StorageError(StorageErrorCode.CANNOT_SLICE_BLOB, "Cannot slice blob for upload. Please retry the upload.");
+}
+function serverFileWrongSize() {
+  return new StorageError(StorageErrorCode.SERVER_FILE_WRONG_SIZE, "Server recorded incorrect upload file size, please retry the upload.");
+}
+function noDownloadURL() {
+  return new StorageError(StorageErrorCode.NO_DOWNLOAD_URL, "The given file does not have any download URLs.");
+}
+function missingPolyFill(polyFill) {
+  return new StorageError(StorageErrorCode.UNSUPPORTED_ENVIRONMENT, `${polyFill} is missing. Make sure to install the required polyfills. See https://firebase.google.com/docs/web/environments-js-sdk#polyfills for more information.`);
+}
+function invalidArgument(message) {
+  return new StorageError(StorageErrorCode.INVALID_ARGUMENT, message);
+}
+function appDeleted() {
+  return new StorageError(StorageErrorCode.APP_DELETED, "The Firebase app was deleted.");
+}
+function invalidRootOperation(name5) {
+  return new StorageError(StorageErrorCode.INVALID_ROOT_OPERATION, "The operation '" + name5 + "' cannot be performed on a root reference, create a non-root reference using child, such as .child('file.png').");
+}
+function invalidFormat(format, message) {
+  return new StorageError(StorageErrorCode.INVALID_FORMAT, "String does not match format '" + format + "': " + message);
+}
+function internalError(message) {
+  throw new StorageError(StorageErrorCode.INTERNAL_ERROR, "Internal error: " + message);
+}
+var Location = class _Location {
+  constructor(bucket, path) {
+    this.bucket = bucket;
+    this.path_ = path;
+  }
+  get path() {
+    return this.path_;
+  }
+  get isRoot() {
+    return this.path.length === 0;
+  }
+  fullServerUrl() {
+    const encode = encodeURIComponent;
+    return "/b/" + encode(this.bucket) + "/o/" + encode(this.path);
+  }
+  bucketOnlyServerUrl() {
+    const encode = encodeURIComponent;
+    return "/b/" + encode(this.bucket) + "/o";
+  }
+  static makeFromBucketSpec(bucketString, host) {
+    let bucketLocation;
+    try {
+      bucketLocation = _Location.makeFromUrl(bucketString, host);
+    } catch (e2) {
+      return new _Location(bucketString, "");
+    }
+    if (bucketLocation.path === "") {
+      return bucketLocation;
+    } else {
+      throw invalidDefaultBucket(bucketString);
+    }
+  }
+  static makeFromUrl(url, host) {
+    let location2 = null;
+    const bucketDomain = "([A-Za-z0-9.\\-_]+)";
+    function gsModify(loc) {
+      if (loc.path.charAt(loc.path.length - 1) === "/") {
+        loc.path_ = loc.path_.slice(0, -1);
+      }
+    }
+    const gsPath = "(/(.*))?$";
+    const gsRegex = new RegExp("^gs://" + bucketDomain + gsPath, "i");
+    const gsIndices = { bucket: 1, path: 3 };
+    function httpModify(loc) {
+      loc.path_ = decodeURIComponent(loc.path);
+    }
+    const version5 = "v[A-Za-z0-9_]+";
+    const firebaseStorageHost = host.replace(/[.]/g, "\\.");
+    const firebaseStoragePath = "(/([^?#]*).*)?$";
+    const firebaseStorageRegExp = new RegExp(`^https?://${firebaseStorageHost}/${version5}/b/${bucketDomain}/o${firebaseStoragePath}`, "i");
+    const firebaseStorageIndices = { bucket: 1, path: 3 };
+    const cloudStorageHost = host === DEFAULT_HOST ? "(?:storage.googleapis.com|storage.cloud.google.com)" : host;
+    const cloudStoragePath = "([^?#]*)";
+    const cloudStorageRegExp = new RegExp(`^https?://${cloudStorageHost}/${bucketDomain}/${cloudStoragePath}`, "i");
+    const cloudStorageIndices = { bucket: 1, path: 2 };
+    const groups = [
+      { regex: gsRegex, indices: gsIndices, postModify: gsModify },
+      {
+        regex: firebaseStorageRegExp,
+        indices: firebaseStorageIndices,
+        postModify: httpModify
+      },
+      {
+        regex: cloudStorageRegExp,
+        indices: cloudStorageIndices,
+        postModify: httpModify
+      }
+    ];
+    for (let i2 = 0; i2 < groups.length; i2++) {
+      const group = groups[i2];
+      const captures = group.regex.exec(url);
+      if (captures) {
+        const bucketValue = captures[group.indices.bucket];
+        let pathValue = captures[group.indices.path];
+        if (!pathValue) {
+          pathValue = "";
+        }
+        location2 = new _Location(bucketValue, pathValue);
+        group.postModify(location2);
+        break;
+      }
+    }
+    if (location2 == null) {
+      throw invalidUrl(url);
+    }
+    return location2;
+  }
+};
+var FailRequest = class {
+  constructor(error) {
+    this.promise_ = Promise.reject(error);
+  }
+  /** @inheritDoc */
+  getPromise() {
+    return this.promise_;
+  }
+  /** @inheritDoc */
+  cancel(_appDelete = false) {
+  }
+};
+function start(doRequest, backoffCompleteCb, timeout) {
+  let waitSeconds = 1;
+  let retryTimeoutId = null;
+  let globalTimeoutId = null;
+  let hitTimeout = false;
+  let cancelState = 0;
+  function canceled2() {
+    return cancelState === 2;
+  }
+  let triggeredCallback = false;
+  function triggerCallback(...args) {
+    if (!triggeredCallback) {
+      triggeredCallback = true;
+      backoffCompleteCb.apply(null, args);
+    }
+  }
+  function callWithDelay(millis) {
+    retryTimeoutId = setTimeout(() => {
+      retryTimeoutId = null;
+      doRequest(responseHandler, canceled2());
+    }, millis);
+  }
+  function clearGlobalTimeout() {
+    if (globalTimeoutId) {
+      clearTimeout(globalTimeoutId);
+    }
+  }
+  function responseHandler(success, ...args) {
+    if (triggeredCallback) {
+      clearGlobalTimeout();
+      return;
+    }
+    if (success) {
+      clearGlobalTimeout();
+      triggerCallback.call(null, success, ...args);
+      return;
+    }
+    const mustStop = canceled2() || hitTimeout;
+    if (mustStop) {
+      clearGlobalTimeout();
+      triggerCallback.call(null, success, ...args);
+      return;
+    }
+    if (waitSeconds < 64) {
+      waitSeconds *= 2;
+    }
+    let waitMillis;
+    if (cancelState === 1) {
+      cancelState = 2;
+      waitMillis = 0;
+    } else {
+      waitMillis = (waitSeconds + Math.random()) * 1e3;
+    }
+    callWithDelay(waitMillis);
+  }
+  let stopped = false;
+  function stop2(wasTimeout) {
+    if (stopped) {
+      return;
+    }
+    stopped = true;
+    clearGlobalTimeout();
+    if (triggeredCallback) {
+      return;
+    }
+    if (retryTimeoutId !== null) {
+      if (!wasTimeout) {
+        cancelState = 2;
+      }
+      clearTimeout(retryTimeoutId);
+      callWithDelay(0);
+    } else {
+      if (!wasTimeout) {
+        cancelState = 1;
+      }
+    }
+  }
+  callWithDelay(0);
+  globalTimeoutId = setTimeout(() => {
+    hitTimeout = true;
+    stop2(true);
+  }, timeout);
+  return stop2;
+}
+function stop(id) {
+  id(false);
+}
+function isJustDef(p2) {
+  return p2 !== void 0;
+}
+function isFunction(p2) {
+  return typeof p2 === "function";
+}
+function isNonArrayObject(p2) {
+  return typeof p2 === "object" && !Array.isArray(p2);
+}
+function isString(p2) {
+  return typeof p2 === "string" || p2 instanceof String;
+}
+function isNativeBlob(p2) {
+  return isNativeBlobDefined() && p2 instanceof Blob;
+}
+function isNativeBlobDefined() {
+  return typeof Blob !== "undefined";
+}
+function validateNumber(argument, minValue, maxValue, value) {
+  if (value < minValue) {
+    throw invalidArgument(`Invalid value for '${argument}'. Expected ${minValue} or greater.`);
+  }
+  if (value > maxValue) {
+    throw invalidArgument(`Invalid value for '${argument}'. Expected ${maxValue} or less.`);
+  }
+}
+function makeUrl(urlPart, host, protocol) {
+  let origin = host;
+  if (protocol == null) {
+    origin = `https://${host}`;
+  }
+  return `${protocol}://${origin}/v0${urlPart}`;
+}
+function makeQueryString(params) {
+  const encode = encodeURIComponent;
+  let queryPart = "?";
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      const nextPart = encode(key) + "=" + encode(params[key]);
+      queryPart = queryPart + nextPart + "&";
+    }
+  }
+  queryPart = queryPart.slice(0, -1);
+  return queryPart;
+}
+var ErrorCode2;
+(function(ErrorCode3) {
+  ErrorCode3[ErrorCode3["NO_ERROR"] = 0] = "NO_ERROR";
+  ErrorCode3[ErrorCode3["NETWORK_ERROR"] = 1] = "NETWORK_ERROR";
+  ErrorCode3[ErrorCode3["ABORT"] = 2] = "ABORT";
+})(ErrorCode2 || (ErrorCode2 = {}));
+function isRetryStatusCode(status, additionalRetryCodes) {
+  const isFiveHundredCode = status >= 500 && status < 600;
+  const extraRetryCodes = [
+    // Request Timeout: web server didn't receive full request in time.
+    408,
+    // Too Many Requests: you're getting rate-limited, basically.
+    429
+  ];
+  const isExtraRetryCode = extraRetryCodes.indexOf(status) !== -1;
+  const isAdditionalRetryCode = additionalRetryCodes.indexOf(status) !== -1;
+  return isFiveHundredCode || isExtraRetryCode || isAdditionalRetryCode;
+}
+var NetworkRequest = class {
+  constructor(url_, method_, headers_, body_, successCodes_, additionalRetryCodes_, callback_, errorCallback_, timeout_, progressCallback_, connectionFactory_, retry = true, isUsingEmulator = false) {
+    this.url_ = url_;
+    this.method_ = method_;
+    this.headers_ = headers_;
+    this.body_ = body_;
+    this.successCodes_ = successCodes_;
+    this.additionalRetryCodes_ = additionalRetryCodes_;
+    this.callback_ = callback_;
+    this.errorCallback_ = errorCallback_;
+    this.timeout_ = timeout_;
+    this.progressCallback_ = progressCallback_;
+    this.connectionFactory_ = connectionFactory_;
+    this.retry = retry;
+    this.isUsingEmulator = isUsingEmulator;
+    this.pendingConnection_ = null;
+    this.backoffId_ = null;
+    this.canceled_ = false;
+    this.appDelete_ = false;
+    this.promise_ = new Promise((resolve, reject) => {
+      this.resolve_ = resolve;
+      this.reject_ = reject;
+      this.start_();
+    });
+  }
+  /**
+   * Actually starts the retry loop.
+   */
+  start_() {
+    const doTheRequest = (backoffCallback, canceled2) => {
+      if (canceled2) {
+        backoffCallback(false, new RequestEndStatus(false, null, true));
+        return;
+      }
+      const connection = this.connectionFactory_();
+      this.pendingConnection_ = connection;
+      const progressListener = (progressEvent) => {
+        const loaded = progressEvent.loaded;
+        const total = progressEvent.lengthComputable ? progressEvent.total : -1;
+        if (this.progressCallback_ !== null) {
+          this.progressCallback_(loaded, total);
+        }
+      };
+      if (this.progressCallback_ !== null) {
+        connection.addUploadProgressListener(progressListener);
+      }
+      connection.send(this.url_, this.method_, this.isUsingEmulator, this.body_, this.headers_).then(() => {
+        if (this.progressCallback_ !== null) {
+          connection.removeUploadProgressListener(progressListener);
+        }
+        this.pendingConnection_ = null;
+        const hitServer = connection.getErrorCode() === ErrorCode2.NO_ERROR;
+        const status = connection.getStatus();
+        if (!hitServer || isRetryStatusCode(status, this.additionalRetryCodes_) && this.retry) {
+          const wasCanceled = connection.getErrorCode() === ErrorCode2.ABORT;
+          backoffCallback(false, new RequestEndStatus(false, null, wasCanceled));
+          return;
+        }
+        const successCode = this.successCodes_.indexOf(status) !== -1;
+        backoffCallback(true, new RequestEndStatus(successCode, connection));
+      });
+    };
+    const backoffDone = (requestWentThrough, status) => {
+      const resolve = this.resolve_;
+      const reject = this.reject_;
+      const connection = status.connection;
+      if (status.wasSuccessCode) {
+        try {
+          const result = this.callback_(connection, connection.getResponse());
+          if (isJustDef(result)) {
+            resolve(result);
+          } else {
+            resolve();
+          }
+        } catch (e2) {
+          reject(e2);
+        }
+      } else {
+        if (connection !== null) {
+          const err = unknown();
+          err.serverResponse = connection.getErrorText();
+          if (this.errorCallback_) {
+            reject(this.errorCallback_(connection, err));
+          } else {
+            reject(err);
+          }
+        } else {
+          if (status.canceled) {
+            const err = this.appDelete_ ? appDeleted() : canceled();
+            reject(err);
+          } else {
+            const err = retryLimitExceeded();
+            reject(err);
+          }
+        }
+      }
+    };
+    if (this.canceled_) {
+      backoffDone(false, new RequestEndStatus(false, null, true));
+    } else {
+      this.backoffId_ = start(doTheRequest, backoffDone, this.timeout_);
+    }
+  }
+  /** @inheritDoc */
+  getPromise() {
+    return this.promise_;
+  }
+  /** @inheritDoc */
+  cancel(appDelete) {
+    this.canceled_ = true;
+    this.appDelete_ = appDelete || false;
+    if (this.backoffId_ !== null) {
+      stop(this.backoffId_);
+    }
+    if (this.pendingConnection_ !== null) {
+      this.pendingConnection_.abort();
+    }
+  }
+};
+var RequestEndStatus = class {
+  constructor(wasSuccessCode, connection, canceled2) {
+    this.wasSuccessCode = wasSuccessCode;
+    this.connection = connection;
+    this.canceled = !!canceled2;
+  }
+};
+function addAuthHeader_(headers, authToken) {
+  if (authToken !== null && authToken.length > 0) {
+    headers["Authorization"] = "Firebase " + authToken;
+  }
+}
+function addVersionHeader_(headers, firebaseVersion) {
+  headers["X-Firebase-Storage-Version"] = "webjs/" + (firebaseVersion ?? "AppManager");
+}
+function addGmpidHeader_(headers, appId) {
+  if (appId) {
+    headers["X-Firebase-GMPID"] = appId;
+  }
+}
+function addAppCheckHeader_(headers, appCheckToken) {
+  if (appCheckToken !== null) {
+    headers["X-Firebase-AppCheck"] = appCheckToken;
+  }
+}
+function makeRequest(requestInfo, appId, authToken, appCheckToken, requestFactory, firebaseVersion, retry = true, isUsingEmulator = false) {
+  const queryPart = makeQueryString(requestInfo.urlParams);
+  const url = requestInfo.url + queryPart;
+  const headers = Object.assign({}, requestInfo.headers);
+  addGmpidHeader_(headers, appId);
+  addAuthHeader_(headers, authToken);
+  addVersionHeader_(headers, firebaseVersion);
+  addAppCheckHeader_(headers, appCheckToken);
+  return new NetworkRequest(url, requestInfo.method, headers, requestInfo.body, requestInfo.successCodes, requestInfo.additionalRetryCodes, requestInfo.handler, requestInfo.errorHandler, requestInfo.timeout, requestInfo.progressCallback, requestFactory, retry, isUsingEmulator);
+}
+function getBlobBuilder() {
+  if (typeof BlobBuilder !== "undefined") {
+    return BlobBuilder;
+  } else if (typeof WebKitBlobBuilder !== "undefined") {
+    return WebKitBlobBuilder;
+  } else {
+    return void 0;
+  }
+}
+function getBlob$1(...args) {
+  const BlobBuilder2 = getBlobBuilder();
+  if (BlobBuilder2 !== void 0) {
+    const bb = new BlobBuilder2();
+    for (let i2 = 0; i2 < args.length; i2++) {
+      bb.append(args[i2]);
+    }
+    return bb.getBlob();
+  } else {
+    if (isNativeBlobDefined()) {
+      return new Blob(args);
+    } else {
+      throw new StorageError(StorageErrorCode.UNSUPPORTED_ENVIRONMENT, "This browser doesn't seem to support creating Blobs");
+    }
+  }
+}
+function sliceBlob(blob, start2, end) {
+  if (blob.webkitSlice) {
+    return blob.webkitSlice(start2, end);
+  } else if (blob.mozSlice) {
+    return blob.mozSlice(start2, end);
+  } else if (blob.slice) {
+    return blob.slice(start2, end);
+  }
+  return null;
+}
+function decodeBase64(encoded) {
+  if (typeof atob === "undefined") {
+    throw missingPolyFill("base-64");
+  }
+  return atob(encoded);
+}
+var StringFormat = {
+  /**
+   * Indicates the string should be interpreted "raw", that is, as normal text.
+   * The string will be interpreted as UTF-16, then uploaded as a UTF-8 byte
+   * sequence.
+   * Example: The string 'Hello! \\ud83d\\ude0a' becomes the byte sequence
+   * 48 65 6c 6c 6f 21 20 f0 9f 98 8a
+   */
+  RAW: "raw",
+  /**
+   * Indicates the string should be interpreted as base64-encoded data.
+   * Padding characters (trailing '='s) are optional.
+   * Example: The string 'rWmO++E6t7/rlw==' becomes the byte sequence
+   * ad 69 8e fb e1 3a b7 bf eb 97
+   */
+  BASE64: "base64",
+  /**
+   * Indicates the string should be interpreted as base64url-encoded data.
+   * Padding characters (trailing '='s) are optional.
+   * Example: The string 'rWmO--E6t7_rlw==' becomes the byte sequence
+   * ad 69 8e fb e1 3a b7 bf eb 97
+   */
+  BASE64URL: "base64url",
+  /**
+   * Indicates the string is a data URL, such as one obtained from
+   * canvas.toDataURL().
+   * Example: the string 'data:application/octet-stream;base64,aaaa'
+   * becomes the byte sequence
+   * 69 a6 9a
+   * (the content-type "application/octet-stream" is also applied, but can
+   * be overridden in the metadata object).
+   */
+  DATA_URL: "data_url"
+};
+var StringData = class {
+  constructor(data, contentType) {
+    this.data = data;
+    this.contentType = contentType || null;
+  }
+};
+function dataFromString(format, stringData) {
+  switch (format) {
+    case StringFormat.RAW:
+      return new StringData(utf8Bytes_(stringData));
+    case StringFormat.BASE64:
+    case StringFormat.BASE64URL:
+      return new StringData(base64Bytes_(format, stringData));
+    case StringFormat.DATA_URL:
+      return new StringData(dataURLBytes_(stringData), dataURLContentType_(stringData));
+  }
+  throw unknown();
+}
+function utf8Bytes_(value) {
+  const b2 = [];
+  for (let i2 = 0; i2 < value.length; i2++) {
+    let c2 = value.charCodeAt(i2);
+    if (c2 <= 127) {
+      b2.push(c2);
+    } else {
+      if (c2 <= 2047) {
+        b2.push(192 | c2 >> 6, 128 | c2 & 63);
+      } else {
+        if ((c2 & 64512) === 55296) {
+          const valid = i2 < value.length - 1 && (value.charCodeAt(i2 + 1) & 64512) === 56320;
+          if (!valid) {
+            b2.push(239, 191, 189);
+          } else {
+            const hi = c2;
+            const lo = value.charCodeAt(++i2);
+            c2 = 65536 | (hi & 1023) << 10 | lo & 1023;
+            b2.push(240 | c2 >> 18, 128 | c2 >> 12 & 63, 128 | c2 >> 6 & 63, 128 | c2 & 63);
+          }
+        } else {
+          if ((c2 & 64512) === 56320) {
+            b2.push(239, 191, 189);
+          } else {
+            b2.push(224 | c2 >> 12, 128 | c2 >> 6 & 63, 128 | c2 & 63);
+          }
+        }
+      }
+    }
+  }
+  return new Uint8Array(b2);
+}
+function percentEncodedBytes_(value) {
+  let decoded;
+  try {
+    decoded = decodeURIComponent(value);
+  } catch (e2) {
+    throw invalidFormat(StringFormat.DATA_URL, "Malformed data URL.");
+  }
+  return utf8Bytes_(decoded);
+}
+function base64Bytes_(format, value) {
+  switch (format) {
+    case StringFormat.BASE64: {
+      const hasMinus = value.indexOf("-") !== -1;
+      const hasUnder = value.indexOf("_") !== -1;
+      if (hasMinus || hasUnder) {
+        const invalidChar = hasMinus ? "-" : "_";
+        throw invalidFormat(format, "Invalid character '" + invalidChar + "' found: is it base64url encoded?");
+      }
+      break;
+    }
+    case StringFormat.BASE64URL: {
+      const hasPlus = value.indexOf("+") !== -1;
+      const hasSlash = value.indexOf("/") !== -1;
+      if (hasPlus || hasSlash) {
+        const invalidChar = hasPlus ? "+" : "/";
+        throw invalidFormat(format, "Invalid character '" + invalidChar + "' found: is it base64 encoded?");
+      }
+      value = value.replace(/-/g, "+").replace(/_/g, "/");
+      break;
+    }
+  }
+  let bytes;
+  try {
+    bytes = decodeBase64(value);
+  } catch (e2) {
+    if (e2.message.includes("polyfill")) {
+      throw e2;
+    }
+    throw invalidFormat(format, "Invalid character found");
+  }
+  const array = new Uint8Array(bytes.length);
+  for (let i2 = 0; i2 < bytes.length; i2++) {
+    array[i2] = bytes.charCodeAt(i2);
+  }
+  return array;
+}
+var DataURLParts = class {
+  constructor(dataURL) {
+    this.base64 = false;
+    this.contentType = null;
+    const matches = dataURL.match(/^data:([^,]+)?,/);
+    if (matches === null) {
+      throw invalidFormat(StringFormat.DATA_URL, "Must be formatted 'data:[<mediatype>][;base64],<data>");
+    }
+    const middle = matches[1] || null;
+    if (middle != null) {
+      this.base64 = endsWith(middle, ";base64");
+      this.contentType = this.base64 ? middle.substring(0, middle.length - ";base64".length) : middle;
+    }
+    this.rest = dataURL.substring(dataURL.indexOf(",") + 1);
+  }
+};
+function dataURLBytes_(dataUrl) {
+  const parts = new DataURLParts(dataUrl);
+  if (parts.base64) {
+    return base64Bytes_(StringFormat.BASE64, parts.rest);
+  } else {
+    return percentEncodedBytes_(parts.rest);
+  }
+}
+function dataURLContentType_(dataUrl) {
+  const parts = new DataURLParts(dataUrl);
+  return parts.contentType;
+}
+function endsWith(s2, end) {
+  const longEnough = s2.length >= end.length;
+  if (!longEnough) {
+    return false;
+  }
+  return s2.substring(s2.length - end.length) === end;
+}
+var FbsBlob = class _FbsBlob {
+  constructor(data, elideCopy) {
+    let size = 0;
+    let blobType = "";
+    if (isNativeBlob(data)) {
+      this.data_ = data;
+      size = data.size;
+      blobType = data.type;
+    } else if (data instanceof ArrayBuffer) {
+      if (elideCopy) {
+        this.data_ = new Uint8Array(data);
+      } else {
+        this.data_ = new Uint8Array(data.byteLength);
+        this.data_.set(new Uint8Array(data));
+      }
+      size = this.data_.length;
+    } else if (data instanceof Uint8Array) {
+      if (elideCopy) {
+        this.data_ = data;
+      } else {
+        this.data_ = new Uint8Array(data.length);
+        this.data_.set(data);
+      }
+      size = data.length;
+    }
+    this.size_ = size;
+    this.type_ = blobType;
+  }
+  size() {
+    return this.size_;
+  }
+  type() {
+    return this.type_;
+  }
+  slice(startByte, endByte) {
+    if (isNativeBlob(this.data_)) {
+      const realBlob = this.data_;
+      const sliced = sliceBlob(realBlob, startByte, endByte);
+      if (sliced === null) {
+        return null;
+      }
+      return new _FbsBlob(sliced);
+    } else {
+      const slice = new Uint8Array(this.data_.buffer, startByte, endByte - startByte);
+      return new _FbsBlob(slice, true);
+    }
+  }
+  static getBlob(...args) {
+    if (isNativeBlobDefined()) {
+      const blobby = args.map((val) => {
+        if (val instanceof _FbsBlob) {
+          return val.data_;
+        } else {
+          return val;
+        }
+      });
+      return new _FbsBlob(getBlob$1.apply(null, blobby));
+    } else {
+      const uint8Arrays = args.map((val) => {
+        if (isString(val)) {
+          return dataFromString(StringFormat.RAW, val).data;
+        } else {
+          return val.data_;
+        }
+      });
+      let finalLength = 0;
+      uint8Arrays.forEach((array) => {
+        finalLength += array.byteLength;
+      });
+      const merged = new Uint8Array(finalLength);
+      let index = 0;
+      uint8Arrays.forEach((array) => {
+        for (let i2 = 0; i2 < array.length; i2++) {
+          merged[index++] = array[i2];
+        }
+      });
+      return new _FbsBlob(merged, true);
+    }
+  }
+  uploadData() {
+    return this.data_;
+  }
+};
+function jsonObjectOrNull(s2) {
+  let obj;
+  try {
+    obj = JSON.parse(s2);
+  } catch (e2) {
+    return null;
+  }
+  if (isNonArrayObject(obj)) {
+    return obj;
+  } else {
+    return null;
+  }
+}
+function parent(path) {
+  if (path.length === 0) {
+    return null;
+  }
+  const index = path.lastIndexOf("/");
+  if (index === -1) {
+    return "";
+  }
+  const newPath = path.slice(0, index);
+  return newPath;
+}
+function child(path, childPath) {
+  const canonicalChildPath = childPath.split("/").filter((component) => component.length > 0).join("/");
+  if (path.length === 0) {
+    return canonicalChildPath;
+  } else {
+    return path + "/" + canonicalChildPath;
+  }
+}
+function lastComponent(path) {
+  const index = path.lastIndexOf("/", path.length - 2);
+  if (index === -1) {
+    return path;
+  } else {
+    return path.slice(index + 1);
+  }
+}
+function noXform_(metadata, value) {
+  return value;
+}
+var Mapping = class {
+  constructor(server, local, writable, xform) {
+    this.server = server;
+    this.local = local || server;
+    this.writable = !!writable;
+    this.xform = xform || noXform_;
+  }
+};
+var mappings_ = null;
+function xformPath(fullPath) {
+  if (!isString(fullPath) || fullPath.length < 2) {
+    return fullPath;
+  } else {
+    return lastComponent(fullPath);
+  }
+}
+function getMappings() {
+  if (mappings_) {
+    return mappings_;
+  }
+  const mappings = [];
+  mappings.push(new Mapping("bucket"));
+  mappings.push(new Mapping("generation"));
+  mappings.push(new Mapping("metageneration"));
+  mappings.push(new Mapping("name", "fullPath", true));
+  function mappingsXformPath(_metadata, fullPath) {
+    return xformPath(fullPath);
+  }
+  const nameMapping = new Mapping("name");
+  nameMapping.xform = mappingsXformPath;
+  mappings.push(nameMapping);
+  function xformSize(_metadata, size) {
+    if (size !== void 0) {
+      return Number(size);
+    } else {
+      return size;
+    }
+  }
+  const sizeMapping = new Mapping("size");
+  sizeMapping.xform = xformSize;
+  mappings.push(sizeMapping);
+  mappings.push(new Mapping("timeCreated"));
+  mappings.push(new Mapping("updated"));
+  mappings.push(new Mapping("md5Hash", null, true));
+  mappings.push(new Mapping("cacheControl", null, true));
+  mappings.push(new Mapping("contentDisposition", null, true));
+  mappings.push(new Mapping("contentEncoding", null, true));
+  mappings.push(new Mapping("contentLanguage", null, true));
+  mappings.push(new Mapping("contentType", null, true));
+  mappings.push(new Mapping("metadata", "customMetadata", true));
+  mappings_ = mappings;
+  return mappings_;
+}
+function addRef(metadata, service) {
+  function generateRef() {
+    const bucket = metadata["bucket"];
+    const path = metadata["fullPath"];
+    const loc = new Location(bucket, path);
+    return service._makeStorageReference(loc);
+  }
+  Object.defineProperty(metadata, "ref", { get: generateRef });
+}
+function fromResource(service, resource, mappings) {
+  const metadata = {};
+  metadata["type"] = "file";
+  const len = mappings.length;
+  for (let i2 = 0; i2 < len; i2++) {
+    const mapping = mappings[i2];
+    metadata[mapping.local] = mapping.xform(metadata, resource[mapping.server]);
+  }
+  addRef(metadata, service);
+  return metadata;
+}
+function fromResourceString(service, resourceString, mappings) {
+  const obj = jsonObjectOrNull(resourceString);
+  if (obj === null) {
+    return null;
+  }
+  const resource = obj;
+  return fromResource(service, resource, mappings);
+}
+function downloadUrlFromResourceString(metadata, resourceString, host, protocol) {
+  const obj = jsonObjectOrNull(resourceString);
+  if (obj === null) {
+    return null;
+  }
+  if (!isString(obj["downloadTokens"])) {
+    return null;
+  }
+  const tokens = obj["downloadTokens"];
+  if (tokens.length === 0) {
+    return null;
+  }
+  const encode = encodeURIComponent;
+  const tokensList = tokens.split(",");
+  const urls = tokensList.map((token) => {
+    const bucket = metadata["bucket"];
+    const path = metadata["fullPath"];
+    const urlPart = "/b/" + encode(bucket) + "/o/" + encode(path);
+    const base = makeUrl(urlPart, host, protocol);
+    const queryString = makeQueryString({
+      alt: "media",
+      token
+    });
+    return base + queryString;
+  });
+  return urls[0];
+}
+function toResourceString(metadata, mappings) {
+  const resource = {};
+  const len = mappings.length;
+  for (let i2 = 0; i2 < len; i2++) {
+    const mapping = mappings[i2];
+    if (mapping.writable) {
+      resource[mapping.server] = metadata[mapping.local];
+    }
+  }
+  return JSON.stringify(resource);
+}
+var RequestInfo = class {
+  constructor(url, method, handler, timeout) {
+    this.url = url;
+    this.method = method;
+    this.handler = handler;
+    this.timeout = timeout;
+    this.urlParams = {};
+    this.headers = {};
+    this.body = null;
+    this.errorHandler = null;
+    this.progressCallback = null;
+    this.successCodes = [200];
+    this.additionalRetryCodes = [];
+  }
+};
+function handlerCheck(cndn) {
+  if (!cndn) {
+    throw unknown();
+  }
+}
+function metadataHandler(service, mappings) {
+  function handler(xhr, text) {
+    const metadata = fromResourceString(service, text, mappings);
+    handlerCheck(metadata !== null);
+    return metadata;
+  }
+  return handler;
+}
+function downloadUrlHandler(service, mappings) {
+  function handler(xhr, text) {
+    const metadata = fromResourceString(service, text, mappings);
+    handlerCheck(metadata !== null);
+    return downloadUrlFromResourceString(metadata, text, service.host, service._protocol);
+  }
+  return handler;
+}
+function sharedErrorHandler(location2) {
+  function errorHandler(xhr, err) {
+    let newErr;
+    if (xhr.getStatus() === 401) {
+      if (
+        // This exact message string is the only consistent part of the
+        // server's error response that identifies it as an App Check error.
+        xhr.getErrorText().includes("Firebase App Check token is invalid")
+      ) {
+        newErr = unauthorizedApp();
+      } else {
+        newErr = unauthenticated();
+      }
+    } else {
+      if (xhr.getStatus() === 402) {
+        newErr = quotaExceeded(location2.bucket);
+      } else {
+        if (xhr.getStatus() === 403) {
+          newErr = unauthorized(location2.path);
+        } else {
+          newErr = err;
+        }
+      }
+    }
+    newErr.status = xhr.getStatus();
+    newErr.serverResponse = err.serverResponse;
+    return newErr;
+  }
+  return errorHandler;
+}
+function objectErrorHandler(location2) {
+  const shared = sharedErrorHandler(location2);
+  function errorHandler(xhr, err) {
+    let newErr = shared(xhr, err);
+    if (xhr.getStatus() === 404) {
+      newErr = objectNotFound(location2.path);
+    }
+    newErr.serverResponse = err.serverResponse;
+    return newErr;
+  }
+  return errorHandler;
+}
+function getMetadata$2(service, location2, mappings) {
+  const urlPart = location2.fullServerUrl();
+  const url = makeUrl(urlPart, service.host, service._protocol);
+  const method = "GET";
+  const timeout = service.maxOperationRetryTime;
+  const requestInfo = new RequestInfo(url, method, metadataHandler(service, mappings), timeout);
+  requestInfo.errorHandler = objectErrorHandler(location2);
+  return requestInfo;
+}
+function getDownloadUrl(service, location2, mappings) {
+  const urlPart = location2.fullServerUrl();
+  const url = makeUrl(urlPart, service.host, service._protocol);
+  const method = "GET";
+  const timeout = service.maxOperationRetryTime;
+  const requestInfo = new RequestInfo(url, method, downloadUrlHandler(service, mappings), timeout);
+  requestInfo.errorHandler = objectErrorHandler(location2);
+  return requestInfo;
+}
+function deleteObject$2(service, location2) {
+  const urlPart = location2.fullServerUrl();
+  const url = makeUrl(urlPart, service.host, service._protocol);
+  const method = "DELETE";
+  const timeout = service.maxOperationRetryTime;
+  function handler(_xhr, _text) {
+  }
+  const requestInfo = new RequestInfo(url, method, handler, timeout);
+  requestInfo.successCodes = [200, 204];
+  requestInfo.errorHandler = objectErrorHandler(location2);
+  return requestInfo;
+}
+function determineContentType_(metadata, blob) {
+  return metadata && metadata["contentType"] || blob && blob.type() || "application/octet-stream";
+}
+function metadataForUpload_(location2, blob, metadata) {
+  const metadataClone = Object.assign({}, metadata);
+  metadataClone["fullPath"] = location2.path;
+  metadataClone["size"] = blob.size();
+  if (!metadataClone["contentType"]) {
+    metadataClone["contentType"] = determineContentType_(null, blob);
+  }
+  return metadataClone;
+}
+function multipartUpload(service, location2, mappings, blob, metadata) {
+  const urlPart = location2.bucketOnlyServerUrl();
+  const headers = {
+    "X-Goog-Upload-Protocol": "multipart"
+  };
+  function genBoundary() {
+    let str = "";
+    for (let i2 = 0; i2 < 2; i2++) {
+      str = str + Math.random().toString().slice(2);
+    }
+    return str;
+  }
+  const boundary = genBoundary();
+  headers["Content-Type"] = "multipart/related; boundary=" + boundary;
+  const metadata_ = metadataForUpload_(location2, blob, metadata);
+  const metadataString = toResourceString(metadata_, mappings);
+  const preBlobPart = "--" + boundary + "\r\nContent-Type: application/json; charset=utf-8\r\n\r\n" + metadataString + "\r\n--" + boundary + "\r\nContent-Type: " + metadata_["contentType"] + "\r\n\r\n";
+  const postBlobPart = "\r\n--" + boundary + "--";
+  const body = FbsBlob.getBlob(preBlobPart, blob, postBlobPart);
+  if (body === null) {
+    throw cannotSliceBlob();
+  }
+  const urlParams = { name: metadata_["fullPath"] };
+  const url = makeUrl(urlPart, service.host, service._protocol);
+  const method = "POST";
+  const timeout = service.maxUploadRetryTime;
+  const requestInfo = new RequestInfo(url, method, metadataHandler(service, mappings), timeout);
+  requestInfo.urlParams = urlParams;
+  requestInfo.headers = headers;
+  requestInfo.body = body.uploadData();
+  requestInfo.errorHandler = sharedErrorHandler(location2);
+  return requestInfo;
+}
+var ResumableUploadStatus = class {
+  constructor(current, total, finalized, metadata) {
+    this.current = current;
+    this.total = total;
+    this.finalized = !!finalized;
+    this.metadata = metadata || null;
+  }
+};
+function checkResumeHeader_(xhr, allowed) {
+  let status = null;
+  try {
+    status = xhr.getResponseHeader("X-Goog-Upload-Status");
+  } catch (e2) {
+    handlerCheck(false);
+  }
+  const allowedStatus = allowed || ["active"];
+  handlerCheck(!!status && allowedStatus.indexOf(status) !== -1);
+  return status;
+}
+function createResumableUpload(service, location2, mappings, blob, metadata) {
+  const urlPart = location2.bucketOnlyServerUrl();
+  const metadataForUpload = metadataForUpload_(location2, blob, metadata);
+  const urlParams = { name: metadataForUpload["fullPath"] };
+  const url = makeUrl(urlPart, service.host, service._protocol);
+  const method = "POST";
+  const headers = {
+    "X-Goog-Upload-Protocol": "resumable",
+    "X-Goog-Upload-Command": "start",
+    "X-Goog-Upload-Header-Content-Length": `${blob.size()}`,
+    "X-Goog-Upload-Header-Content-Type": metadataForUpload["contentType"],
+    "Content-Type": "application/json; charset=utf-8"
+  };
+  const body = toResourceString(metadataForUpload, mappings);
+  const timeout = service.maxUploadRetryTime;
+  function handler(xhr) {
+    checkResumeHeader_(xhr);
+    let url2;
+    try {
+      url2 = xhr.getResponseHeader("X-Goog-Upload-URL");
+    } catch (e2) {
+      handlerCheck(false);
+    }
+    handlerCheck(isString(url2));
+    return url2;
+  }
+  const requestInfo = new RequestInfo(url, method, handler, timeout);
+  requestInfo.urlParams = urlParams;
+  requestInfo.headers = headers;
+  requestInfo.body = body;
+  requestInfo.errorHandler = sharedErrorHandler(location2);
+  return requestInfo;
+}
+function getResumableUploadStatus(service, location2, url, blob) {
+  const headers = { "X-Goog-Upload-Command": "query" };
+  function handler(xhr) {
+    const status = checkResumeHeader_(xhr, ["active", "final"]);
+    let sizeString = null;
+    try {
+      sizeString = xhr.getResponseHeader("X-Goog-Upload-Size-Received");
+    } catch (e2) {
+      handlerCheck(false);
+    }
+    if (!sizeString) {
+      handlerCheck(false);
+    }
+    const size = Number(sizeString);
+    handlerCheck(!isNaN(size));
+    return new ResumableUploadStatus(size, blob.size(), status === "final");
+  }
+  const method = "POST";
+  const timeout = service.maxUploadRetryTime;
+  const requestInfo = new RequestInfo(url, method, handler, timeout);
+  requestInfo.headers = headers;
+  requestInfo.errorHandler = sharedErrorHandler(location2);
+  return requestInfo;
+}
+var RESUMABLE_UPLOAD_CHUNK_SIZE = 256 * 1024;
+function continueResumableUpload(location2, service, url, blob, chunkSize, mappings, status, progressCallback) {
+  const status_ = new ResumableUploadStatus(0, 0);
+  if (status) {
+    status_.current = status.current;
+    status_.total = status.total;
+  } else {
+    status_.current = 0;
+    status_.total = blob.size();
+  }
+  if (blob.size() !== status_.total) {
+    throw serverFileWrongSize();
+  }
+  const bytesLeft = status_.total - status_.current;
+  let bytesToUpload = bytesLeft;
+  if (chunkSize > 0) {
+    bytesToUpload = Math.min(bytesToUpload, chunkSize);
+  }
+  const startByte = status_.current;
+  const endByte = startByte + bytesToUpload;
+  let uploadCommand = "";
+  if (bytesToUpload === 0) {
+    uploadCommand = "finalize";
+  } else if (bytesLeft === bytesToUpload) {
+    uploadCommand = "upload, finalize";
+  } else {
+    uploadCommand = "upload";
+  }
+  const headers = {
+    "X-Goog-Upload-Command": uploadCommand,
+    "X-Goog-Upload-Offset": `${status_.current}`
+  };
+  const body = blob.slice(startByte, endByte);
+  if (body === null) {
+    throw cannotSliceBlob();
+  }
+  function handler(xhr, text) {
+    const uploadStatus = checkResumeHeader_(xhr, ["active", "final"]);
+    const newCurrent = status_.current + bytesToUpload;
+    const size = blob.size();
+    let metadata;
+    if (uploadStatus === "final") {
+      metadata = metadataHandler(service, mappings)(xhr, text);
+    } else {
+      metadata = null;
+    }
+    return new ResumableUploadStatus(newCurrent, size, uploadStatus === "final", metadata);
+  }
+  const method = "POST";
+  const timeout = service.maxUploadRetryTime;
+  const requestInfo = new RequestInfo(url, method, handler, timeout);
+  requestInfo.headers = headers;
+  requestInfo.body = body.uploadData();
+  requestInfo.progressCallback = progressCallback || null;
+  requestInfo.errorHandler = sharedErrorHandler(location2);
+  return requestInfo;
+}
+var TaskState = {
+  /** The task is currently transferring data. */
+  RUNNING: "running",
+  /** The task was paused by the user. */
+  PAUSED: "paused",
+  /** The task completed successfully. */
+  SUCCESS: "success",
+  /** The task was canceled. */
+  CANCELED: "canceled",
+  /** The task failed with an error. */
+  ERROR: "error"
+};
+function taskStateFromInternalTaskState(state) {
+  switch (state) {
+    case "running":
+    case "pausing":
+    case "canceling":
+      return TaskState.RUNNING;
+    case "paused":
+      return TaskState.PAUSED;
+    case "success":
+      return TaskState.SUCCESS;
+    case "canceled":
+      return TaskState.CANCELED;
+    case "error":
+      return TaskState.ERROR;
+    default:
+      return TaskState.ERROR;
+  }
+}
+var Observer = class {
+  constructor(nextOrObserver, error, complete) {
+    const asFunctions = isFunction(nextOrObserver) || error != null || complete != null;
+    if (asFunctions) {
+      this.next = nextOrObserver;
+      this.error = error ?? void 0;
+      this.complete = complete ?? void 0;
+    } else {
+      const observer = nextOrObserver;
+      this.next = observer.next;
+      this.error = observer.error;
+      this.complete = observer.complete;
+    }
+  }
+};
+function async(f) {
+  return (...argsToForward) => {
+    Promise.resolve().then(() => f(...argsToForward));
+  };
+}
+var XhrConnection = class {
+  constructor() {
+    this.sent_ = false;
+    this.xhr_ = new XMLHttpRequest();
+    this.initXhr();
+    this.errorCode_ = ErrorCode2.NO_ERROR;
+    this.sendPromise_ = new Promise((resolve) => {
+      this.xhr_.addEventListener("abort", () => {
+        this.errorCode_ = ErrorCode2.ABORT;
+        resolve();
+      });
+      this.xhr_.addEventListener("error", () => {
+        this.errorCode_ = ErrorCode2.NETWORK_ERROR;
+        resolve();
+      });
+      this.xhr_.addEventListener("load", () => {
+        resolve();
+      });
+    });
+  }
+  send(url, method, isUsingEmulator, body, headers) {
+    if (this.sent_) {
+      throw internalError("cannot .send() more than once");
+    }
+    if (isCloudWorkstation(url) && isUsingEmulator) {
+      this.xhr_.withCredentials = true;
+    }
+    this.sent_ = true;
+    this.xhr_.open(method, url, true);
+    if (headers !== void 0) {
+      for (const key in headers) {
+        if (headers.hasOwnProperty(key)) {
+          this.xhr_.setRequestHeader(key, headers[key].toString());
+        }
+      }
+    }
+    if (body !== void 0) {
+      this.xhr_.send(body);
+    } else {
+      this.xhr_.send();
+    }
+    return this.sendPromise_;
+  }
+  getErrorCode() {
+    if (!this.sent_) {
+      throw internalError("cannot .getErrorCode() before sending");
+    }
+    return this.errorCode_;
+  }
+  getStatus() {
+    if (!this.sent_) {
+      throw internalError("cannot .getStatus() before sending");
+    }
+    try {
+      return this.xhr_.status;
+    } catch (e2) {
+      return -1;
+    }
+  }
+  getResponse() {
+    if (!this.sent_) {
+      throw internalError("cannot .getResponse() before sending");
+    }
+    return this.xhr_.response;
+  }
+  getErrorText() {
+    if (!this.sent_) {
+      throw internalError("cannot .getErrorText() before sending");
+    }
+    return this.xhr_.statusText;
+  }
+  /** Aborts the request. */
+  abort() {
+    this.xhr_.abort();
+  }
+  getResponseHeader(header) {
+    return this.xhr_.getResponseHeader(header);
+  }
+  addUploadProgressListener(listener) {
+    if (this.xhr_.upload != null) {
+      this.xhr_.upload.addEventListener("progress", listener);
+    }
+  }
+  removeUploadProgressListener(listener) {
+    if (this.xhr_.upload != null) {
+      this.xhr_.upload.removeEventListener("progress", listener);
+    }
+  }
+};
+var XhrTextConnection = class extends XhrConnection {
+  initXhr() {
+    this.xhr_.responseType = "text";
+  }
+};
+function newTextConnection() {
+  return new XhrTextConnection();
+}
+var UploadTask = class {
+  isExponentialBackoffExpired() {
+    return this.sleepTime > this.maxSleepTime;
+  }
+  /**
+   * @param ref - The firebaseStorage.Reference object this task came
+   *     from, untyped to avoid cyclic dependencies.
+   * @param blob - The blob to upload.
+   */
+  constructor(ref2, blob, metadata = null) {
+    this._transferred = 0;
+    this._needToFetchStatus = false;
+    this._needToFetchMetadata = false;
+    this._observers = [];
+    this._error = void 0;
+    this._uploadUrl = void 0;
+    this._request = void 0;
+    this._chunkMultiplier = 1;
+    this._resolve = void 0;
+    this._reject = void 0;
+    this._ref = ref2;
+    this._blob = blob;
+    this._metadata = metadata;
+    this._mappings = getMappings();
+    this._resumable = this._shouldDoResumable(this._blob);
+    this._state = "running";
+    this._errorHandler = (error) => {
+      this._request = void 0;
+      this._chunkMultiplier = 1;
+      if (error._codeEquals(StorageErrorCode.CANCELED)) {
+        this._needToFetchStatus = true;
+        this.completeTransitions_();
+      } else {
+        const backoffExpired = this.isExponentialBackoffExpired();
+        if (isRetryStatusCode(error.status, [])) {
+          if (backoffExpired) {
+            error = retryLimitExceeded();
+          } else {
+            this.sleepTime = Math.max(this.sleepTime * 2, DEFAULT_MIN_SLEEP_TIME_MILLIS);
+            this._needToFetchStatus = true;
+            this.completeTransitions_();
+            return;
+          }
+        }
+        this._error = error;
+        this._transition(
+          "error"
+          /* InternalTaskState.ERROR */
+        );
+      }
+    };
+    this._metadataErrorHandler = (error) => {
+      this._request = void 0;
+      if (error._codeEquals(StorageErrorCode.CANCELED)) {
+        this.completeTransitions_();
+      } else {
+        this._error = error;
+        this._transition(
+          "error"
+          /* InternalTaskState.ERROR */
+        );
+      }
+    };
+    this.sleepTime = 0;
+    this.maxSleepTime = this._ref.storage.maxUploadRetryTime;
+    this._promise = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
+      this._start();
+    });
+    this._promise.then(null, () => {
+    });
+  }
+  _makeProgressCallback() {
+    const sizeBefore = this._transferred;
+    return (loaded) => this._updateProgress(sizeBefore + loaded);
+  }
+  _shouldDoResumable(blob) {
+    return blob.size() > 256 * 1024;
+  }
+  _start() {
+    if (this._state !== "running") {
+      return;
+    }
+    if (this._request !== void 0) {
+      return;
+    }
+    if (this._resumable) {
+      if (this._uploadUrl === void 0) {
+        this._createResumable();
+      } else {
+        if (this._needToFetchStatus) {
+          this._fetchStatus();
+        } else {
+          if (this._needToFetchMetadata) {
+            this._fetchMetadata();
+          } else {
+            this.pendingTimeout = setTimeout(() => {
+              this.pendingTimeout = void 0;
+              this._continueUpload();
+            }, this.sleepTime);
+          }
+        }
+      }
+    } else {
+      this._oneShotUpload();
+    }
+  }
+  _resolveToken(callback) {
+    Promise.all([
+      this._ref.storage._getAuthToken(),
+      this._ref.storage._getAppCheckToken()
+    ]).then(([authToken, appCheckToken]) => {
+      switch (this._state) {
+        case "running":
+          callback(authToken, appCheckToken);
+          break;
+        case "canceling":
+          this._transition(
+            "canceled"
+            /* InternalTaskState.CANCELED */
+          );
+          break;
+        case "pausing":
+          this._transition(
+            "paused"
+            /* InternalTaskState.PAUSED */
+          );
+          break;
+      }
+    });
+  }
+  // TODO(andysoto): assert false
+  _createResumable() {
+    this._resolveToken((authToken, appCheckToken) => {
+      const requestInfo = createResumableUpload(this._ref.storage, this._ref._location, this._mappings, this._blob, this._metadata);
+      const createRequest = this._ref.storage._makeRequest(requestInfo, newTextConnection, authToken, appCheckToken);
+      this._request = createRequest;
+      createRequest.getPromise().then((url) => {
+        this._request = void 0;
+        this._uploadUrl = url;
+        this._needToFetchStatus = false;
+        this.completeTransitions_();
+      }, this._errorHandler);
+    });
+  }
+  _fetchStatus() {
+    const url = this._uploadUrl;
+    this._resolveToken((authToken, appCheckToken) => {
+      const requestInfo = getResumableUploadStatus(this._ref.storage, this._ref._location, url, this._blob);
+      const statusRequest = this._ref.storage._makeRequest(requestInfo, newTextConnection, authToken, appCheckToken);
+      this._request = statusRequest;
+      statusRequest.getPromise().then((status) => {
+        status = status;
+        this._request = void 0;
+        this._updateProgress(status.current);
+        this._needToFetchStatus = false;
+        if (status.finalized) {
+          this._needToFetchMetadata = true;
+        }
+        this.completeTransitions_();
+      }, this._errorHandler);
+    });
+  }
+  _continueUpload() {
+    const chunkSize = RESUMABLE_UPLOAD_CHUNK_SIZE * this._chunkMultiplier;
+    const status = new ResumableUploadStatus(this._transferred, this._blob.size());
+    const url = this._uploadUrl;
+    this._resolveToken((authToken, appCheckToken) => {
+      let requestInfo;
+      try {
+        requestInfo = continueResumableUpload(this._ref._location, this._ref.storage, url, this._blob, chunkSize, this._mappings, status, this._makeProgressCallback());
+      } catch (e2) {
+        this._error = e2;
+        this._transition(
+          "error"
+          /* InternalTaskState.ERROR */
+        );
+        return;
+      }
+      const uploadRequest = this._ref.storage._makeRequest(
+        requestInfo,
+        newTextConnection,
+        authToken,
+        appCheckToken,
+        /*retry=*/
+        false
+        // Upload requests should not be retried as each retry should be preceded by another query request. Which is handled in this file.
+      );
+      this._request = uploadRequest;
+      uploadRequest.getPromise().then((newStatus) => {
+        this._increaseMultiplier();
+        this._request = void 0;
+        this._updateProgress(newStatus.current);
+        if (newStatus.finalized) {
+          this._metadata = newStatus.metadata;
+          this._transition(
+            "success"
+            /* InternalTaskState.SUCCESS */
+          );
+        } else {
+          this.completeTransitions_();
+        }
+      }, this._errorHandler);
+    });
+  }
+  _increaseMultiplier() {
+    const currentSize = RESUMABLE_UPLOAD_CHUNK_SIZE * this._chunkMultiplier;
+    if (currentSize * 2 < 32 * 1024 * 1024) {
+      this._chunkMultiplier *= 2;
+    }
+  }
+  _fetchMetadata() {
+    this._resolveToken((authToken, appCheckToken) => {
+      const requestInfo = getMetadata$2(this._ref.storage, this._ref._location, this._mappings);
+      const metadataRequest = this._ref.storage._makeRequest(requestInfo, newTextConnection, authToken, appCheckToken);
+      this._request = metadataRequest;
+      metadataRequest.getPromise().then((metadata) => {
+        this._request = void 0;
+        this._metadata = metadata;
+        this._transition(
+          "success"
+          /* InternalTaskState.SUCCESS */
+        );
+      }, this._metadataErrorHandler);
+    });
+  }
+  _oneShotUpload() {
+    this._resolveToken((authToken, appCheckToken) => {
+      const requestInfo = multipartUpload(this._ref.storage, this._ref._location, this._mappings, this._blob, this._metadata);
+      const multipartRequest = this._ref.storage._makeRequest(requestInfo, newTextConnection, authToken, appCheckToken);
+      this._request = multipartRequest;
+      multipartRequest.getPromise().then((metadata) => {
+        this._request = void 0;
+        this._metadata = metadata;
+        this._updateProgress(this._blob.size());
+        this._transition(
+          "success"
+          /* InternalTaskState.SUCCESS */
+        );
+      }, this._errorHandler);
+    });
+  }
+  _updateProgress(transferred) {
+    const old = this._transferred;
+    this._transferred = transferred;
+    if (this._transferred !== old) {
+      this._notifyObservers();
+    }
+  }
+  _transition(state) {
+    if (this._state === state) {
+      return;
+    }
+    switch (state) {
+      case "canceling":
+      case "pausing":
+        this._state = state;
+        if (this._request !== void 0) {
+          this._request.cancel();
+        } else if (this.pendingTimeout) {
+          clearTimeout(this.pendingTimeout);
+          this.pendingTimeout = void 0;
+          this.completeTransitions_();
+        }
+        break;
+      case "running":
+        const wasPaused = this._state === "paused";
+        this._state = state;
+        if (wasPaused) {
+          this._notifyObservers();
+          this._start();
+        }
+        break;
+      case "paused":
+        this._state = state;
+        this._notifyObservers();
+        break;
+      case "canceled":
+        this._error = canceled();
+        this._state = state;
+        this._notifyObservers();
+        break;
+      case "error":
+        this._state = state;
+        this._notifyObservers();
+        break;
+      case "success":
+        this._state = state;
+        this._notifyObservers();
+        break;
+    }
+  }
+  completeTransitions_() {
+    switch (this._state) {
+      case "pausing":
+        this._transition(
+          "paused"
+          /* InternalTaskState.PAUSED */
+        );
+        break;
+      case "canceling":
+        this._transition(
+          "canceled"
+          /* InternalTaskState.CANCELED */
+        );
+        break;
+      case "running":
+        this._start();
+        break;
+    }
+  }
+  /**
+   * A snapshot of the current task state.
+   */
+  get snapshot() {
+    const externalState = taskStateFromInternalTaskState(this._state);
+    return {
+      bytesTransferred: this._transferred,
+      totalBytes: this._blob.size(),
+      state: externalState,
+      metadata: this._metadata,
+      task: this,
+      ref: this._ref
+    };
+  }
+  /**
+   * Adds a callback for an event.
+   * @param type - The type of event to listen for.
+   * @param nextOrObserver -
+   *     The `next` function, which gets called for each item in
+   *     the event stream, or an observer object with some or all of these three
+   *     properties (`next`, `error`, `complete`).
+   * @param error - A function that gets called with a `StorageError`
+   *     if the event stream ends due to an error.
+   * @param completed - A function that gets called if the
+   *     event stream ends normally.
+   * @returns
+   *     If only the event argument is passed, returns a function you can use to
+   *     add callbacks (see the examples above). If more than just the event
+   *     argument is passed, returns a function you can call to unregister the
+   *     callbacks.
+   */
+  on(type, nextOrObserver, error, completed) {
+    const observer = new Observer(nextOrObserver || void 0, error || void 0, completed || void 0);
+    this._addObserver(observer);
+    return () => {
+      this._removeObserver(observer);
+    };
+  }
+  /**
+   * This object behaves like a Promise, and resolves with its snapshot data
+   * when the upload completes.
+   * @param onFulfilled - The fulfillment callback. Promise chaining works as normal.
+   * @param onRejected - The rejection callback.
+   */
+  then(onFulfilled, onRejected) {
+    return this._promise.then(onFulfilled, onRejected);
+  }
+  /**
+   * Equivalent to calling `then(null, onRejected)`.
+   */
+  catch(onRejected) {
+    return this.then(null, onRejected);
+  }
+  /**
+   * Adds the given observer.
+   */
+  _addObserver(observer) {
+    this._observers.push(observer);
+    this._notifyObserver(observer);
+  }
+  /**
+   * Removes the given observer.
+   */
+  _removeObserver(observer) {
+    const i2 = this._observers.indexOf(observer);
+    if (i2 !== -1) {
+      this._observers.splice(i2, 1);
+    }
+  }
+  _notifyObservers() {
+    this._finishPromise();
+    const observers = this._observers.slice();
+    observers.forEach((observer) => {
+      this._notifyObserver(observer);
+    });
+  }
+  _finishPromise() {
+    if (this._resolve !== void 0) {
+      let triggered = true;
+      switch (taskStateFromInternalTaskState(this._state)) {
+        case TaskState.SUCCESS:
+          async(this._resolve.bind(null, this.snapshot))();
+          break;
+        case TaskState.CANCELED:
+        case TaskState.ERROR:
+          const toCall = this._reject;
+          async(toCall.bind(null, this._error))();
+          break;
+        default:
+          triggered = false;
+          break;
+      }
+      if (triggered) {
+        this._resolve = void 0;
+        this._reject = void 0;
+      }
+    }
+  }
+  _notifyObserver(observer) {
+    const externalState = taskStateFromInternalTaskState(this._state);
+    switch (externalState) {
+      case TaskState.RUNNING:
+      case TaskState.PAUSED:
+        if (observer.next) {
+          async(observer.next.bind(observer, this.snapshot))();
+        }
+        break;
+      case TaskState.SUCCESS:
+        if (observer.complete) {
+          async(observer.complete.bind(observer))();
+        }
+        break;
+      case TaskState.CANCELED:
+      case TaskState.ERROR:
+        if (observer.error) {
+          async(observer.error.bind(observer, this._error))();
+        }
+        break;
+      default:
+        if (observer.error) {
+          async(observer.error.bind(observer, this._error))();
+        }
+    }
+  }
+  /**
+   * Resumes a paused task. Has no effect on a currently running or failed task.
+   * @returns True if the operation took effect, false if ignored.
+   */
+  resume() {
+    const valid = this._state === "paused" || this._state === "pausing";
+    if (valid) {
+      this._transition(
+        "running"
+        /* InternalTaskState.RUNNING */
+      );
+    }
+    return valid;
+  }
+  /**
+   * Pauses a currently running task. Has no effect on a paused or failed task.
+   * @returns True if the operation took effect, false if ignored.
+   */
+  pause() {
+    const valid = this._state === "running";
+    if (valid) {
+      this._transition(
+        "pausing"
+        /* InternalTaskState.PAUSING */
+      );
+    }
+    return valid;
+  }
+  /**
+   * Cancels a currently running or paused task. Has no effect on a complete or
+   * failed task.
+   * @returns True if the operation took effect, false if ignored.
+   */
+  cancel() {
+    const valid = this._state === "running" || this._state === "pausing";
+    if (valid) {
+      this._transition(
+        "canceling"
+        /* InternalTaskState.CANCELING */
+      );
+    }
+    return valid;
+  }
+};
+var Reference = class _Reference {
+  constructor(_service, location2) {
+    this._service = _service;
+    if (location2 instanceof Location) {
+      this._location = location2;
+    } else {
+      this._location = Location.makeFromUrl(location2, _service.host);
+    }
+  }
+  /**
+   * Returns the URL for the bucket and path this object references,
+   *     in the form gs://<bucket>/<object-path>
+   * @override
+   */
+  toString() {
+    return "gs://" + this._location.bucket + "/" + this._location.path;
+  }
+  _newRef(service, location2) {
+    return new _Reference(service, location2);
+  }
+  /**
+   * A reference to the root of this object's bucket.
+   */
+  get root() {
+    const location2 = new Location(this._location.bucket, "");
+    return this._newRef(this._service, location2);
+  }
+  /**
+   * The name of the bucket containing this reference's object.
+   */
+  get bucket() {
+    return this._location.bucket;
+  }
+  /**
+   * The full path of this object.
+   */
+  get fullPath() {
+    return this._location.path;
+  }
+  /**
+   * The short name of this object, which is the last component of the full path.
+   * For example, if fullPath is 'full/path/image.png', name is 'image.png'.
+   */
+  get name() {
+    return lastComponent(this._location.path);
+  }
+  /**
+   * The `StorageService` instance this `StorageReference` is associated with.
+   */
+  get storage() {
+    return this._service;
+  }
+  /**
+   * A `StorageReference` pointing to the parent location of this `StorageReference`, or null if
+   * this reference is the root.
+   */
+  get parent() {
+    const newPath = parent(this._location.path);
+    if (newPath === null) {
+      return null;
+    }
+    const location2 = new Location(this._location.bucket, newPath);
+    return new _Reference(this._service, location2);
+  }
+  /**
+   * Utility function to throw an error in methods that do not accept a root reference.
+   */
+  _throwIfRoot(name5) {
+    if (this._location.path === "") {
+      throw invalidRootOperation(name5);
+    }
+  }
+};
+function uploadBytesResumable$1(ref2, data, metadata) {
+  ref2._throwIfRoot("uploadBytesResumable");
+  return new UploadTask(ref2, new FbsBlob(data), metadata);
+}
+function getDownloadURL$1(ref2) {
+  ref2._throwIfRoot("getDownloadURL");
+  const requestInfo = getDownloadUrl(ref2.storage, ref2._location, getMappings());
+  return ref2.storage.makeRequestWithTokens(requestInfo, newTextConnection).then((url) => {
+    if (url === null) {
+      throw noDownloadURL();
+    }
+    return url;
+  });
+}
+function deleteObject$1(ref2) {
+  ref2._throwIfRoot("deleteObject");
+  const requestInfo = deleteObject$2(ref2.storage, ref2._location);
+  return ref2.storage.makeRequestWithTokens(requestInfo, newTextConnection);
+}
+function _getChild$1(ref2, childPath) {
+  const newPath = child(ref2._location.path, childPath);
+  const location2 = new Location(ref2._location.bucket, newPath);
+  return new Reference(ref2.storage, location2);
+}
+function isUrl(path) {
+  return /^[A-Za-z]+:\/\//.test(path);
+}
+function refFromURL(service, url) {
+  return new Reference(service, url);
+}
+function refFromPath(ref2, path) {
+  if (ref2 instanceof FirebaseStorageImpl) {
+    const service = ref2;
+    if (service._bucket == null) {
+      throw noDefaultBucket();
+    }
+    const reference = new Reference(service, service._bucket);
+    if (path != null) {
+      return refFromPath(reference, path);
+    } else {
+      return reference;
+    }
+  } else {
+    if (path !== void 0) {
+      return _getChild$1(ref2, path);
+    } else {
+      return ref2;
+    }
+  }
+}
+function ref$1(serviceOrRef, pathOrUrl) {
+  if (pathOrUrl && isUrl(pathOrUrl)) {
+    if (serviceOrRef instanceof FirebaseStorageImpl) {
+      return refFromURL(serviceOrRef, pathOrUrl);
+    } else {
+      throw invalidArgument("To use ref(service, url), the first argument must be a Storage instance.");
+    }
+  } else {
+    return refFromPath(serviceOrRef, pathOrUrl);
+  }
+}
+function extractBucket(host, config) {
+  const bucketString = config?.[CONFIG_STORAGE_BUCKET_KEY];
+  if (bucketString == null) {
+    return null;
+  }
+  return Location.makeFromBucketSpec(bucketString, host);
+}
+function connectStorageEmulator$1(storage, host, port, options = {}) {
+  storage.host = `${host}:${port}`;
+  const useSsl = isCloudWorkstation(host);
+  if (useSsl) {
+    void pingServer(`https://${storage.host}/b`);
+  }
+  storage._isUsingEmulator = true;
+  storage._protocol = useSsl ? "https" : "http";
+  const { mockUserToken } = options;
+  if (mockUserToken) {
+    storage._overrideAuthToken = typeof mockUserToken === "string" ? mockUserToken : createMockUserToken(mockUserToken, storage.app.options.projectId);
+  }
+}
+var FirebaseStorageImpl = class {
+  constructor(app, _authProvider, _appCheckProvider, _url, _firebaseVersion, _isUsingEmulator = false) {
+    this.app = app;
+    this._authProvider = _authProvider;
+    this._appCheckProvider = _appCheckProvider;
+    this._url = _url;
+    this._firebaseVersion = _firebaseVersion;
+    this._isUsingEmulator = _isUsingEmulator;
+    this._bucket = null;
+    this._host = DEFAULT_HOST;
+    this._protocol = "https";
+    this._appId = null;
+    this._deleted = false;
+    this._maxOperationRetryTime = DEFAULT_MAX_OPERATION_RETRY_TIME;
+    this._maxUploadRetryTime = DEFAULT_MAX_UPLOAD_RETRY_TIME;
+    this._requests = /* @__PURE__ */ new Set();
+    if (_url != null) {
+      this._bucket = Location.makeFromBucketSpec(_url, this._host);
+    } else {
+      this._bucket = extractBucket(this._host, this.app.options);
+    }
+  }
+  /**
+   * The host string for this service, in the form of `host` or
+   * `host:port`.
+   */
+  get host() {
+    return this._host;
+  }
+  set host(host) {
+    this._host = host;
+    if (this._url != null) {
+      this._bucket = Location.makeFromBucketSpec(this._url, host);
+    } else {
+      this._bucket = extractBucket(host, this.app.options);
+    }
+  }
+  /**
+   * The maximum time to retry uploads in milliseconds.
+   */
+  get maxUploadRetryTime() {
+    return this._maxUploadRetryTime;
+  }
+  set maxUploadRetryTime(time) {
+    validateNumber(
+      "time",
+      /* minValue=*/
+      0,
+      /* maxValue= */
+      Number.POSITIVE_INFINITY,
+      time
+    );
+    this._maxUploadRetryTime = time;
+  }
+  /**
+   * The maximum time to retry operations other than uploads or downloads in
+   * milliseconds.
+   */
+  get maxOperationRetryTime() {
+    return this._maxOperationRetryTime;
+  }
+  set maxOperationRetryTime(time) {
+    validateNumber(
+      "time",
+      /* minValue=*/
+      0,
+      /* maxValue= */
+      Number.POSITIVE_INFINITY,
+      time
+    );
+    this._maxOperationRetryTime = time;
+  }
+  async _getAuthToken() {
+    if (this._overrideAuthToken) {
+      return this._overrideAuthToken;
+    }
+    const auth = this._authProvider.getImmediate({ optional: true });
+    if (auth) {
+      const tokenData = await auth.getToken();
+      if (tokenData !== null) {
+        return tokenData.accessToken;
+      }
+    }
+    return null;
+  }
+  async _getAppCheckToken() {
+    if (_isFirebaseServerApp(this.app) && this.app.settings.appCheckToken) {
+      return this.app.settings.appCheckToken;
+    }
+    const appCheck = this._appCheckProvider.getImmediate({ optional: true });
+    if (appCheck) {
+      const result = await appCheck.getToken();
+      return result.token;
+    }
+    return null;
+  }
+  /**
+   * Stop running requests and prevent more from being created.
+   */
+  _delete() {
+    if (!this._deleted) {
+      this._deleted = true;
+      this._requests.forEach((request) => request.cancel());
+      this._requests.clear();
+    }
+    return Promise.resolve();
+  }
+  /**
+   * Returns a new firebaseStorage.Reference object referencing this StorageService
+   * at the given Location.
+   */
+  _makeStorageReference(loc) {
+    return new Reference(this, loc);
+  }
+  /**
+   * @param requestInfo - HTTP RequestInfo object
+   * @param authToken - Firebase auth token
+   */
+  _makeRequest(requestInfo, requestFactory, authToken, appCheckToken, retry = true) {
+    if (!this._deleted) {
+      const request = makeRequest(requestInfo, this._appId, authToken, appCheckToken, requestFactory, this._firebaseVersion, retry, this._isUsingEmulator);
+      this._requests.add(request);
+      request.getPromise().then(() => this._requests.delete(request), () => this._requests.delete(request));
+      return request;
+    } else {
+      return new FailRequest(appDeleted());
+    }
+  }
+  async makeRequestWithTokens(requestInfo, requestFactory) {
+    const [authToken, appCheckToken] = await Promise.all([
+      this._getAuthToken(),
+      this._getAppCheckToken()
+    ]);
+    return this._makeRequest(requestInfo, requestFactory, authToken, appCheckToken).getPromise();
+  }
+};
+var name4 = "@firebase/storage";
+var version4 = "0.14.5";
+var STORAGE_TYPE = "storage";
+function uploadBytesResumable(ref2, data, metadata) {
+  ref2 = getModularInstance(ref2);
+  return uploadBytesResumable$1(ref2, data, metadata);
+}
+function getDownloadURL(ref2) {
+  ref2 = getModularInstance(ref2);
+  return getDownloadURL$1(ref2);
+}
+function deleteObject(ref2) {
+  ref2 = getModularInstance(ref2);
+  return deleteObject$1(ref2);
+}
+function ref(serviceOrRef, pathOrUrl) {
+  serviceOrRef = getModularInstance(serviceOrRef);
+  return ref$1(serviceOrRef, pathOrUrl);
+}
+function getStorage(app = getApp(), bucketUrl) {
+  app = getModularInstance(app);
+  const storageProvider = _getProvider(app, STORAGE_TYPE);
+  const storageInstance = storageProvider.getImmediate({
+    identifier: bucketUrl
+  });
+  const emulator = getDefaultEmulatorHostnameAndPort("storage");
+  if (emulator) {
+    connectStorageEmulator(storageInstance, ...emulator);
+  }
+  return storageInstance;
+}
+function connectStorageEmulator(storage, host, port, options = {}) {
+  connectStorageEmulator$1(storage, host, port, options);
+}
+function factory(container, { instanceIdentifier: url }) {
+  const app = container.getProvider("app").getImmediate();
+  const authProvider = container.getProvider("auth-internal");
+  const appCheckProvider = container.getProvider("app-check-internal");
+  return new FirebaseStorageImpl(app, authProvider, appCheckProvider, url, SDK_VERSION);
+}
+function registerStorage() {
+  _registerComponent(new Component(
+    STORAGE_TYPE,
+    factory,
+    "PUBLIC"
+    /* ComponentType.PUBLIC */
+  ).setMultipleInstances(true));
+  registerVersion(name4, version4, "");
+  registerVersion(name4, version4, "esm2020");
+}
+registerStorage();
 export {
   addDoc,
   collection,
   deleteDoc,
+  deleteObject,
   doc,
   getApp,
   getApps,
@@ -31773,13 +34367,16 @@ export {
   getDoc,
   getDocFromServer,
   getDocs,
+  getDownloadURL,
   getFirestore,
+  getStorage,
   initializeApp,
   limit,
   onAuthStateChanged,
   onSnapshot,
   orderBy,
   query,
+  ref,
   runTransaction,
   serverTimestamp,
   setDoc,
@@ -31787,6 +34384,7 @@ export {
   signInWithEmailAndPassword,
   signOut,
   updateDoc,
+  uploadBytesResumable,
   where
 };
 /*! Bundled license information:
@@ -31829,6 +34427,9 @@ export {
 @firebase/firestore/dist/common-CLMydGSF.esm.js:
 @firebase/firestore/dist/common-CLMydGSF.esm.js:
 @firebase/firestore/dist/index.esm.js:
+@firebase/storage/dist/index.esm.js:
+@firebase/storage/dist/index.esm.js:
+@firebase/storage/dist/index.esm.js:
   (**
    * @license
    * Copyright 2017 Google LLC
@@ -31992,6 +34593,7 @@ firebase/app/dist/esm/index.esm.js:
 @firebase/auth/dist/esm/index-4NFEPWkC.js:
 @firebase/auth/dist/esm/index-4NFEPWkC.js:
 @firebase/auth/dist/esm/index-4NFEPWkC.js:
+@firebase/storage/dist/index.esm.js:
   (**
    * @license
    * Copyright 2020 Google LLC
@@ -32128,10 +34730,10 @@ re2js/build/index.js:
   * re2js
   * RE2JS is the JavaScript port of RE2, a regular expression engine that provides linear time matching
   *
-  * @version v2.8.6
+  * @version v2.9.0
   * @author Oleksii Vasyliev
   * @homepage https://github.com/le0pard/re2js#readme
-  * @repository github:le0pard/re2js
+  * @repository [object Object]
   * @license MIT
   *)
 
@@ -32157,6 +34759,7 @@ re2js/build/index.js:
 
 @firebase/firestore/dist/common-CLMydGSF.esm.js:
 @firebase/firestore/dist/common-CLMydGSF.esm.js:
+@firebase/storage/dist/index.esm.js:
   (**
    * @license
    * Copyright 2017 Google LLC
@@ -32902,6 +35505,7 @@ re2js/build/index.js:
    *)
 
 @firebase/firestore/dist/common-CLMydGSF.esm.js:
+@firebase/storage/dist/index.esm.js:
   (**
    * @license
    * Copyright 2017 Google LLC
@@ -33022,6 +35626,7 @@ re2js/build/index.js:
 
 @firebase/firestore/dist/index.esm.js:
 @firebase/auth/dist/esm/index-4NFEPWkC.js:
+@firebase/storage/dist/index.esm.js:
   (**
    * @license
    * Copyright 2021 Google LLC
@@ -33344,6 +35949,72 @@ re2js/build/index.js:
   (**
    * @license
    * Copyright 2021 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+
+@firebase/storage/dist/index.esm.js:
+  (**
+   * @license
+   * Copyright 2017 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+  (**
+   * @license
+   * Copyright 2022 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+  (**
+   * @license
+   * Copyright 2021 Google LLC
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *   http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *)
+  (**
+   * @license
+   * Copyright 2019 Google LLC
    *
    * Licensed under the Apache License, Version 2.0 (the "License");
    * you may not use this file except in compliance with the License.

@@ -23,3 +23,8 @@
 /my-order/          /my-order.html          200
 /membership         /membership.html        200
 /membership/        /membership.html        200
+/product            /product.html           200
+/product/           /product.html           200
+/product/*          /product.html           200
+/p/*                /product.html           200
+

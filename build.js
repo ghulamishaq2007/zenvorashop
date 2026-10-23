@@ -15,6 +15,7 @@ const bundleFirebase = async () => {
         export { initializeApp, getApps, getApp } from 'firebase/app';
         export { getFirestore, doc, getDoc, getDocFromServer, setDoc, updateDoc, deleteDoc, collection, getDocs, onSnapshot, runTransaction, serverTimestamp, query, orderBy, where, limit, addDoc } from 'firebase/firestore';
         export { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+        export { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
       `,
       resolveDir: __dirname
     },

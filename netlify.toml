@@ -39,3 +39,19 @@
   from = "/membership"
   to = "/membership.html"
   status = 200
+
+[[redirects]]
+  from = "/product/*"
+  to = "/product.html"
+  status = 200
+
+[[redirects]]
+  from = "/product"
+  to = "/product.html"
+  status = 200
+
+[[redirects]]
+  from = "/p/*"
+  to = "/product.html"
+  status = 200
+

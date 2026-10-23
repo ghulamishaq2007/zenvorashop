@@ -21,10 +21,15 @@ import {
   getAuth, 
   signInWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject
 } from "./firebase-bundle.js";
 
-import { firebaseConfig, INITIAL_PRODUCTS, canonicalizeProductId } from "./firebase-config.js";
+import { firebaseConfig, INITIAL_PRODUCTS, canonicalizeProductId, generateProductSlug } from "./firebase-config.js";
 
 // Initialize Firebase App
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
@@ -35,6 +40,13 @@ const db = firebaseConfig.firestoreDatabaseId
   : getFirestore(app);
 
 const auth = getAuth(app);
+
+let storage = null;
+try {
+  storage = getStorage(app);
+} catch (e) {
+  console.warn("[ZENVORA] Firebase Storage init notice:", e.message);
+}
 
 /**
  * Seed initial products into Firestore if missing from the products collection.
@@ -169,7 +181,7 @@ export async function createOrderWithStockDeduction(orderData) {
       // 1. Read all product documents involved in the order
       const productDocs = [];
       for (const item of items) {
-        const canonicalId = canonicalizeProductId(item.id);
+        const canonicalId = canonicalizeProductId(item.id || item.productId);
         const pRef = doc(db, "products", canonicalId);
         const pSnap = await transaction.get(pRef);
 
@@ -178,7 +190,7 @@ export async function createOrderWithStockDeduction(orderData) {
           // If product doesn't exist yet in Firestore, initialize from seed definition
           const seed = INITIAL_PRODUCTS.find(p => p.productId === canonicalId);
           if (!seed) {
-            throw new Error(`Product "${item.name}" is no longer available in the catalogue.`);
+            throw new Error(`Product "${item.name || item.productName}" is no longer available in the catalogue.`);
           }
           pData = { ...seed };
           transaction.set(pRef, { ...seed, updatedAt: createdAtIso });
@@ -188,12 +200,37 @@ export async function createOrderWithStockDeduction(orderData) {
 
         const requestedQty = Number(item.quantity) || 1;
         const currentStock = typeof pData.stock === 'number' ? pData.stock : 0;
+        const itemColor = (item.color || 'Standard').trim();
 
-        if (currentStock < requestedQty) {
-          if (currentStock <= 0) {
-            throw new Error(`Sorry, "${pData.productName || item.name}" is currently Out of Stock.`);
-          } else {
-            throw new Error(`Sorry, only ${currentStock} item(s) available for "${pData.productName || item.name}".`);
+        // Check if product has variants and item specifies a color
+        let matchedVariant = null;
+        let productVariants = Array.isArray(pData.variants) ? JSON.parse(JSON.stringify(pData.variants)) : null;
+
+        if (productVariants && productVariants.length > 0 && itemColor && itemColor !== 'Standard') {
+          const vIdx = productVariants.findIndex(
+            v => v.name && v.name.toLowerCase() === itemColor.toLowerCase()
+          );
+          if (vIdx !== -1) {
+            matchedVariant = { ...productVariants[vIdx], index: vIdx };
+            const variantStock = typeof matchedVariant.stock === 'number' ? matchedVariant.stock : 0;
+            if (variantStock < requestedQty) {
+              if (variantStock <= 0) {
+                throw new Error(`Sorry, "${pData.productName || item.name}" in ${matchedVariant.name} is currently Out of Stock.`);
+              } else {
+                throw new Error(`Sorry, only ${variantStock} item(s) available for "${pData.productName || item.name}" in ${matchedVariant.name}.`);
+              }
+            }
+          }
+        }
+
+        // If no matching variant or standard color, check overall product stock
+        if (!matchedVariant) {
+          if (currentStock < requestedQty) {
+            if (currentStock <= 0) {
+              throw new Error(`Sorry, "${pData.productName || item.name}" is currently Out of Stock.`);
+            } else {
+              throw new Error(`Sorry, only ${currentStock} item(s) available for "${pData.productName || item.name}".`);
+            }
           }
         }
 
@@ -201,12 +238,15 @@ export async function createOrderWithStockDeduction(orderData) {
           ref: pRef,
           currentStock,
           requestedQty,
-          authoritativePrice: pData.price || item.price,
+          authoritativePrice: (matchedVariant && matchedVariant.price) ? matchedVariant.price : (pData.price || item.price),
           productName: pData.productName || item.name,
           productId: canonicalId,
-          image: pData.image || item.image || "",
+          image: (matchedVariant && matchedVariant.image) ? matchedVariant.image : (pData.image || item.image || ""),
           size: item.size || "Standard",
-          color: item.color || "Standard"
+          color: itemColor,
+          sku: (matchedVariant && matchedVariant.sku) ? matchedVariant.sku : (pData.sku || item.sku || ""),
+          matchedVariant,
+          allVariants: productVariants
         });
       }
 
@@ -215,14 +255,36 @@ export async function createOrderWithStockDeduction(orderData) {
       const verifiedItems = [];
 
       for (const p of productDocs) {
-        const newStock = p.currentStock - p.requestedQty;
-        const newStatus = newStock <= 0 ? "out_of_stock" : "available";
+        let updatePayload = {};
+        if (p.allVariants && p.matchedVariant) {
+          // Deduct variant stock
+          const vIdx = p.matchedVariant.index;
+          const newVarStock = Math.max(0, p.matchedVariant.stock - p.requestedQty);
+          p.allVariants[vIdx].stock = newVarStock;
+          p.allVariants[vIdx].status = newVarStock <= 0 ? "out_of_stock" : "available";
 
-        transaction.update(p.ref, {
-          stock: newStock,
-          status: newStatus,
-          updatedAt: createdAtIso
-        });
+          // Calculate new total stock
+          const newTotalStock = p.allVariants
+            .filter(v => v.enabled !== false)
+            .reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
+
+          updatePayload = {
+            variants: p.allVariants,
+            stock: newTotalStock,
+            status: newTotalStock <= 0 ? "out_of_stock" : "available",
+            updatedAt: createdAtIso
+          };
+        } else {
+          const newStock = Math.max(0, p.currentStock - p.requestedQty);
+          const newStatus = newStock <= 0 ? "out_of_stock" : "available";
+          updatePayload = {
+            stock: newStock,
+            status: newStatus,
+            updatedAt: createdAtIso
+          };
+        }
+
+        transaction.update(p.ref, updatePayload);
 
         const subtotal = p.authoritativePrice * p.requestedQty;
         verifiedTotal += subtotal;
@@ -235,7 +297,8 @@ export async function createOrderWithStockDeduction(orderData) {
           subtotal,
           image: p.image,
           size: p.size,
-          color: p.color
+          color: p.color,
+          sku: p.sku
         });
       }
 
@@ -307,18 +370,47 @@ export async function cancelOrder(orderId) {
       // Restore stock for all order items if not already restored
       if (!order.stockRestored && Array.isArray(order.items)) {
         for (const item of order.items) {
-          const canonicalId = canonicalizeProductId(item.productId);
+          const canonicalId = canonicalizeProductId(item.productId || item.id);
           const pRef = doc(db, "products", canonicalId);
           const pSnap = await transaction.get(pRef);
 
           if (pSnap.exists()) {
-            const currentStock = pSnap.data().stock || 0;
-            const restoredStock = currentStock + (Number(item.quantity) || 1);
-            transaction.update(pRef, {
-              stock: restoredStock,
-              status: "available",
-              updatedAt: nowIso
-            });
+            const pData = pSnap.data();
+            const qty = Number(item.quantity) || 1;
+            const itemColor = (item.color || 'Standard').trim();
+
+            if (Array.isArray(pData.variants) && pData.variants.length > 0 && itemColor && itemColor !== 'Standard') {
+              const updatedVariants = JSON.parse(JSON.stringify(pData.variants));
+              const vIdx = updatedVariants.findIndex(v => v.name && v.name.toLowerCase() === itemColor.toLowerCase());
+              if (vIdx !== -1) {
+                updatedVariants[vIdx].stock = (Number(updatedVariants[vIdx].stock) || 0) + qty;
+                updatedVariants[vIdx].status = "available";
+                const newTotalStock = updatedVariants
+                  .filter(v => v.enabled !== false)
+                  .reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
+                transaction.update(pRef, {
+                  variants: updatedVariants,
+                  stock: newTotalStock,
+                  status: "available",
+                  updatedAt: nowIso
+                });
+              } else {
+                const currentStock = pData.stock || 0;
+                transaction.update(pRef, {
+                  stock: currentStock + qty,
+                  status: "available",
+                  updatedAt: nowIso
+                });
+              }
+            } else {
+              const currentStock = pData.stock || 0;
+              const restoredStock = currentStock + qty;
+              transaction.update(pRef, {
+                stock: restoredStock,
+                status: "available",
+                updatedAt: nowIso
+              });
+            }
           }
         }
       }
@@ -361,7 +453,284 @@ export async function getOrder(orderId) {
 }
 
 /**
+ * Upload a product image to Firebase Storage with progress tracking.
+ * Returns { success: true, downloadUrl, filePath } or informative error.
+ */
+export async function uploadProductImage(file, productId, progressCallback) {
+  if (!storage) {
+    return {
+      success: false,
+      error: "Firebase Storage is not initialized or configured in this environment.",
+      storageNotConfigured: true
+    };
+  }
+
+  const cleanId = String(productId || "uploads").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  const safeName = file.name ? file.name.replace(/[^a-zA-Z0-9._-]/g, "_") : "product-image.jpg";
+  const filePath = `products/${cleanId}/${Date.now()}_${safeName}`;
+  const storageRef = ref(storage, filePath);
+
+  try {
+    const uploadTask = uploadBytesResumable(storageRef, file, {
+      contentType: file.type || "image/jpeg",
+      cacheControl: "public, max-age=31536000"
+    });
+
+    return new Promise((resolve) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = snapshot.totalBytes > 0 
+            ? (snapshot.bytesTransferred / snapshot.totalBytes) * 100 
+            : 0;
+          if (typeof progressCallback === "function") {
+            progressCallback(Math.round(progress));
+          }
+        },
+        (error) => {
+          console.error("[ZENVORA] Firebase Storage upload error:", error);
+          const isPerm = error.code === 'storage/unauthorized' || String(error.message || '').includes('permission');
+          resolve({
+            success: false,
+            error: error.message || "Failed to upload image to Firebase Storage",
+            storageNotConfigured: isPerm,
+            code: error.code
+          });
+        },
+        async () => {
+          try {
+            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve({
+              success: true,
+              downloadUrl,
+              filePath,
+              name: file.name,
+              size: file.size
+            });
+          } catch (urlErr) {
+            resolve({ success: false, error: urlErr.message });
+          }
+        }
+      );
+    });
+  } catch (err) {
+    console.error("[ZENVORA] Upload exception:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Check if a product has existing customer orders in Firestore.
+ */
+export async function checkProductHasOrders(productId) {
+  const canonicalId = canonicalizeProductId(productId);
+  try {
+    const ordersCol = collection(db, "orders");
+    const snap = await getDocs(ordersCol);
+    let orderCount = 0;
+    let recentOrderId = null;
+    snap.forEach((docSnap) => {
+      const order = docSnap.data();
+      if (Array.isArray(order.items)) {
+        const found = order.items.some(
+          it => canonicalizeProductId(it.productId || it.id) === canonicalId
+        );
+        if (found) {
+          orderCount++;
+          if (!recentOrderId) recentOrderId = order.orderId || docSnap.id;
+        }
+      }
+    });
+    return { hasOrders: orderCount > 0, orderCount, recentOrderId };
+  } catch (err) {
+    console.warn("[ZENVORA] checkProductHasOrders warning:", err);
+    return { hasOrders: false, orderCount: 0 };
+  }
+}
+
+/**
+ * Create a new dynamic product in Firestore.
+ */
+export async function createProduct(productData) {
+  const {
+    productId,
+    productName,
+    price,
+    originalPrice,
+    category,
+    image,
+    images = [],
+    stock,
+    status = "published",
+    variants = [],
+    sizes = [],
+    description = "",
+    shortDescription = "",
+    brand = "ZENVORA SHOOP",
+    sku = "",
+    fabric = "",
+    features = [],
+    tags = [],
+    isFeatured = false,
+    shippingInfo = "Fast doorstep delivery across Karachi (2-3 days). Cash on Delivery available.",
+    seo = {}
+  } = productData;
+
+  const canonicalId = String(productId || "").trim().toLowerCase();
+  if (!canonicalId) throw new Error("Product ID / Slug is required.");
+  if (!productName || !String(productName).trim()) throw new Error("Product Name is required.");
+  if (typeof price !== 'number' || isNaN(price) || price < 0) throw new Error("A valid selling price (PKR) is required.");
+  if (!image) throw new Error("At least one main product image is required.");
+
+  // Check if product ID already exists
+  const docRef = doc(db, "products", canonicalId);
+  const snap = await getDoc(docRef);
+  if (snap.exists()) {
+    throw new Error(`A product with ID or Slug "${canonicalId}" already exists. Please choose a unique slug.`);
+  }
+
+  // Calculate authoritative stock from variants if variants are present and enabled
+  let finalStock = Number(stock) || 0;
+  let normalizedVariants = [];
+  if (Array.isArray(variants) && variants.length > 0) {
+    normalizedVariants = variants.map((v, idx) => ({
+      id: v.id || `var-${idx + 1}`,
+      name: String(v.name || "").trim(),
+      hex: v.hex || "#111111",
+      stock: Math.max(0, parseInt(v.stock, 10) || 0),
+      sku: v.sku ? String(v.sku).trim() : `${canonicalId}-${(v.name || 'var').toLowerCase().replace(/\s+/g, '-')}`,
+      price: (typeof v.price === 'number' && v.price > 0) ? v.price : price,
+      image: v.image || image,
+      enabled: v.enabled !== false,
+      status: (parseInt(v.stock, 10) || 0) <= 0 ? "out_of_stock" : "available"
+    }));
+    finalStock = normalizedVariants
+      .filter(v => v.enabled)
+      .reduce((acc, v) => acc + v.stock, 0);
+  }
+
+  const finalStatus = status === "draft" 
+    ? "draft" 
+    : (finalStock <= 0 ? "out_of_stock" : "available");
+
+  const nowIso = new Date().toISOString();
+  const productPayload = {
+    productId: canonicalId,
+    productName: productName.trim(),
+    slug: canonicalId,
+    productUrl: `product.html?id=${canonicalId}`,
+    category: category ? category.trim() : "Fashion",
+    price: Number(price),
+    originalPrice: (typeof originalPrice === 'number' && originalPrice > price) ? originalPrice : null,
+    stock: finalStock,
+    status: finalStatus,
+    image,
+    images: images.length > 0 ? images : [image],
+    variants: normalizedVariants,
+    sizes: Array.isArray(sizes) ? sizes : [],
+    description: description.trim(),
+    shortDescription: shortDescription.trim(),
+    brand: brand.trim(),
+    sku: sku.trim(),
+    fabric: fabric.trim(),
+    features: Array.isArray(features) ? features : [],
+    tags: Array.isArray(tags) ? tags : [],
+    isFeatured: Boolean(isFeatured),
+    shippingInfo: shippingInfo.trim(),
+    seo: {
+      metaTitle: (seo && seo.metaTitle) ? seo.metaTitle : `${productName.trim()} | ZENVORA SHOOP`,
+      metaDescription: (seo && seo.metaDescription) ? seo.metaDescription : `Shop ${productName.trim()} at ZENVORA SHOOP. Authentic Pakistani fashion online with Cash on Delivery Pakistan & WhatsApp orders.`,
+      focusKeyword: (seo && seo.focusKeyword) ? seo.focusKeyword : productName.trim().toLowerCase(),
+      additionalKeywords: (seo && seo.additionalKeywords) ? seo.additionalKeywords : "",
+      canonicalUrl: (seo && seo.canonicalUrl) ? seo.canonicalUrl : `https://zenvorashoop.netlify.app/product.html?id=${canonicalId}`,
+      ogTitle: (seo && seo.ogTitle) ? seo.ogTitle : `${productName.trim()} | ZENVORA SHOOP`,
+      ogDescription: (seo && seo.ogDescription) ? seo.ogDescription : `Shop authentic ${productName.trim()} at ZENVORA SHOOP.`,
+      ogImage: (seo && seo.ogImage) ? seo.ogImage : image
+    },
+    createdAt: nowIso,
+    updatedAt: nowIso
+  };
+
+  await setDoc(docRef, productPayload);
+  return { success: true, product: productPayload };
+}
+
+/**
+ * Update an existing product document in Firestore.
+ */
+export async function updateProduct(productId, productData) {
+  const canonicalId = canonicalizeProductId(productId);
+  const docRef = doc(db, "products", canonicalId);
+  const snap = await getDoc(docRef);
+  if (!snap.exists()) {
+    throw new Error(`Product "${canonicalId}" not found in database.`);
+  }
+
+  const existing = snap.data();
+  const price = typeof productData.price === 'number' ? productData.price : (existing.price || 0);
+  
+  let finalStock = typeof productData.stock === 'number' ? productData.stock : existing.stock;
+  let normalizedVariants = productData.variants !== undefined ? productData.variants : (existing.variants || []);
+  
+  if (Array.isArray(normalizedVariants) && normalizedVariants.length > 0) {
+    normalizedVariants = normalizedVariants.map((v, idx) => ({
+      id: v.id || `var-${idx + 1}`,
+      name: String(v.name || "").trim(),
+      hex: v.hex || "#111111",
+      stock: Math.max(0, parseInt(v.stock, 10) || 0),
+      sku: v.sku ? String(v.sku).trim() : `${canonicalId}-${(v.name || 'var').toLowerCase().replace(/\s+/g, '-')}`,
+      price: (typeof v.price === 'number' && v.price > 0) ? v.price : price,
+      image: v.image || productData.image || existing.image || "",
+      enabled: v.enabled !== false,
+      status: (parseInt(v.stock, 10) || 0) <= 0 ? "out_of_stock" : "available"
+    }));
+    finalStock = normalizedVariants
+      .filter(v => v.enabled)
+      .reduce((acc, v) => acc + v.stock, 0);
+  }
+
+  const requestedStatus = productData.status || existing.status;
+  const finalStatus = requestedStatus === "draft"
+    ? "draft"
+    : (finalStock <= 0 ? "out_of_stock" : "available");
+
+  const nowIso = new Date().toISOString();
+  const updates = {
+    ...productData,
+    stock: finalStock,
+    status: finalStatus,
+    variants: normalizedVariants,
+    updatedAt: nowIso
+  };
+
+  await updateDoc(docRef, updates);
+  return { success: true, product: { ...existing, ...updates } };
+}
+
+/**
+ * Safely delete a product or require unpublishing if customer orders exist.
+ */
+export async function deleteProduct(productId, force = false) {
+  const canonicalId = canonicalizeProductId(productId);
+  const orderCheck = await checkProductHasOrders(canonicalId);
+  if (orderCheck.hasOrders && !force) {
+    return {
+      success: false,
+      hasOrders: true,
+      orderCount: orderCheck.orderCount,
+      recentOrderId: orderCheck.recentOrderId,
+      error: `Product is referenced in ${orderCheck.orderCount} customer order(s) (e.g. #${orderCheck.recentOrderId}). To preserve customer order and sales history, please unpublish or set status to Draft instead.`
+    };
+  }
+
+  const docRef = doc(db, "products", canonicalId);
+  await deleteDoc(docRef);
+  return { success: true, deletedId: canonicalId };
+}
+
+/**
  * Update product stock and price directly (Admin only).
+ * Intelligently supports colour variants if present.
  */
 export async function adminUpdateProduct(productId, updates) {
   const canonicalId = canonicalizeProductId(productId);
@@ -372,7 +741,14 @@ export async function adminUpdateProduct(productId, updates) {
     ...updates,
     updatedAt: nowIso
   };
-  if (typeof updates.stock === "number") {
+
+  if (Array.isArray(updates.variants) && updates.variants.length > 0) {
+    const total = updates.variants
+      .filter(v => v.enabled !== false)
+      .reduce((sum, v) => sum + (Number(v.stock) || 0), 0);
+    payload.stock = total;
+    payload.status = total <= 0 ? "out_of_stock" : "available";
+  } else if (typeof updates.stock === "number") {
     payload.status = updates.stock <= 0 ? "out_of_stock" : "available";
   }
 
@@ -736,6 +1112,12 @@ export async function deleteMemberPurchase(membershipCode, purchaseId) {
 export { 
   db, 
   auth, 
+  storage,
+  uploadProductImage,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  checkProductHasOrders,
   doc, 
   getDoc, 
   setDoc, 
@@ -753,3 +1135,4 @@ export {
   signOut, 
   onAuthStateChanged 
 };
+

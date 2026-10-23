@@ -174,6 +174,95 @@
       from { opacity: 0; transform: scale(0.96); }
       to { opacity: 1; transform: scale(1); }
     }
+
+    /* Alerts and Status Banners */
+    .alert-info { background: #EFF6FF; border: 1.5px solid #BFDBFE; color: #1E40AF; padding: 0.85rem 1.15rem; border-radius: 8px; font-size: 0.88rem; }
+    .alert-success { background: #ECFDF5; border: 1.5px solid #A7F3D0; color: #065F46; padding: 0.85rem 1.15rem; border-radius: 8px; font-size: 0.88rem; }
+    .alert-warning { background: #FFFBEB; border: 1.5px solid #FDE68A; color: #92400E; padding: 0.85rem 1.15rem; border-radius: 8px; font-size: 0.88rem; }
+    .alert-danger { background: #FEF2F2; border: 1.5px solid #FECACA; color: #991B1B; padding: 0.85rem 1.15rem; border-radius: 8px; font-size: 0.88rem; }
+
+    /* Add Product Form Components */
+    .form-section-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-section-sub {
+      font-size: 0.82rem;
+      color: #6B7280;
+      margin-bottom: 1.25rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.35rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      background: #FFFFFF;
+      transition: border-color 0.15s ease-in-out;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #D4AF37;
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+    .image-dropzone {
+      border: 2px dashed #D1D5DB;
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      background: #F9FAFB;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .image-dropzone:hover {
+      border-color: #D4AF37;
+      background: #FEFDF9;
+    }
+    .uploaded-images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .quick-color-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid #D1D5DB;
+      background: #FFFFFF;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .quick-color-btn:hover {
+      border-color: #111827;
+      background: #F3F4F6;
+    }
   </style>
 
   <!-- Modular Firebase 10 SDK & Services -->
@@ -301,6 +390,13 @@
           </td>
           <td>
             <input type="number" id="stock-input-${p.productId}" class="stock-input-field" value="${stock}" min="0">
+            ${Array.isArray(p.variants) && p.variants.length > 0 ? `
+              <div style="margin-top: 0.35rem;">
+                <button type="button" class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.72rem; border-color: #7C3AED; color: #7C3AED; background: #F5F3FF; border-radius: 4px;" onclick="window.openVariantStockModal('${p.productId}')">
+                  🎨 ${p.variants.length} Variants
+                </button>
+              </div>
+            ` : ''}
           </td>
           <td>${badge}</td>
           <td>
@@ -982,6 +1078,9 @@
       <button type="button" class="admin-tab-btn" id="tab-btn-members" onclick="switchAdminTab('members')">
         👥 Membership Management
       </button>
+      <button type="button" class="admin-tab-btn" id="tab-btn-add-product" onclick="switchAdminTab('add-product')">
+        📦 Add Product
+      </button>
     </div>
 
     <!-- TAB 1: Stock & Inventory Management (ORIGINAL) -->
@@ -1082,6 +1181,411 @@
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- TAB 4: ADD & MANAGE PRODUCT (DYNAMIC SYSTEM) -->
+    <div id="admin-view-add-product" style="display: none;">
+      
+      <!-- Top Action Header -->
+      <div class="admin-card" style="margin-bottom: 1.5rem; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 id="form-mode-title" style="font-size: 1.4rem; font-weight: 700; color: var(--primary); margin: 0 0 0.25rem;">
+              Add New Product
+            </h2>
+            <p style="font-size: 0.85rem; color: #6B7280; margin: 0;">
+              Create, configure, and publish dynamic products with images, colour variants, AI descriptions and SEO.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem;" onclick="window.resetProductForm()">
+              ＋ New Blank Product
+            </button>
+            <button type="button" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem;" onclick="window.previewProductFromForm()">
+              👁️ Preview Current
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save Status Notification Banner -->
+      <div id="product-save-status-banner" style="display: none; margin-bottom: 1.5rem;"></div>
+
+      <!-- Main Add Product Form -->
+      <form id="add-product-form" onsubmit="event.preventDefault(); window.saveProductForm();">
+
+        <!-- SECTION 1: PRODUCT IMAGES -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <span>📸</span> 1. Product Images & Gallery
+          </div>
+          <div class="form-section-sub">
+            Upload multiple high-resolution photos (JPG, PNG, WebP). Images are client-side optimized for fast loading. Click <strong>★ Make Main</strong> on the primary image to display on cards and search snippets.
+          </div>
+
+          <div id="image-upload-status" style="display: none; margin-bottom: 1rem;"></div>
+
+          <!-- Dropzone -->
+          <div id="image-dropzone" class="image-dropzone" onclick="document.getElementById('image-file-input').click()">
+            <input type="file" id="image-file-input" accept="image/png,image/jpeg,image/webp" multiple style="display: none;" onchange="window.handleImageUploadFiles(this.files)">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📁</div>
+            <div style="font-weight: 700; font-size: 1rem; color: var(--primary); margin-bottom: 0.25rem;">
+              Drag & Drop product photos here, or click to browse
+            </div>
+            <div style="font-size: 0.8rem; color: #6B7280;">
+              Upload 2-3 or more images (JPG, PNG, WebP). Automatic WebP compression applied.
+            </div>
+          </div>
+
+          <!-- Image URL Entry Fallback -->
+          <div style="display: flex; gap: 0.5rem; margin-top: 1rem; align-items: center;">
+            <input type="text" id="image-url-input" class="form-control" placeholder="Or enter direct image URL (e.g. https://... or ./image.jpeg)" style="flex: 1;">
+            <button type="button" class="btn btn-outline" style="white-space: nowrap; padding: 0.65rem 1rem; font-size: 0.85rem;" onclick="window.addImageByUrl()">
+              ＋ Add URL
+            </button>
+          </div>
+
+          <!-- Uploaded Images Grid -->
+          <div id="uploaded-images-grid" class="uploaded-images-grid"></div>
+        </div>
+
+        <!-- SECTION 2: BASIC INFORMATION -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <span>🏷️</span> 2. Basic Product Information
+          </div>
+          <div class="form-section-sub">
+            Essential catalog details, naming, category, and automatic clean URL generation.
+          </div>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label class="form-label">Product Name *</label>
+              <input type="text" id="product-name-input" class="form-control" required placeholder="e.g. Royal Embroidered 3-Piece Lawn Suit">
+            </div>
+            <div>
+              <label class="form-label">Category *</label>
+              <select id="product-category-input" class="form-control">
+                <option value="Ladies Suits">Ladies Suits</option>
+                <option value="Gents Suits">Gents Suits</option>
+                <option value="Luxury Lawn">Luxury Lawn</option>
+                <option value="Watches">Watches</option>
+                <option value="Bags & Wallets">Bags & Wallets</option>
+                <option value="Footwear">Footwear</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Summer Collection">Summer Collection</option>
+                <option value="Winter Collection">Winter Collection</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Slug & Canonical -->
+          <div class="form-group">
+            <label class="form-label">URL Slug (Auto-Generated)</label>
+            <input type="text" id="product-slug-input" class="form-control" placeholder="royal-embroidered-3-piece-lawn-suit" style="font-family: monospace;">
+            <div style="font-size: 0.78rem; color: #6B7280; margin-top: 0.35rem;">
+              Canonical Direct URL: <code id="product-canonical-preview" style="color: #2563EB;">https://zenvorashoop.netlify.app/product.html?id=...</code>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label class="form-label">Brand</label>
+              <input type="text" id="product-brand-input" class="form-control" value="ZENVORA SHOOP">
+            </div>
+            <div>
+              <label class="form-label">Model SKU (Optional)</label>
+              <input type="text" id="product-sku-input" class="form-control" placeholder="e.g. ZV-LAWN-2026-01">
+            </div>
+            <div>
+              <label class="form-label">Fabric / Material</label>
+              <input type="text" id="product-fabric-input" class="form-control" placeholder="e.g. Pure Cotton Lawn 90/70">
+            </div>
+          </div>
+
+          <div style="margin-top: 0.75rem;">
+            <label style="display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" id="product-featured-checkbox">
+              <span style="font-weight: 600; color: #111827;">Feature this product on homepage top recommendations</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 3: PRICING & INVENTORY -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <span>💰</span> 3. Pricing & Base Inventory
+          </div>
+          <div class="form-section-sub">
+            Set the selling price, optional crossed-out comparison price (which generates an automatic % OFF discount pill), and stock level.
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label class="form-label">Selling Price (PKR) *</label>
+              <div style="position: relative;">
+                <input type="number" id="product-price-input" class="form-control" required min="0" placeholder="2950" oninput="window.updateDiscountPreview?.()">
+              </div>
+            </div>
+            <div>
+              <label class="form-label">
+                Original / Cut Price (PKR)
+                <span id="discount-badge-preview" style="display: none; background: #DC2626; color: #FFFFFF; font-size: 0.72rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 9999px; margin-left: 0.4rem;"></span>
+              </label>
+              <input type="number" id="product-cut-price-input" class="form-control" min="0" placeholder="e.g. 4500" oninput="window.updateDiscountPreview?.()">
+            </div>
+            <div>
+              <label class="form-label">Total Stock Quantity *</label>
+              <input type="number" id="product-stock-input" class="form-control" min="0" value="10">
+            </div>
+          </div>
+
+          <div id="total-variant-stock-banner" class="alert-info" style="display: none;"></div>
+        </div>
+
+        <!-- SECTION 4: COLOUR VARIANTS -->
+        <div class="form-section-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+            <div class="form-section-title" style="margin: 0;">
+              <span>🎨</span> 4. Colour Variants (Multi-Colour System)
+            </div>
+            <button type="button" class="btn btn-dark" style="background: var(--primary); padding: 0.4rem 0.9rem; font-size: 0.85rem;" onclick="window.addColourVariant()">
+              ＋ Add Colour Variant
+            </button>
+          </div>
+          <div class="form-section-sub">
+            Each colour variant supports independent stock tracking, individual photos, hex swatches, and SKUs. Customer orders will deduct stock exclusively from the chosen colour.
+          </div>
+
+          <!-- Quick Palette -->
+          <div style="margin-bottom: 0.75rem;">
+            <span style="font-size: 0.78rem; font-weight: 700; color: #6B7280; text-transform: uppercase;">Quick Add Colour:</span>
+            <div id="variants-quick-palette" style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.35rem;"></div>
+          </div>
+
+          <!-- Variants List Container -->
+          <div id="variants-list-container"></div>
+        </div>
+
+        <!-- SECTION 5: SIZES & ATTRIBUTES -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <span>📏</span> 5. Available Sizes & Specifications
+          </div>
+          <div class="form-section-sub">
+            Select sizes available for customer selection during checkout.
+          </div>
+
+          <div style="display: flex; gap: 1.25rem; flex-wrap: wrap;">
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Unstitched (3-Piece)" checked>
+              <span>Unstitched (3-Piece)</span>
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Unstitched (2-Piece)">
+              <span>Unstitched (2-Piece)</span>
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Standard / Free Size">
+              <span>Standard / Free Size</span>
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Small (S)">
+              <span>Small (S)</span>
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Medium (M)">
+              <span>Medium (M)</span>
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Large (L)">
+              <span>Large (L)</span>
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" class="size-checkbox" value="Extra Large (XL)">
+              <span>Extra Large (XL)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 6: DESCRIPTION & BULLET HIGHLIGHTS (WITH AI GENERATOR) -->
+        <div class="form-section-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+            <div class="form-section-title" style="margin: 0;">
+              <span>📝</span> 6. Product Description & Highlights
+            </div>
+            <button type="button" id="btn-generate-ai-desc" class="btn btn-outline" style="border-color: #8B5CF6; color: #7C3AED; background: #F5F3FF; padding: 0.4rem 0.9rem; font-size: 0.82rem; font-weight: 700;" onclick="window.generateAiDescription()">
+              ✨ Generate Description with AI
+            </button>
+          </div>
+          <div class="form-section-sub">
+            Craft engaging luxury product descriptions or let Gemini AI generate tailored e-commerce copy.
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Catchy Section Heading</label>
+            <input type="text" id="product-heading-input" class="form-control" placeholder="e.g. Premium Summer Elegance — Pure Breathable Lawn">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Short Summary (Shown above 'Add to Cart')</label>
+            <textarea id="product-short-desc" class="form-control" rows="2" placeholder="Brief 1-2 sentence overview summarizing the appeal and quality."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Full Product Story & Specifications</label>
+            <textarea id="product-full-desc" class="form-control" rows="4" placeholder="Detailed product copy highlighting fabric craftsmanship, color-fastness, design motifs, and care instructions."></textarea>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label class="form-label" style="margin: 0;">Key Bullet Highlights / Features</label>
+              <button type="button" class="btn btn-outline" style="padding: 0.2rem 0.6rem; font-size: 0.78rem;" onclick="window.addFeatureBullet()">
+                ＋ Add Bullet Point
+              </button>
+            </div>
+            <div id="features-list-container"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Shipping & Delivery Note</label>
+            <input type="text" id="product-shipping-input" class="form-control" value="Fast doorstep delivery across Karachi (2-3 days). Cash on Delivery available nationwide.">
+          </div>
+        </div>
+
+        <!-- SECTION 7: SEARCH ENGINE OPTIMIZATION (SEO) (WITH AI GENERATOR) -->
+        <div class="form-section-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.35rem;">
+            <div class="form-section-title" style="margin: 0;">
+              <span>🔍</span> 7. Search Engine Optimization (SEO) & Social Graph
+            </div>
+            <button type="button" id="btn-generate-ai-seo" class="btn btn-outline" style="border-color: #059669; color: #059669; background: #ECFDF5; padding: 0.4rem 0.9rem; font-size: 0.82rem; font-weight: 700;" onclick="window.generateAiSeo()">
+              ✨ Generate SEO with AI
+            </button>
+          </div>
+          <div class="form-section-sub">
+            Optimize for Google Search and social media cards (Facebook, WhatsApp, Twitter). Includes live character counters.
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" style="margin: 0;">Meta Title (Recommended 50–60 characters)</label>
+              <span id="seo-title-count" style="font-size: 0.75rem; font-weight: 600; color: #6B7280;">0 / 60 chars</span>
+            </div>
+            <input type="text" id="product-seo-title" class="form-control" placeholder="e.g. Royal Embroidered 3-Piece Lawn Suit | ZENVORA SHOOP">
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <label class="form-label" style="margin: 0;">Meta Description (Recommended 130–160 characters)</label>
+              <span id="seo-desc-count" style="font-size: 0.75rem; font-weight: 600; color: #6B7280;">0 / 160 chars</span>
+            </div>
+            <textarea id="product-seo-desc" class="form-control" rows="2" placeholder="e.g. Shop the Royal Embroidered 3-Piece Lawn Suit with pure voil dupatta at ZENVORA SHOOP. Premium Karachi fashion with fast Cash on Delivery & WhatsApp orders."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+              <label class="form-label">Focus Keyword</label>
+              <input type="text" id="product-seo-keyword" class="form-control" placeholder="e.g. lawn suit karachi">
+            </div>
+            <div>
+              <label class="form-label">Additional Search Keywords</label>
+              <input type="text" id="product-seo-additional-keywords" class="form-control" placeholder="unstitched lawn, 3 piece suit, summer collection">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label class="form-label">Open Graph (Facebook/WhatsApp) Title</label>
+              <input type="text" id="product-seo-og-title" class="form-control" placeholder="Royal Embroidered 3-Piece Lawn Suit">
+            </div>
+            <div>
+              <label class="form-label">Open Graph Description</label>
+              <textarea id="product-seo-og-desc" class="form-control" rows="2" placeholder="Available in vibrant summer colours at ZENVORA SHOOP."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 8: PUBLICATION STATUS & SUBMIT -->
+        <div class="admin-card" style="padding: 1.5rem; background: #FFFFFF; border: 2px solid #D4AF37;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <div style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 0.35rem;">
+                Publication Status
+              </div>
+              <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; cursor: pointer;">
+                  <input type="radio" name="product-status-radio" value="published" checked>
+                  <span style="font-weight: 600; color: #065F46;">● Published (Live in store)</span>
+                </label>
+                <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; cursor: pointer;">
+                  <input type="radio" name="product-status-radio" value="draft">
+                  <span style="font-weight: 600; color: #92400E;">○ Draft (Hidden from store)</span>
+                </label>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-outline" style="padding: 0.7rem 1.25rem; font-weight: 600;" onclick="window.saveProductForm('draft')">
+                Save as Draft
+              </button>
+              <button type="button" class="btn btn-outline" style="padding: 0.7rem 1.25rem; font-weight: 600;" onclick="window.previewProductFromForm()">
+                👁️ Preview
+              </button>
+              <button type="submit" id="btn-save-product-main" class="btn btn-dark" style="background: var(--primary); color: #FFFFFF; padding: 0.7rem 2rem; font-size: 1rem; font-weight: 700;">
+                Save & Publish Product
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- SECTION 9: CATALOGUE MANAGEMENT TABLE -->
+      <div class="admin-card" style="margin-top: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--primary); margin: 0 0 0.2rem;">
+              Existing Products Catalogue
+            </h2>
+            <div style="font-size: 0.82rem; color: #6B7280;">
+              Manage, edit, publish/unpublish, and safely delete products across your entire inventory.
+            </div>
+          </div>
+          <span id="catalogue-count-badge" class="badge-in">Loading products...</span>
+        </div>
+
+        <!-- Filter Controls -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+          <input type="text" id="catalogue-search-input" class="form-control" placeholder="Search products by title, category, or ID..." oninput="window.filterCatalogueTable()">
+          <select id="catalogue-status-filter" class="form-control" onchange="window.filterCatalogueTable()">
+            <option value="all">All Statuses</option>
+            <option value="published">Published Only</option>
+            <option value="draft">Drafts Only</option>
+            <option value="out_of_stock">Out of Stock Only</option>
+          </select>
+        </div>
+
+        <!-- Table -->
+        <div style="overflow-x: auto;">
+          <table class="stock-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock & Variants</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="catalogue-table-body">
+              <!-- Rendered dynamically by loadCatalogueTable -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
   </main>
@@ -1384,22 +1888,54 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: VARIANT STOCK BREAKDOWN EDITOR -->
+  <!-- ========================================== -->
+  <div id="modal-variant-stock-editor" class="zv-admin-modal-backdrop">
+    <div class="zv-admin-modal-box" style="max-width: 550px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.75rem;">
+        <h3 id="modal-variant-product-title" style="font-size: 1.2rem; font-weight: 700; color: var(--primary); margin: 0;">Variant Inventory</h3>
+        <button type="button" onclick="window.closeVariantStockModal()" style="background: none; border: none; font-size: 1.6rem; cursor: pointer; color: #6B7280;">&times;</button>
+      </div>
+
+      <p style="font-size: 0.85rem; color: #4B5563; margin-bottom: 1rem;">
+        Edit the live available inventory for each colour variant. Saving here updates Firestore immediately and synchronizes total product stock.
+      </p>
+
+      <div id="modal-variants-list" style="max-height: 380px; overflow-y: auto; margin-bottom: 1.5rem; border: 1px solid #E5E7EB; border-radius: 8px; padding: 0.75rem;">
+        <!-- Populated dynamically by openVariantStockModal -->
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+        <button type="button" class="btn btn-outline" onclick="window.closeVariantStockModal()" style="padding: 0.6rem 1.25rem;">Cancel</button>
+        <button type="button" id="btn-save-modal-variants" class="btn btn-dark" style="background: var(--primary); color: #fff; padding: 0.6rem 1.5rem; font-weight: 700;" onclick="window.saveVariantStockModal()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module integration for Add Product Controller -->
+  <script type="module" src="./admin-product-manager.js"></script>
+
   <script>
     function switchAdminTab(tab) {
       const stockView = document.getElementById('admin-view-stock');
       const ordersView = document.getElementById('admin-view-orders');
       const membersView = document.getElementById('admin-view-members');
+      const addProductView = document.getElementById('admin-view-add-product');
       const stockBtn = document.getElementById('tab-btn-stock');
       const ordersBtn = document.getElementById('tab-btn-orders');
       const membersBtn = document.getElementById('tab-btn-members');
+      const addProductBtn = document.getElementById('tab-btn-add-product');
 
       if (stockView) stockView.style.display = tab === 'stock' ? 'block' : 'none';
       if (ordersView) ordersView.style.display = tab === 'orders' ? 'block' : 'none';
       if (membersView) membersView.style.display = tab === 'members' ? 'block' : 'none';
+      if (addProductView) addProductView.style.display = tab === 'add-product' ? 'block' : 'none';
 
       if (stockBtn) stockBtn.classList.toggle('active', tab === 'stock');
       if (ordersBtn) ordersBtn.classList.toggle('active', tab === 'orders');
       if (membersBtn) membersBtn.classList.toggle('active', tab === 'members');
+      if (addProductBtn) addProductBtn.classList.toggle('active', tab === 'add-product');
 
       if (tab === 'stock' && typeof window.loadProductsLive === 'function') {
         window.loadProductsLive();
@@ -1407,9 +1943,28 @@
         window.loadOrdersLive();
       } else if (tab === 'members' && typeof window.loadMembersLive === 'function') {
         window.loadMembersLive();
+      } else if (tab === 'add-product') {
+        if (typeof window.initAddProductTab === 'function') {
+          window.initAddProductTab();
+        }
       }
     }
     window.switchAdminTab = switchAdminTab;
+
+    window.updateDiscountPreview = function() {
+      const price = parseFloat(document.getElementById('product-price-input')?.value) || 0;
+      const cut = parseFloat(document.getElementById('product-cut-price-input')?.value) || 0;
+      const badge = document.getElementById('discount-badge-preview');
+      if (badge) {
+        if (cut > price && price > 0) {
+          const discount = Math.round(((cut - price) / cut) * 100);
+          badge.textContent = `-${discount}% OFF`;
+          badge.style.display = 'inline-block';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+    };
   </script>
 
 </body>
