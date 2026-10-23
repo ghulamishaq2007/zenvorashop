@@ -1,0 +1,6 @@
+{
+  "name": "ZENVORA SHOOP - Fashion E-Commerce",
+  "description": "Shop authentic Pakistani fashion online at ZENVORA SHOOP. Discover ladies lawn suits, gents wear & footwear with Cash on Delivery Pakistan and WhatsApp ordering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
