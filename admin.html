@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ZENVORA Chat Admin</title>
+<style>
+  :root{--bg:#f4f4f5;--card:#fff;--ink:#111;--mut:#6b7280;--line:#e5e7eb;--gold:#f5c542}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f0f10;--card:#1a1a1c;--ink:#f3f3f3;--mut:#9ca3af;--line:#2b2b2e}}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+  header{background:#111;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  header b{color:var(--gold)}
+  header button{background:var(--gold);border:0;border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:600}
+  #login{max-width:340px;margin:80px auto;background:var(--card);padding:24px;border-radius:14px;border:1px solid var(--line)}
+  #login input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;margin:6px 0;background:var(--bg);color:var(--ink)}
+  #login button{width:100%;padding:10px;border:0;border-radius:8px;background:#111;color:var(--gold);font-weight:600;cursor:pointer}
+  #err{color:#dc2626;font-size:13px;min-height:18px}
+  #app{display:none;grid-template-columns:340px 1fr;height:calc(100vh - 52px)}
+  #list{overflow-y:auto;border-right:1px solid var(--line);background:var(--card)}
+  .item{padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+  .item:hover,.item.sel{background:var(--bg)}
+  .item .t{display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}
+  .item .q{font-weight:600;font-size:14px;margin:4px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item .l{font-size:13px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bad{color:#dc2626;font-weight:700}
+  #view{overflow-y:auto;padding:16px}
+  #meta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--mut);margin-bottom:14px;line-height:1.7}
+  #meta b{color:var(--ink)}
+  .m{max-width:75%;padding:10px 13px;border-radius:14px;margin:8px 0;font-size:14px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+  .m small{display:block;font-size:11px;opacity:.65;margin-top:4px}
+  .u{background:#111;color:#fff;margin-right:auto;border-bottom-left-radius:4px}
+  .a{background:var(--card);border:1px solid var(--line);margin-left:auto;border-bottom-right-radius:4px}
+  .lbl{font-size:11px;color:var(--mut);margin-top:10px}
+  .lbl.r{text-align:right}
+  #del{background:none;border:1px solid #dc2626;color:#dc2626;border-radius:8px;padding:5px 10px;cursor:pointer;margin-top:8px}
+  #back{display:none}
+  .empty{color:var(--mut);padding:30px;text-align:center}
+  @media(max-width:760px){
+    #app{grid-template-columns:1fr}
+    #view{display:none}
+    #app.open #list{display:none}
+    #app.open #view{display:block}
+    #app.open #back{display:inline-block}
+    .m{max-width:90%}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div><b>ZENVORA</b> Chat Admin</div>
+  <div><button id="back">← Back</button> <button id="out" style="display:none">Logout</button></div>
+</header>
+
+<div id="login">
+  <h3 style="margin:0 0 4px">Admin Login</h3>
+  <input id="em" type="email" placeholder="Email" autocomplete="username">
+  <input id="pw" type="password" placeholder="Password" autocomplete="current-password">
+  <div id="err"></div>
+  <button id="go">Login</button>
+</div>
+
+<div id="app">
+  <div id="list"></div>
+  <div id="view"><div class="empty">Left se koi chat select karein</div></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDi-NRm9L-FBlGW2B0XfQ7UJFKgHkBG2ms",
+  authDomain: "gen-lang-client-0896359096.firebaseapp.com",
+  projectId: "gen-lang-client-0896359096",
+  storageBucket: "gen-lang-client-0896359096.firebasestorage.app",
+  messagingSenderId: "599206346518",
+  appId: "1:599206346518:web:9946f09f5fe6f226b25a37"
+};
+const auth = getAuth(initializeApp(firebaseConfig));
+
+const $ = (id) => document.getElementById(id);
+let current = null;
+let timer = null;
+let loginMsg = location.protocol === "file:"
+  ? "Yeh page file ki tarah khola gaya hai, is par backend nahi chalega. Apni Netlify site (https://zenvorashoop.netlify.app/admin.html) par kholein."
+  : "";
+
+const fmt = (t) => new Date(t).toLocaleString("en-PK", { dateStyle: "medium", timeStyle: "short" });
+const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
+
+async function api(path, opts = {}) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("auth");
+  const idToken = await user.getIdToken();
+  const r = await fetch(path, { ...opts, headers: { Authorization: "Bearer " + idToken } });
+  if (r.status === 401 || r.status === 403) {
+    loginMsg = r.status === 403 ? "Is account ko admin ki ijazat nahi hai." : "Login expire ho gaya, dobara login karein.";
+    await signOut(auth);
+    throw new Error("auth");
+  }
+  return r.json();
+}
+
+function showLogin() {
+  clearInterval(timer);
+  $("app").style.display = "none"; $("login").style.display = "block"; $("out").style.display = "none";
+  $("err").textContent = loginMsg; loginMsg = "";
+}
+const logout = () => signOut(auth);
+
+async function loadList() {
+  const { chats } = await api("/api/admin");
+  const list = $("list");
+  list.replaceChildren();
+  if (!chats.length) { list.append(mk("div", "empty", "Abhi tak koi chat nahi aayi")); return; }
+  chats.forEach((c) => {
+    const where = [c.visitor?.city, c.visitor?.country].filter(Boolean).join(", ") || "Unknown";
+    const it = mk("div", "item" + (current === c.id ? " sel" : ""));
+    const top = mk("div", "t");
+    top.append(mk("span", "", where + " • " + c.count + " msgs"), mk("span", "", fmt(c.updatedAt)));
+    const q = mk("div", "q", c.firstQuestion);
+    if (c.hasError) q.prepend(mk("span", "bad", "! "));
+    it.append(top, q, mk("div", "l", "Bot: " + c.last));
+    it.onclick = () => openChat(c.id);
+    list.append(it);
+  });
+}
+
+async function openChat(id) {
+  current = id;
+  const c = await api("/api/admin?id=" + encodeURIComponent(id));
+  const v = $("view");
+  v.replaceChildren();
+  const meta = mk("div"); meta.id = "meta";
+  const row = (k, val) => { const s = mk("div"); s.append(mk("b", "", k + ": "), document.createTextNode(val || "-")); meta.append(s); };
+  row("Location", [c.visitor?.city, c.visitor?.country].filter(Boolean).join(", "));
+  row("IP", c.visitor?.ip);
+  row("Started", fmt(c.createdAt));
+  row("Page", c.visitor?.page);
+  row("Device", c.visitor?.device);
+  const del = mk("button", "", "Delete chat"); del.id = "del";
+  del.onclick = async () => {
+    if (!confirm("Yeh chat hamesha ke liye delete ho jayegi. Pakka?")) return;
+    await api("/api/admin?id=" + encodeURIComponent(id), { method: "DELETE" });
+    current = null; v.replaceChildren(mk("div", "empty", "Chat delete ho gayi")); $("app").classList.remove("open"); loadList();
+  };
+  meta.append(del);
+  v.append(meta);
+  c.messages.forEach((m) => {
+    const isUser = m.role === "user";
+    v.append(mk("div", "lbl" + (isUser ? "" : " r"), isUser ? "Visitor" : "AI Agent"));
+    const b = mk("div", "m " + (isUser ? "u" : "a"), m.content);
+    b.append(mk("small", "", fmt(m.ts)));
+    v.append(b);
+  });
+  $("app").classList.add("open");
+  loadList();
+}
+
+async function start() {
+  $("login").style.display = "none"; $("app").style.display = "grid"; $("out").style.display = "inline-block";
+  await loadList();
+  clearInterval(timer);
+  timer = setInterval(() => { loadList().catch(() => {}); if (current) openChatQuiet(); }, 20000);
+}
+async function openChatQuiet() {
+  const v = $("view"); const top = v.scrollTop;
+  await openChat(current); v.scrollTop = top;
+}
+
+$("go").onclick = async () => {
+  $("err").textContent = "";
+  try {
+    await signInWithEmailAndPassword(auth, $("em").value.trim(), $("pw").value);
+    $("pw").value = "";
+  } catch (e) {
+    const c = e && e.code;
+    $("err").textContent =
+      ["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"].includes(c) ? "Email ya password ghalat hai"
+      : c === "auth/operation-not-allowed" ? "Firebase mein Email/Password sign-in enable nahi hai"
+      : c === "auth/unauthorized-domain" ? "Yeh domain Firebase ke Authorized domains mein add nahi hai"
+      : c === "auth/too-many-requests" ? "Bohat zyada koshishein ho gayin, thori der baad try karein"
+      : c === "auth/network-request-failed" ? "Internet ka masla hai"
+      : "Login nahi hua (" + (c || e.message) + ")";
+  }
+};
+$("pw").addEventListener("keydown", (e) => { if (e.key === "Enter") $("go").click(); });
+$("out").onclick = logout;
+$("back").onclick = () => $("app").classList.remove("open");
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return showLogin();
+  try { await api("/api/admin"); await start(); }
+  catch (e) {
+    if (e.message !== "auth") {
+      loginMsg = "Login ho gaya lekin backend (/api/admin) se jawab nahi mila. Site Netlify par deploy honi chahiye (ya netlify dev chalayein) aur Netlify mein FIREBASE_PROJECT_ID aur ADMIN_EMAILS set hon.";
+      showLogin();
+    }
+  }
+});
+</script>
+</body>
+</html>
